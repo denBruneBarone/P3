@@ -1,0 +1,12 @@
+﻿.cardlink {
+    max-width: 20%;
+    aspect-ratio: 1 / 1;
+    background-color: #2879fe;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.1s ease-in-out all;
+}
+
+    .cardlink:hover {
+        background-color: #2267d8;
+    }

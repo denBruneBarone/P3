@@ -1,0 +1,8 @@
+﻿<a href="@href" class="card card-body text-center cardlink">
+    <h2 class="card-title mt-auto mb-auto">@Title</h2>
+</a>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? href { get; set; }
+}
