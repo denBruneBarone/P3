@@ -1,0 +1,64 @@
+﻿@page "/upload"
+@using System.IO
+@inject IWebHostEnvironment env
+@inject NavigationManager NavManager
+
+<PageTitle>Upload</PageTitle>
+
+<center>
+    <div class="upload-container">
+        <div class="upload-div">
+            <div class="upload-button">
+                <label for="fileinput" class="label-wrapper">
+                    <span class="oi oi-paperclip"></span>
+                    Upload price list file
+                    <InputFile OnChange="HandleSelectedFile" id="fileinput" style="width:0; height:0; overflow: hidden;" />
+                </label>
+            </div>  
+        </div>
+        <small>@Message</small>
+        <div class="nav-buttons">
+            <button type="button" class="cancel-button" @onclick="CancelClicked">Cancel</button>
+            <button @onclick="ContinueClicked" type="button" class="continue-button">Continue</button>
+        </div>
+    </div>
+</center>
+
+@code {
+    string Message = "No files are selected";
+    IReadOnlyList<IBrowserFile> selectedFiles;
+    //href didn't work on the cancel button for some reason
+    private void CancelClicked(){
+        NavManager.NavigateTo("/");
+    }
+    //"selectedFiles gets 
+    private void HandleSelectedFile(InputFileChangeEventArgs e){
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles[0].Name.ToString()} is chosen";
+        this.StateHasChanged();
+    }
+    private async void ContinueClicked() {
+        /*As there is only one file, a list may be redundant*/
+        /*Der skal implementeres errorhandling :) */
+        try
+        {
+            foreach (var file in selectedFiles)
+            {
+                /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
+                Stream stream = file.OpenReadStream(1000000);
+                /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
+                var path = $"{env.WebRootPath}\\{file.Name}";
+                FileStream fs = File.Create(path);
+                /*The file content is copied to the path*/
+                await stream.CopyToAsync(fs);
+                /*The two streams are closed again*/
+                stream.Close();
+                fs.Close();
+            }
+            this.StateHasChanged();
+            NavManager.NavigateTo("/mapping");
+        }catch(NullReferenceException e){
+            Message = "You have to add a price list file before continuing!";
+        }
+}
+}
