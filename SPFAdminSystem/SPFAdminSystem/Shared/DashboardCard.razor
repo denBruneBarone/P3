@@ -1,8 +1,23 @@
-﻿<a href="@href" class="card card-body text-center cardlink">
-    <h2 class="card-title mt-auto mb-auto">@Title</h2>
+﻿<a href="@href" class="card card-body text-center cardlink m-lg-3" style="font-size: 125%">
+    <div class="mt-auto h-100 w-100 d-flex flex-column justify-content-center">
+        <span class="card-title mt-auto mb-auto">@Title</span>
+        <div class="w-100 p-3 d-flex justify-content-end" style="font-size: 125%">
+            @if (State == "Ready")
+            {
+                <span class="oi oi-file" style="color:lawngreen"></span>
+            }
+            else if (State == "Waiting")
+            {
+                <span class="oi oi-file" style="color:red"></span>
+            } else if (State == "Ongoing") {
+                <span class="oi oi-file" style="color:yellow"></span>
+            }
+        </div>
+    </div>
 </a>
 
 @code {
     [Parameter] public string? Title { get; set; }
     [Parameter] public string? href { get; set; }
+    [Parameter] public string? State { get; set; }
 }

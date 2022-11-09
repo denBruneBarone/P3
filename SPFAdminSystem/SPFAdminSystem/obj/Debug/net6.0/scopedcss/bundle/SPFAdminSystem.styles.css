@@ -1,6 +1,11 @@
 /* _content/SPFAdminSystem/Shared/DashboardCard.razor.rz.scp.css */
 .cardlink[b-fwjgy9clvm] {
-    max-width: 20%;
+    max-width: 256px !important;
+    max-width: 256px !important;
+    width: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     aspect-ratio: 1 / 1;
     background-color: #2879fe;
     color: #fff;
@@ -11,6 +16,17 @@
     .cardlink:hover[b-fwjgy9clvm] {
         background-color: #2267d8;
     }
+
+
+.btn-square-xl[b-fwjgy9clvm] {
+    width: 400px !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    height: 400px;
+    text-align: center;
+    padding: 0px;
+    font-size: 24px;
+}
 /* _content/SPFAdminSystem/Shared/MainLayout.razor.rz.scp.css */
 .page[b-9ex7y2ima2] {
     position: absolute;

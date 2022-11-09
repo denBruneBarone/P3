@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
+    "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
   },
   "projects": {
-    "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
+    "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "projectUniqueName": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
         "projectName": "SPFAdminSystem",
-        "projectPath": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "projectPath": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
         "packagesPath": "C:\\Users\\peter\\.nuget\\packages\\",
-        "outputPath": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
+        "outputPath": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -91,7 +91,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100-rc.2.22477.23\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
