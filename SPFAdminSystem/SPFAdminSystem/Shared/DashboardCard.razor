@@ -1,7 +1,7 @@
-﻿<a href="@href" class="card card-body text-center cardlink m-lg-3" style="font-size: 125%">
-    <div class="mt-auto h-100 w-100 d-flex flex-column justify-content-center">
-        <span class="card-title mt-auto mb-auto">@Title</span>
-        <div class="w-100 p-3 d-flex justify-content-end" style="font-size: 125%">
+﻿<a href="@href" class="card card-body text-center cardlink m-lg-3" style="font-size: 125%;">
+    <div class="mt-auto h-100 w-100 d-flex flex-column justify-content-center align-items-center position-absolute" style="z-index: 0">
+        <span class="d-flex card-title" style="">@Title</span>
+        <div class="w-100 h-100 d-flex justify-content-end align-items-end position-absolute p-md-3 mt-auto" style="font-size: 150%; z-index: 1">
             @if (State == "Ready")
             {
                 <span class="oi oi-file" style="color:lawngreen"></span>
