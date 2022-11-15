@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "RIu6tQXyRCBnVoAOhJWRwZ0L1fUBLpO5GWx86gA1oi8=",
+  "Hash": "s/tDv3qD/tcmHLzv+b9yEQm3y8V6U9nWQ5NIxGvsLcg=",
   "Source": "SPFAdminSystem",
   "BasePath": "_content/SPFAdminSystem",
   "Mode": "Default",
@@ -1290,6 +1290,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\images\\logo_2x_9770ec66-53ad-4ca0-b6ae-2de6ba7f1e56_250x.avif",
+      "SourceId": "SPFAdminSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "BasePath": "_content/SPFAdminSystem",
+      "RelativePath": "images/logo_2x_9770ec66-53ad-4ca0-b6ae-2de6ba7f1e56_250x.avif",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\logo_2x_9770ec66-53ad-4ca0-b6ae-2de6ba7f1e56_250x.avif"
     }
   ]
 }

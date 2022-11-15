@@ -1,60 +1,64 @@
 {
   "Files": [
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css",
       "PackagePath": "staticwebassets\\SPFAdminSystem.bundle.scp.css"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
       "PackagePath": "staticwebassets\\css\\open-iconic"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
       "PackagePath": "staticwebassets\\css\\open-iconic"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\README.md",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\README.md",
       "PackagePath": "staticwebassets\\css\\open-iconic\\README.md"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.eot"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.otf"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.svg"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.ttf"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
       "PackagePath": "staticwebassets\\css\\open-iconic\\font\\fonts\\open-iconic.woff"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\site.css",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
     {
-      "Id": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\favicon.ico",
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\images\\logo_2x_9770ec66-53ad-4ca0-b6ae-2de6ba7f1e56_250x.avif",
+      "PackagePath": "staticwebassets\\images\\logo_2x_9770ec66-53ad-4ca0-b6ae-2de6ba7f1e56_250x.avif"
     },
     {
       "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.SPFAdminSystem.Microsoft.AspNetCore.StaticWebAssets.props",

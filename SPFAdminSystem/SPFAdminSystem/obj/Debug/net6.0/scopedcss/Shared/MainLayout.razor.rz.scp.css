@@ -35,7 +35,7 @@ main[b-9ex7y2ima2] {
         text-overflow: ellipsis;
     }
 
-@media (max-width: 640.98px) {
+@media (max-width: 929.98px) {
     .top-row:not(.auth)[b-9ex7y2ima2] {
         display: none;
     }
@@ -49,13 +49,13 @@ main[b-9ex7y2ima2] {
     }
 }
 
-@media (min-width: 641px) {
+@media (min-width: 930px) {
     .page[b-9ex7y2ima2] {
         flex-direction: row;
     }
 
     .sidebar[b-9ex7y2ima2] {
-        width: 250px;
+        width: 320px;
         height: 100vh;
         position: sticky;
         top: 0;

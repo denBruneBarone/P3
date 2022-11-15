@@ -4,8 +4,8 @@
     "\\SPFAdminSystem",
     "\\SPFAdminSystem\\SPFAdminSystem",
     "\\SPFAdminSystem\\SPFAdminSystem\\Pages",
-    "\\SPFAdminSystem\\SPFAdminSystem\\Properties"
+    "\\SPFAdminSystem\\SPFAdminSystem\\Shared"
   ],
-  "SelectedNode": "\\SPFAdminSystem\\SPFAdminSystem.sln",
+  "SelectedNode": "\\SPFAdminSystem\\SPFAdminSystem\\Shared\\SurveyPrompt.razor",
   "PreviewInSolutionExplorer": false
 }

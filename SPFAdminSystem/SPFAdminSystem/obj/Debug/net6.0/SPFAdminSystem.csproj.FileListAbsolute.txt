@@ -553,3 +553,8 @@ C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\
 C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\SPFAdminSystem.pdb
 C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\SPFAdminSystem.genruntimeconfig.cache
 C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\ref\SPFAdminSystem.dll
+C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\staticwebassets\msbuild.SPFAdminSystem.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\staticwebassets\msbuild.build.SPFAdminSystem.props
+C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.SPFAdminSystem.props
+C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.SPFAdminSystem.props
+C:\Users\peter\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\obj\Debug\net6.0\staticwebassets.pack.json
