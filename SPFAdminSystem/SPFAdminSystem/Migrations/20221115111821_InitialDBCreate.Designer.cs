@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(SpilforsyningContext))]
-    [Migration("20221115082102_InitialDBCreate")]
+    [Migration("20221115111821_InitialDBCreate")]
     partial class InitialDBCreate
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace SPFAdminSystem.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.Property<string>("InHouseProductId")
+                    b.Property<string>("ProductId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("ArriveDate")
@@ -68,16 +68,20 @@ namespace SPFAdminSystem.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("InHouseProductId");
+                    b.HasKey("ProductId");
 
                     b.ToTable("Products");
                 });
 
             modelBuilder.Entity("User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DeleteDate")
                         .HasColumnType("TEXT");
@@ -101,24 +105,26 @@ namespace SPFAdminSystem.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("UserAction", b =>
                 {
+                    b.Property<int>("UserActionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ActionType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AffectedProductId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("AffectedUser")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
@@ -128,7 +134,42 @@ namespace SPFAdminSystem.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.HasKey("UserActionId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("UserActions");
+                });
+
+            modelBuilder.Entity("UserAction", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("UserActions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("User", "User")
+                        .WithMany("UserActions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.Navigation("UserActions");
+                });
+
+            modelBuilder.Entity("User", b =>
+                {
+                    b.Navigation("UserActions");
                 });
 #pragma warning restore 612, 618
         }

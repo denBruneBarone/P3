@@ -25,9 +25,14 @@ public class SpilforsyningContext : DbContext
 
 public class User
 {
-    public int Id { get; set; }
+    public int UserId { get; set; }
+
+    public List<UserAction> UserActions { get; set; }
 
     public DateTime RegisterDate { get; set; }
+
+    [Required]
+    public string CreatedBy { get; set; }
 
     [Required]
     public string UserName { get; set; }
@@ -40,6 +45,7 @@ public class User
 
     public DateTime DeleteDate { get; set; }
 
+    [Required]
     public string Role { get; set; }
 }
 
@@ -51,7 +57,9 @@ public class Product
 
     [Required]
     [Key]
-    public string InHouseProductId { get; set; }
+    public string ProductId { get; set; }
+
+    public List<UserAction> UserActions { get; set; }
 
     [Required]
     public string InHouseTitle { get; set; }
@@ -79,11 +87,14 @@ public class Product
     public int OrderQuantity { get; set; }
 }
 
-[Keyless]
 public class UserAction
 {
+    public int UserActionId { get; set; }
+
     [Required]
     public int UserId { get; set; }
+
+    public User User { get; set; }
 
     public DateTime Date { get; set; }
 
@@ -91,7 +102,7 @@ public class UserAction
 
     public string Value { get; set; }
 
-    public int AffectedProductId { get; set; }
+    public string ProductId { get; set; }
 
-    public int AffectedUser { get; set; }
+    public Product Product { get; set; }
 }
