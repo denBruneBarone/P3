@@ -40,15 +40,15 @@
     //"selectedFiles gets 
     private void HandleSelectedFile(InputFileChangeEventArgs e){
         try{
-            selectedFiles = e.GetMultipleFiles();
+        selectedFiles = e.GetMultipleFiles();
             if(selectedFiles.Count != 3){
                 throw new Exception("");
             }
             Message = $"{selectedFiles.Count()} files are chosen";
-            this.StateHasChanged();
+        this.StateHasChanged();
         }catch(Exception s){
             Message = s.Message;
-        }
+    }
 
     }
     private async void ContinueClicked() {
@@ -67,17 +67,17 @@
                 string fileString = file.Name.ToString();
                 if ((fileString.StartsWith("Pricelist") || fileString.StartsWith("Mapping") || fileString.StartsWith("Produkter")))
                 {
-                    /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
-                    Stream stream = file.OpenReadStream(1000000);
-                    /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
-                    var path = $"{env.WebRootPath}\\{file.Name}";
-                    FileStream fs = File.Create(path);
-                    /*The file content is copied to the path*/
-                    await stream.CopyToAsync(fs);
-                    /*The two streams are closed again*/
-                    stream.Close();
-                    fs.Close();
-                }
+                /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
+                Stream stream = file.OpenReadStream(1000000);
+                /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
+                var path = $"{env.WebRootPath}\\{file.Name}";
+                FileStream fs = File.Create(path);
+                /*The file content is copied to the path*/
+                await stream.CopyToAsync(fs);
+                /*The two streams are closed again*/
+                stream.Close();
+                fs.Close();
+            }
                 else
                 {
                     throw new Exception("Choose the correct files!");
@@ -94,7 +94,7 @@
         }catch(Exception f){
             Message = f.Message;
         }
-    }
+        }
 
 
     private void GetExcelData(){
