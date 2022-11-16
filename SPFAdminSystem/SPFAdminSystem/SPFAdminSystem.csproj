@@ -8,6 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="DataAccessLibrary\.vs\VSWorkspaceState.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="DataAccessLibrary\.vs\DataAccessLibrary\FileContentIndex\5da14360-c799-4574-8b2b-bc01b63e3df4.vsidx" />
+    <None Include="DataAccessLibrary\.vs\DataAccessLibrary\FileContentIndex\7916992c-0046-4285-b1e1-d87af9703e24.vsidx" />
+    <None Include="DataAccessLibrary\.vs\DataAccessLibrary\FileContentIndex\read.lock" />
+    <None Include="DataAccessLibrary\.vs\slnx.sqlite" />
+    <None Include="Database\DataAccessLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
@@ -17,6 +30,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\FileContentIndex\merges\" />
+    <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\v17\" />
+    <Folder Include="DataAccessLibrary\bin\Debug\netstandard2.0\" />
+    <Folder Include="DataAccessLibrary\bin\Release\netstandard2.0\" />
   </ItemGroup>
 
 </Project>

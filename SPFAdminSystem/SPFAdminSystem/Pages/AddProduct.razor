@@ -1,0 +1,37 @@
+﻿@page "/product"
+@using SPFAdminSystem.Database
+@inject IProductData _db
+
+<h3>AddProduct</h3>
+<button onclick="@InsertProduct">add product here</button>
+
+@code {
+
+    private List<Product> products;
+    public async Task InsertProduct() {
+
+        Product hejsa = new Product();
+        hejsa.ProductId = "1";
+        hejsa.InHouseTitle = "test";
+
+        await _db.InsertProduct(hejsa);
+
+
+        products.Add(hejsa);
+    }
+    }
+
+
+@code {
+    /* private async Task InsertPerson()
+    {
+
+        await _db.InsertPerson(p);
+
+        people.Add(p);
+
+        newPerson = new DisplayPersonModel();
+    }*/
+}
+
+
