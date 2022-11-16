@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
+    "C:\\Users\\lucas\\GitRepos\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
+    "C:\\Users\\lucas\\GitRepos\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "projectUniqueName": "C:\\Users\\lucas\\GitRepos\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
         "projectName": "SPFAdminSystem",
-        "projectPath": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
-        "packagesPath": "C:\\Users\\rudnu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
+        "projectPath": "C:\\Users\\lucas\\GitRepos\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lucas\\GitRepos\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\rudnu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -64,9 +64,15 @@
               "target": "Package",
               "version": "[6.0.9, )"
             },
-            "Microsoft.EntityFrameworkCore.Tools": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
-              "version": "[6.0.9, )"
+              "version": "[7.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[7.0.0, )"
             }
           },
           "imports": [
@@ -75,8 +81,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -88,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     }
