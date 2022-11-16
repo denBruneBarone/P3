@@ -1,7 +1,11 @@
 ﻿@page "/upload"
 @using System.IO
+@using SPFAdminSystem.Repository
 @inject IWebHostEnvironment env
 @inject NavigationManager NavManager
+
+
+
 
 <PageTitle>Upload</PageTitle>
 
@@ -11,8 +15,8 @@
             <div class="upload-button">
                 <label for="fileinput" class="label-wrapper">
                     <span class="oi oi-paperclip"></span>
-                    Upload price list file
-                    <InputFile OnChange="HandleSelectedFile" id="fileinput" style="width:0; height:0; overflow: hidden;" />
+                    Upload files here
+                    <InputFile OnChange="HandleSelectedFile" multiple id="fileinput" style="width:0; height:0; overflow: hidden;" />
                 </label>
             </div>  
         </div>
@@ -25,6 +29,8 @@
 </center>
 
 @code {
+    ProductRepository prod = new ProductRepository();
+
     string Message = "No files are selected";
     IReadOnlyList<IBrowserFile> selectedFiles;
     //href didn't work on the cancel button for some reason
@@ -33,32 +39,65 @@
     }
     //"selectedFiles gets 
     private void HandleSelectedFile(InputFileChangeEventArgs e){
-        selectedFiles = e.GetMultipleFiles();
-        Message = $"{selectedFiles[0].Name.ToString()} is chosen";
-        this.StateHasChanged();
+        try{
+            selectedFiles = e.GetMultipleFiles();
+            if(selectedFiles.Count != 3){
+                throw new Exception("");
+            }
+            Message = $"{selectedFiles.Count()} files are chosen";
+            this.StateHasChanged();
+        }catch(Exception s){
+            Message = s.Message;
+        }
+
     }
     private async void ContinueClicked() {
         /*As there is only one file, a list may be redundant*/
         /*Der skal implementeres errorhandling :) */
         try
         {
+            /*Ensuring 3 files are chosen*/
+            if (selectedFiles.Count != 3)
+            {
+                throw new Exception("Exactly 3 files must be chosen");
+            }
+            /*Check if filename is correct format*/
             foreach (var file in selectedFiles)
             {
-                /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
-                Stream stream = file.OpenReadStream(1000000);
-                /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
-                var path = $"{env.WebRootPath}\\{file.Name}";
-                FileStream fs = File.Create(path);
-                /*The file content is copied to the path*/
-                await stream.CopyToAsync(fs);
-                /*The two streams are closed again*/
-                stream.Close();
-                fs.Close();
+                string fileString = file.Name.ToString();
+                if ((fileString.StartsWith("Pricelist") || fileString.StartsWith("Mapping") || fileString.StartsWith("Produkter")))
+                {
+                    /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
+                    Stream stream = file.OpenReadStream(1000000);
+                    /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
+                    var path = $"{env.WebRootPath}\\{file.Name}";
+                    FileStream fs = File.Create(path);
+                    /*The file content is copied to the path*/
+                    await stream.CopyToAsync(fs);
+                    /*The two streams are closed again*/
+                    stream.Close();
+                    fs.Close();
+                }
+                else
+                {
+                    throw new Exception("Choose the correct files!");
+                }
+
             }
+            //GetExcelData();
             this.StateHasChanged();
             NavManager.NavigateTo("/mapping");
+            prod.HandleExcel("Produkter.xlsx");
+
         }catch(NullReferenceException e){
-            Message = "You have to add a price list file before continuing!";
+            Message = "You have to add the files before continuing!";
+        }catch(Exception f){
+            Message = f.Message;
         }
-}
+    }
+
+
+    private void GetExcelData(){
+
+    }
 }

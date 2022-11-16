@@ -1,6 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\SPFAdminSystem",
+    "\\SPFAdminSystem\\SPFAdminSystem",
+    "\\SPFAdminSystem\\SPFAdminSystem\\Pages"
   ],
+  "SelectedNode": "\\SPFAdminSystem\\SPFAdminSystem\\Pages\\Mapping.razor",
   "PreviewInSolutionExplorer": false
 }

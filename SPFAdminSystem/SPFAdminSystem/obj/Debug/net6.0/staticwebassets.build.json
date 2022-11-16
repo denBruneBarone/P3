@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "rdAeiyjZX7g04Y6oFm/nkz67j+qovNmY93AKZFI/oj0=",
+  "Hash": "TEgx5bzgR4yMo1785lPmsWfhyS8YHyqbU9BPYMWknJA=",
   "Source": "SPFAdminSystem",
   "BasePath": "_content/SPFAdminSystem",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "SPFAdminSystem\\wwwroot",
       "Source": "SPFAdminSystem",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "Pattern": "**"
     }
@@ -1037,10 +1037,10 @@
       "OriginalItemSpec": "C:\\Users\\rudnu\\.nuget\\packages\\microsoft.aspnetcore.identity.ui\\6.0.9\\staticwebassets\\V5\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SPFAdminSystem.styles.css",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SPFAdminSystem.styles.css",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "SPFAdminSystem.styles.css",
       "AssetKind": "All",
@@ -1051,13 +1051,13 @@
       "AssetTraitValue": "ApplicationBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SPFAdminSystem.styles.css"
+      "OriginalItemSpec": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\bundle\\SPFAdminSystem.styles.css"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "SPFAdminSystem.bundle.scp.css",
       "AssetKind": "All",
@@ -1068,13 +1068,13 @@
       "AssetTraitValue": "ProjectBundle",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\Debug\\net6.0\\scopedcss\\projectbundle\\SPFAdminSystem.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/bootstrap/bootstrap.min.css",
       "AssetKind": "All",
@@ -1088,10 +1088,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/bootstrap/bootstrap.min.css.map",
       "AssetKind": "All",
@@ -1105,10 +1105,10 @@
       "OriginalItemSpec": "wwwroot\\css\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/css/open-iconic-bootstrap.min.css",
       "AssetKind": "All",
@@ -1122,10 +1122,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\css\\open-iconic-bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.eot",
       "AssetKind": "All",
@@ -1139,10 +1139,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.eot"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.otf",
       "AssetKind": "All",
@@ -1156,10 +1156,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.otf"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.svg",
       "AssetKind": "All",
@@ -1173,10 +1173,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.svg"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.ttf",
       "AssetKind": "All",
@@ -1190,10 +1190,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.ttf"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/font/fonts/open-iconic.woff",
       "AssetKind": "All",
@@ -1207,10 +1207,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\font\\fonts\\open-iconic.woff"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\FONT-LICENSE",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/FONT-LICENSE",
       "AssetKind": "All",
@@ -1224,10 +1224,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\FONT-LICENSE"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\ICON-LICENSE",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/ICON-LICENSE",
       "AssetKind": "All",
@@ -1241,10 +1241,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\ICON-LICENSE"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\README.md",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\open-iconic\\README.md",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/open-iconic/README.md",
       "AssetKind": "All",
@@ -1258,10 +1258,10 @@
       "OriginalItemSpec": "wwwroot\\css\\open-iconic\\README.md"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\site.css",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\css\\site.css",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "css/site.css",
       "AssetKind": "All",
@@ -1275,10 +1275,10 @@
       "OriginalItemSpec": "wwwroot\\css\\site.css"
     },
     {
-      "Identity": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\favicon.ico",
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\favicon.ico",
       "SourceId": "SPFAdminSystem",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
       "BasePath": "_content/SPFAdminSystem",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
@@ -1290,6 +1290,57 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\Mapping.xlsx",
+      "SourceId": "SPFAdminSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "BasePath": "_content/SPFAdminSystem",
+      "RelativePath": "Mapping.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Mapping.xlsx"
+    },
+    {
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\Pricelist Europe__3.xls",
+      "SourceId": "SPFAdminSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "BasePath": "_content/SPFAdminSystem",
+      "RelativePath": "Pricelist Europe__3.xls",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Pricelist Europe__3.xls"
+    },
+    {
+      "Identity": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\Produkter.xlsx",
+      "SourceId": "SPFAdminSystem",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\",
+      "BasePath": "_content/SPFAdminSystem",
+      "RelativePath": "Produkter.xlsx",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Produkter.xlsx"
     }
   ]
 }

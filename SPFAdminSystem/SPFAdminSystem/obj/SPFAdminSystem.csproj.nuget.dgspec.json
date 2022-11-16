@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
+    "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
+    "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "projectUniqueName": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
         "projectName": "SPFAdminSystem",
-        "projectPath": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+        "projectPath": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
         "packagesPath": "C:\\Users\\rudnu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\rudnu\\Source\\Repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
+        "outputPath": "C:\\Users\\rudnu\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\rudnu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -40,6 +40,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "EPPlus": {
+              "target": "Package",
+              "version": "[6.1.0, )"
+            },
             "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.9, )"
@@ -51,6 +55,10 @@
             "Microsoft.AspNetCore.Identity.UI": {
               "target": "Package",
               "version": "[6.0.9, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[7.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
