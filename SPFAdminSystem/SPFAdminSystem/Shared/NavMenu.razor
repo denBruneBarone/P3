@@ -8,22 +8,51 @@
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
+    <nav class="flex-column h-100">
+        <AuthorizeView Roles="Admin, Employee">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="prodadmin" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Product Administration
+                </NavLink>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="admin">
+                    <span class="oi oi-people" aria-hidden="true"></span> User Management
+                </NavLink>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin, Employee">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="placeholder">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Future Feature
+                </NavLink>
+            </div>
+            <div class="position-absolute bottom-0 w-100">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="me">
+                        <span class="oi oi-person" aria-hidden="true"></span> Name
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="logout">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Logout
+                    </NavLink>
+                </div>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView>
+            <NotAuthorized>
+                                <div class="position-absolute bottom-0 w-100">
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link w-100" href="login">
+                            <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                        </NavLink>
+                    </div>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
 </div>
 
