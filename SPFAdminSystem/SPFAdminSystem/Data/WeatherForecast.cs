@@ -1,4 +1,4 @@
-namespace SPFAdminSystem.Data
+﻿namespace SPFAdminSystem.Data
 {
     public class WeatherForecast
     {
