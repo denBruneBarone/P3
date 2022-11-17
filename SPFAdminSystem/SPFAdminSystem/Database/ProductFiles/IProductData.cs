@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SPFAdminSystem.Database
+namespace SPFAdminSystem.Database.ProductFiles
 {
     public interface IProductData
     {
