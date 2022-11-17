@@ -68,11 +68,11 @@ public class Product
 
     public double? OrderPrice { get; set; }
 
-    public int? InStock { get; set; }
+    public int? StockAmount { get; set; }
 
-    public int? InOrder { get; set; }
+    public int? OrderAmount { get; set; }
 
-    public int? Available { get; set; }
+    public int? AvailableAmount { get; set; }
 
     public int? Ordered { get; set; }
 

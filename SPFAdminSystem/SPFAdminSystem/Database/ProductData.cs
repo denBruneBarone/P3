@@ -17,7 +17,7 @@ namespace SPFAdminSystem.Database
 
         public Task<List<Product>> GetProducts()
         {
-            string sql = "select * from dbo.Product";
+            string sql = "select * from Products";
 
             return _db.LoadData<Product, dynamic>(sql, new { });
         }
