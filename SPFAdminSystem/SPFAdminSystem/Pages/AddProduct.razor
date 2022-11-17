@@ -7,17 +7,18 @@
 
 @code {
 
-    private List<Product> products;
+    private List<Product> products = new();
     public async Task InsertProduct() {
 
         Product hejsa = new Product();
-        hejsa.ProductId = "1";
+        hejsa.ProductId = "4";
         hejsa.InHouseTitle = "test";
 
         await _db.InsertProduct(hejsa);
 
 
         products.Add(hejsa);
+        Console.WriteLine("Product Added");
     }
     }
 

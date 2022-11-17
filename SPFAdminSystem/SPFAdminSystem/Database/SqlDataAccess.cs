@@ -4,11 +4,13 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using System.IO;
 
 namespace SPFAdminSystem.Database
 {
@@ -25,9 +27,12 @@ namespace SPFAdminSystem.Database
 
         public async Task<List<T>> LoadData<T, U>(string sql, U parameters)
         {
-            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            string DbPath = System.IO.Path.Join(path, "Spilforsyning.db");
+            string connectionString = $"Data Source={DbPath}";
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 var data = await connection.QueryAsync<T>(sql, parameters);
 
@@ -37,9 +42,12 @@ namespace SPFAdminSystem.Database
 
         public async Task SaveData<T>(string sql, T parameters)
         {
-            string connectionString = _config.GetConnectionString(ConnectionStringName);
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            string DbPath = System.IO.Path.Join(path, "Spilforsyning.db");
+            string connectionString = $"Data Source={DbPath}";
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             {
                 object value = await connection.ExecuteAsync(sql, parameters);
             }

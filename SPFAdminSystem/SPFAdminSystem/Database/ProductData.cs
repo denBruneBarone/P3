@@ -24,7 +24,7 @@ namespace SPFAdminSystem.Database
 
         public Task InsertProduct(Product product)
         {
-            string sql = @"insert into dbo.Product (ProductId, InHouseTitle);";
+            string sql = "INSERT INTO Products (ProductId, InHouseTitle)" + "VALUES (@ProductId, @InHouseTitle);";
 
             return _db.SaveData(sql, product);
         }

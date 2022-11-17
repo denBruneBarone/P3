@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(SpilforsyningContext))]
-    partial class SpilforsyningContextModelSnapshot : ModelSnapshot
+    [Migration("20221117100516_fix")]
+    partial class fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -24,44 +27,45 @@ namespace SPFAdminSystem.Migrations
                     b.Property<DateTime?>("ArriveDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Available")
+                    b.Property<int>("Available")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Barcode")
+                    b.Property<int>("Barcode")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("InHouseTitle")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("InOrder")
+                    b.Property<int>("InOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("InStock")
+                    b.Property<int>("InStock")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("MinOrder")
+                    b.Property<int>("MinOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("OrderPrice")
+                    b.Property<double>("OrderPrice")
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("OrderQuantity")
+                    b.Property<int>("OrderQuantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Ordered")
+                    b.Property<int>("Ordered")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PackSize")
+                    b.Property<int>("PackSize")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("RemovedFromStockDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("Target")
+                    b.Property<int>("Target")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TitleGWS")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProductId");
