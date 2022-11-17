@@ -364,9 +364,9 @@ MigrationBackup/
 FodyWeavers.xsd
 =======
 # Project Specific
-SPFAdminSystem/*/bin/*
-*/obj/Debug/net6.0
-SPFAdminSystem/.vs/*
-.vs/*
+SPFAdminSystem/*/bin/
+SPFAdminSystem/*/obj/
+SPFAdminSystem/.vs/
+.vs/
 
 >>>>>>> Stashed changes:.gitignore

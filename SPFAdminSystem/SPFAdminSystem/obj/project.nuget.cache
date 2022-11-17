@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "H+j0jEhpXEoISmYra8mqXqimPm1PF7O6AmBBbCSp20C+7gk5WsYzzam9zEaFCmVdQETb1VfXfp7TDXv47/lsLw==",
+  "dgSpecHash": "PGtUdCJLwjql1EPDdUpN5Aozhue/N42UVGakPCFqZbmiOFJcyEiEOQ35exQ0WMh+QJl+p2JqaqdFYi2nagN11w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\peter\\source\\repos\\denBruneBarone\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
+  "projectFilePath": "C:\\source\\P3\\SPFAdminSystem\\SPFAdminSystem\\SPFAdminSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\peter\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\peter\\.nuget\\packages\\messagepack\\2.1.152\\messagepack.2.1.152.nupkg.sha512",
