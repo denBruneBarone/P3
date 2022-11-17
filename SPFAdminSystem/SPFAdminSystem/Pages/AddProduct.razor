@@ -1,41 +1,92 @@
 ﻿@page "/product"
+@attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database
 @inject IProductData _db
 
-<h3>AddProduct</h3>
-<input @bind=Id type="text" placeholder="Id" required/>
-<input @bind=Title type="text" placeholder="Title" required/>
-<button onclick="@InsertProduct">add product here</button>
+<h4>All Products</h4>
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>Inhouse Title</th>
+                <th>GWS Title</th>
+                <th>Order Price</th>
+                <th>Stock Amount</th>
+                <th>Order Amount</th>
+                <th>AvailableAmount</th>
+                <th>Ordered</th>
+                <th>Barcode</th>
+                <th>Pack Size</th>
+                <th>Target</th>
+                <th>MinOrder</th>
+                <th>Order Quantity</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.InHouseTitle</td>
+                    <td>@product.TitleGWS</td>
+                    <td>@product.OrderPrice</td>
+                    <td>@product.StockAmount</td>
+                    <td>@product.OrderAmount</td>
+                    <td>@product.AvailableAmount</td>
+                    <td>@product.Ordered</td>
+                    <td>@product.Barcode</td>
+                    <td>@product.PackSize</td>
+                    <td>@product.Target</td>
+                    <td>@product.MinOrder</td>
+                    <td>@product.OrderQuantity</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>AddProduct</h3>
+    <input @bind=Id type="text" placeholder="Id" required />
+    <input @bind=Title type="text" placeholder="Title" required />
+    <button onclick="@InsertProduct">add new product</button>
+}
+
+
+
 
 @code {
     public string Id { get; private set; }
     public string Title { get; private set; }
     private List<Product> products = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await _db.GetProducts();
+    }
+    
+
     public async Task InsertProduct() {
 
-        Product hejsa = new Product();
-        hejsa.ProductId = Id;
-        hejsa.InHouseTitle = Title;
+        Product p = new Product();
+        p.ProductId = Id;
+        p.InHouseTitle = Title;
 
-        await _db.InsertProduct(hejsa);
+        await _db.InsertProduct(p);
 
 
-        products.Add(hejsa);
+        products.Add(p);
         Console.WriteLine("Product Added");
     }
-    }
+
+    
 
 
-@code {
-    /* private async Task InsertPerson()
-    {
-
-        await _db.InsertPerson(p);
-
-        people.Add(p);
-
-        newPerson = new DisplayPersonModel();
-    }*/
 }
-
 
