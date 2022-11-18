@@ -1,0 +1,170 @@
+﻿@page "/match"
+@*/mapping*@
+
+<div id="topSpacer"></div>
+
+@*Container div holder alle andre divs*@
+@*I productList tjekkes om produktet fra list 1 er i list 2 og markere dem med rødt eller grønt*@
+@*matchProduct vise informationerne for produktet fra SF og GSM*@
+@*browseBtn er knappen der tillader at lede efter alle produkter*@
+
+<div class="container">
+    <div id="productList">
+        @{
+            string[] checkList = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10", "Item 11", "Item 12", "Item 13", "Item 14", "Item 15", "Item 16" };
+            int[] valuesSelect = { 1, 2, 3, 4, 5 };
+
+            string[] items = { "Item 4", "Item 7", "Item 8", "Item 9", "Item 4" };
+            int[] values = { 1, 2, 3, 4, 5};
+
+            int counter = 0;
+
+            foreach (var product in checkList)
+            {
+                if (!(items.Contains(product)))
+                {
+                    counter++;
+                }
+            }
+        }
+
+        <ul id="productListItems">
+            <li id="listTitle">@counter Unknown Products</li>
+            @foreach (var item in checkList)
+            {
+                if (items.Contains(item))
+                {
+                    <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item)) style="background-color: #b2dab6;" id="listButtons">@item</button></li>
+                }
+                else
+                {
+                    <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item)) style="background-color: #f3cac9;" id="listButtons">@item</button></li>
+                    counter++;
+                }
+            }
+        </ul>
+    </div>
+
+    @code{
+        string matchTitle = "";
+
+        private void GetValue(string item)
+        {
+            matchTitle = item;
+        }
+    }
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+    <div id="matchProduct">
+        @*Attempt to make a title for the "Match Product" but failed at width*@
+        <div id="matchProductTitle">
+        </div>
+
+        @*----------------------------------------------------------------------------------------------------------------------*@
+
+        <div id="leftItem">
+            <div id="itemTitle">
+                <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
+            </div>
+            <div id="currentInfoTitle">
+                <h3 style="text-align: center;">Current match information:</h3>
+            </div>
+            <div id="leftMatchItemsFlex">
+                <div id="currentInfo">
+                    <ul id="matchListLeft">
+                        @{
+                            int countItems = 0;
+                            foreach (var item in items)
+                            {
+                                if (countItems == 10)
+                                {
+                                    break;
+                                }
+                                <li id="itemLi">@item</li>
+                                countItems++;
+                            }
+                        }
+                    </ul>
+                </div>
+                <div id="currentInfoValues">
+                    <ul style="list-style: none;" id="matchListLeft">
+                        @{
+                            int countItemsValues = 0;
+                            foreach (var value in values)
+                            {
+                                if (countItemsValues == 10)
+                                {
+                                    break;
+                                }
+                                <li id="itemValueLi">@value</li>
+                                countItemsValues++;
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        @*----------------------------------------------------------------------------------------------------------------------*@
+
+        <div id="rightItem">
+            <div id="itemTitle">
+            </div>
+            <div id="currentInfoTitle">
+                <h3 style="text-align: center;">Selected match information:</h3>
+            </div>
+            <div id="leftMatchItemsFlex">
+                <div id="currentInfo">
+                    <ul id="matchListLeft">
+                        @{
+                            int countItemsR = 0;
+                            foreach (var item in checkList)
+                            {
+                                if (countItemsR == 10)
+                                {
+                                    break;
+                                }
+                                <li id="itemLi">@item</li>
+                                countItemsR++;
+                            }
+                        }
+                    </ul>
+                </div>
+                <div id="currentInfoValues">
+                    <ul style="list-style: none;" id="matchListLeft">
+                        @{
+                            int countItemsValuesR = 0;
+                            foreach (var value in valuesSelect)
+                            {
+                                if (countItemsValuesR == 10)
+                                {
+                                    break;
+                                }
+                                <li id="itemValueLi">@value</li>
+                                countItemsValuesR++;
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+    <div id="browseBtn">
+        <button id="browseBtnBlue">Browse all products</button>
+    </div>
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+</div>
+
+@*
+#b2dab6 - grøn
+#e6bdbc - m.rød
+#f3cac9 - l.rød
+#0288d1 - blå
+*@
