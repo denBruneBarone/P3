@@ -1,0 +1,84 @@
+﻿@page "/admin"
+@attribute [Authorize(Roles = "Administrator")]
+
+<PageTitle>User Administration</PageTitle>
+
+@using SPFAdminSystem.Authentication
+@using System.Web
+@inject UserAccountService userAccountService
+@inject IJSRuntime js
+
+<h1>User Administration</h1>
+
+<p>Here you can administer the users.</p>
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>USERS</h3>
+        </div>
+        @for (int i=0;i<userAccountService.Users.Count;i++){
+            <div class="mb-3">
+                <p>User: @userAccountService.Users[i].UserName, Role: @userAccountService.Users[i].Role</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
+        <div class="mb-3 text-center">
+            <h3>REGISTER</h3>
+        </div>
+        <div class="mb-3">
+            <label>User Name</label>
+            <input @bind="model.UserName" class="form-control" placeholder="User Name" />
+        </div>
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input @bind="model.FullName" class="form-control" placeholder="Full Name" />
+        </div>
+        <div class="mb-3">
+            <label>Password</label>
+            <input @bind="model.Password" type="password" class="form-control" placeholder="Password" />
+        </div>
+        <div>
+            <label>Role</label>
+            <select @bind="model.Role">
+                <option value="Employee">Employee</option>
+                <option value="Administrator">Administrator</option>
+            </select>
+        </div>
+        <div class="mb-3 d-grid gap-2">
+            <button @onclick="Register" class="btn btn-primary">Register</button>
+        </div>
+    </div>
+</div>
+@code {
+    private class Model {
+        public string FullName { get; set; }
+        public string UserName{ get; set; }
+        public string Role{ get; set; }
+        public string Password{ get; set; }
+    }
+    Model model = new Model();
+    private async void Register() {
+        var userAccount = userAccountService.GetByUserName(model.UserName);
+        if (userAccount != null)
+        {
+            await js.InvokeVoidAsync("alert", "User Already Exists");
+            return;
+        }
+        if (model.Role == null) {
+            // user has not chosen either of the roles, hence we assume he wanted to choose the first one
+            model.Role = "Employee";
+        }
+        try {
+            userAccountService.Add(new UserAccount { UserName = model.UserName, Password = model.Password, Role = model.Role });
+        }
+        catch (ArgumentNullException)
+        {
+            await js.InvokeVoidAsync("alert", "Error: Empty field passed");
+        }
+    }
+}
