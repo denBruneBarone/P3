@@ -52,6 +52,19 @@ namespace SPFAdminSystem.Database
             }
         }
 
+        public async Task SaveDataNoParams<T>(string sql)
+        {
+            var folder = Environment.SpecialFolder.LocalApplicationData;
+            var path = Environment.GetFolderPath(folder);
+            string DbPath = System.IO.Path.Join(path, "Spilforsyning.db");
+            string connectionString = $"Data Source={DbPath}";
+
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            {
+                object value = await connection.ExecuteAsync(sql);
+            }
+        }
+
         public async Task<T> GetSingleData<T>(string sql)
         {
             var folder = Environment.SpecialFolder.LocalApplicationData;

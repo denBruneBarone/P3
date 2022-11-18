@@ -1,0 +1,19 @@
+﻿@page "/insertFromExcel"
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
+@inject IProductData _db
+<h3>Dummy page for the Mapping functionality</h3>
+<button onclick=@logfiles>log from Excel</button>
+@code {
+    string hej = null;
+    private async void logfiles()
+    {
+        await _db.InsertExcel("Produkter.xlsx");
+        hej ="Product Added";
+    }
+}
+
+@if (hej != null)
+{
+    <h5>@hej</h5>
+}

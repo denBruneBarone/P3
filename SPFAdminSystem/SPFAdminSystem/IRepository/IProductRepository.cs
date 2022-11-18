@@ -4,7 +4,6 @@ namespace SPFAdminSystem.IRepository
 {
     public interface IProductRepository
     {
-        List<Product> HandleExcel(string fileName);
-
+        void HandleExcel(string fileName);
     }
 }

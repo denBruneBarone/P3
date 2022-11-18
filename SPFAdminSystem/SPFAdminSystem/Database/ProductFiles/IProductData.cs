@@ -8,5 +8,6 @@ namespace SPFAdminSystem.Database.ProductFiles
     {
         Task<List<Product>> GetProducts();
         Task InsertProduct(Product product);
+        Task InsertExcel(string Filename);
     }
 }
