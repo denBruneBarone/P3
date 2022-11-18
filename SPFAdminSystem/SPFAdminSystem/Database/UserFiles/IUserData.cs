@@ -8,5 +8,6 @@ namespace SPFAdminSystem.Database.UserFiles
     {
         Task<List<User>> GetUsers();
         Task InsertUser(User user);
+        Task<User> GetUserByName(string UserName);
     }
 }

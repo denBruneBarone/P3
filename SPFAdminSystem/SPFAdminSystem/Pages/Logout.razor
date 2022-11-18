@@ -1,0 +1,13 @@
+﻿@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@using SPFAdminSystem.Authentication
+@page "/logout"
+
+@code {
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        CustomAuthenticationStateProvider customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+        await customAuthStateProvider.UpdateAuthenticationState(null);
+        navManager.NavigateTo("/", true);
+    }
+}

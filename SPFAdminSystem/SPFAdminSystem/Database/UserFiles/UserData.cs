@@ -28,5 +28,12 @@ namespace SPFAdminSystem.Database.UserFiles
 
             return _db.SaveData(sql, user);
         }
+
+        public Task<User> GetUserByName(string UserName)
+        {
+            string sql = $"SELECT * FROM 'Users' WHERE UserName='{UserName}';";
+
+            return _db.GetSingleData<User>(sql);
+        }
     }
 }
