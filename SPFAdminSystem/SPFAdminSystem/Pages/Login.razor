@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @using SPFAdminSystem.Authentication
-@inject UserAccountService userAccountService
+@using SPFAdminSystem.Database
+@using SPFAdminSystem.Database.UserFiles
+@inject IUserData _db
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
@@ -35,7 +37,7 @@
 
     private async Task Authenticate()
     {
-        var userAccount = userAccountService.GetByUserName(model.UserName);
+        var userAccount = await _db.GetUserByName(model.UserName);
         if (userAccount == null || userAccount.Password != model.Password)
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");

@@ -3,6 +3,7 @@
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles
 @inject IUserData _db
+@inject IJSRuntime js
 
 <h5>All Users</h5>
 @if (users is null)
@@ -38,29 +39,30 @@ else
     </table>
 
     <h3>Add User</h3>
-    <input @bind=UserName type="text" placeholder="UserName" required />
-    <input @bind=Password type="text" placeholder="Password" required />
-    <input @bind=FullName type="text" placeholder="Full Name" required />
+    <input @bind=userName type="text" placeholder="UserName" required />
+    <input @bind=password type="text" placeholder="Password" required />
+    <input @bind=fullName type="text" placeholder="Full Name" required />
 
 
 
     <label for="role">User Role:</label>
-    <select name="role" id="role" @bind=Role>
-        <option value="employee">employee</option>
-        <option value="edmin">admin</option>
+    <select name="role" id="role" @bind=role>
+        <option value="Employee">employee</option>
+        <option value="Admin">admin</option>
     </select>
 
 
     <button onclick="@addUser">add new user</button>
-}
+    <button onclick="@getUserByName">Test Get User</button>
+}   
 
 @code {
     // Variables for input bind
-    public string UserName { get; private set; }
-    public string Password { get; private set; }
-    public string FullName { get; private set; }
-    public string Role { get; private set; }
-
+    public string userName { get; private set; }
+    public string password { get; private set; }
+    public string fullName { get; private set; }
+    public string role { get; private set; } = "Employee";
+    private User UserTest { get; set; }
 
     private List<User> users = new();
 
@@ -75,16 +77,25 @@ else
     {
 
         User u = new User();
-        u.UserName = UserName;
-        u.Password = Password;
-        u.FullName = FullName;
-        u.Role = Role;
+        u.UserName = userName;
+        u.Password = password;
+        u.FullName = fullName;
+        u.Role = role;
 
         await _db.InsertUser(u);
 
-
         users.Add(u);
         Console.WriteLine("User Added");
+    }
+
+    public async Task getUserByName() {
+        try 
+        {
+            UserTest = await _db.GetUserByName("fdsafdsa");
+        } catch(Exception)
+        {
+            await js.InvokeVoidAsync("alert", "Error: User Not Found");
+        }
     }
 }
 
