@@ -1,4 +1,9 @@
-﻿@page "/match"
+﻿@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
+@using System.Reflection
+@inject IProductData _db
+
+@page "/match"
 @*/mapping*@
 
 <div id="topSpacer"></div>
@@ -8,14 +13,18 @@
 @*matchProduct vise informationerne for produktet fra SF og GSM*@
 @*browseBtn er knappen der tillader at lede efter alle produkter*@
 
+<div class="tempButton">
+    <button @onclick="InsertProduct">Add products</button>
+</div>
 <div class="container">
     <div id="productList">
         @{
             string[] checkList = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10", "Item 11", "Item 12", "Item 13", "Item 14", "Item 15", "Item 16" };
             int[] valuesSelect = { 1, 2, 3, 4, 5 };
 
-            string[] items = { "Item 4", "Item 7", "Item 8", "Item 9", "Item 4" };
-            int[] values = { 1, 2, 3, 4, 5};
+
+            string[] items = { "ProductID", "InhouseTitle", "Barcode", "OrderQTY" };
+            int[] values = { 1, 2, 3, 4, 5 };
 
             int counter = 0;
 
@@ -30,29 +39,22 @@
 
         <ul id="productListItems">
             <li id="listTitle">@counter Unknown Products</li>
-            @foreach (var item in checkList)
+            @foreach (var item in products)
             {
-                if (items.Contains(item))
+                if (products.Contains(item))
                 {
-                    <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item)) style="background-color: #b2dab6;" id="listButtons">@item</button></li>
+                    <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #b2dab6;" id="listButtons">@item.InHouseTitle</button></li>
                 }
                 else
                 {
-                    <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item)) style="background-color: #f3cac9;" id="listButtons">@item</button></li>
+                    <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
                     counter++;
                 }
             }
         </ul>
+
     </div>
 
-    @code{
-        string matchTitle = "";
-
-        private void GetValue(string item)
-        {
-            matchTitle = item;
-        }
-    }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -73,96 +75,162 @@
             <div id="leftMatchItemsFlex">
                 <div id="currentInfo">
                     <ul id="matchListLeft">
-                        @{
-                            int countItems = 0;
-                            foreach (var item in items)
-                            {
-                                if (countItems == 10)
+                        @code {
+                                for (int i = 0; i < products.Count(); i++)
                                 {
-                                    break;
+                                    foreach (PropertyInfo prop in products[i].GetType().GetProperties())
+                                    {
+                                        if(prop.GetValue(products[i].ProductId, null) == matchTitle){
+                                            Console.WriteLine("WORKS!!");
+                                        }
+                                    }
                                 }
-                                <li id="itemLi">@item</li>
-                                countItems++;
-                            }
+                                    foreach (PropertyInfo prop in products[0].GetType().GetProperties())
+                                    {
+                                        <li id="itemLi">@prop.Name</li>
+                                    }
                         }
-                    </ul>
+                            </ul>
+                        </div>
+                        <div id="currentInfoValues">
+                            <ul style="list-style: none;" id="matchListLeft">
+                                        @{
+                                            foreach (PropertyInfo prop in products[0].GetType().GetProperties())
+                                            {
+                                                if (prop.GetValue(products[0], null) != null)
+                                                {
+                                            <li id="itemLi">@prop.GetValue(products[0], null).ToString()</li>
+                                                }
+                                                else
+                                                {
+                                            <li id="itemLi"></li>
+                                                }
+                                            }
+                                        }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div id="currentInfoValues">
-                    <ul style="list-style: none;" id="matchListLeft">
-                        @{
-                            int countItemsValues = 0;
-                            foreach (var value in values)
-                            {
-                                if (countItemsValues == 10)
-                                {
-                                    break;
-                                }
-                                <li id="itemValueLi">@value</li>
-                                countItemsValues++;
-                            }
-                        }
-                    </ul>
+
+                                @*----------------------------------------------------------------------------------------------------------------------*@
+
+                <div id="rightItem">
+                    <div id="itemTitle">
+                    </div>
+                    <div id="currentInfoTitle">
+                        <h3 style="text-align: center;">Selected match information:</h3>
+                    </div>
+                    <div id="leftMatchItemsFlex">
+                        <div id="currentInfo">
+                            <ul id="matchListLeft">
+                                                @{
+                                                    int countItemsR = 0;
+                                                    foreach (var item in checkList)
+                                                    {
+                                                        if (countItemsR == 10)
+                                                        {
+                                                            break;
+                                                        }
+                                        <li id="itemLi">@item</li>
+                                                        countItemsR++;
+                                                    }
+                                                }
+                            </ul>
+                        </div>
+                        <div id="currentInfoValues">
+                            <ul style="list-style: none;" id="matchListLeft">
+                                                @{
+                                                    int countItemsValuesR = 0;
+                                                    foreach (var value in valuesSelect)
+                                                    {
+                                                        if (countItemsValuesR == 10)
+                                                        {
+                                                            break;
+                                                        }
+                                        <li id="itemValueLi">@value</li>
+                                                        countItemsValuesR++;
+                                                    }
+                                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
+                                @*----------------------------------------------------------------------------------------------------------------------*@
+
+            <div id="browseBtn">
+                <button id="browseBtnBlue">Browse all products</button>
+            </div>
+
+                                @*----------------------------------------------------------------------------------------------------------------------*@
+
         </div>
 
-        @*----------------------------------------------------------------------------------------------------------------------*@
+                                @code {
 
-        <div id="rightItem">
-            <div id="itemTitle">
-            </div>
-            <div id="currentInfoTitle">
-                <h3 style="text-align: center;">Selected match information:</h3>
-            </div>
-            <div id="leftMatchItemsFlex">
-                <div id="currentInfo">
-                    <ul id="matchListLeft">
-                        @{
-                            int countItemsR = 0;
-                            foreach (var item in checkList)
-                            {
-                                if (countItemsR == 10)
+                                string matchTitle = "";
+
+                                private void GetValue(string item)
                                 {
-                                    break;
+                                    matchTitle = item;
                                 }
-                                <li id="itemLi">@item</li>
-                                countItemsR++;
-                            }
-                        }
-                    </ul>
-                </div>
-                <div id="currentInfoValues">
-                    <ul style="list-style: none;" id="matchListLeft">
-                        @{
-                            int countItemsValuesR = 0;
-                            foreach (var value in valuesSelect)
-                            {
-                                if (countItemsValuesR == 10)
+
+                                /*Get products from database and insert products into database*/
+                                public string Id { get; private set; }
+                                public string Title { get; private set; }
+                                private List<Product> products = new();
+
+
+                                protected override async Task OnInitializedAsync()
                                 {
-                                    break;
+                                    products = await _db.GetProducts();
                                 }
-                                <li id="itemValueLi">@value</li>
-                                countItemsValuesR++;
-                            }
-                        }
-                    </ul>
-                </div>
-            </div>
-        </div>
 
-    </div>
 
-    @*----------------------------------------------------------------------------------------------------------------------*@
+                                public async Task InsertProduct()
+                                {
 
-    <div id="browseBtn">
-        <button id="browseBtnBlue">Browse all products</button>
-    </div>
+                                    Product p = new();
+                                    Product a = new();
+                                    Product b = new();
+                                    Product i = new();
+                                    p.ProductId = "1";
+                                    p.InHouseTitle = "ragnarok";
+                                    p.Barcode = 24311231;
+                                    p.OrderQuantity = 4;
 
-    @*----------------------------------------------------------------------------------------------------------------------*@
+                                    a.ProductId = "2";
+                                    a.InHouseTitle = "Destiny";
+                                    a.Barcode = 24311531;
+                                    a.OrderQuantity = 3;
 
-</div>
+                                    b.ProductId = "3";
+                                    b.InHouseTitle = "CSGO";
+                                    b.Barcode = 24331231;
+                                    b.OrderQuantity = 5;
 
-@*
+                                    i.ProductId = "4";
+                                    i.InHouseTitle = "BOTW";
+                                    i.Barcode = 24311233;
+                                    i.OrderQuantity = 6;
+
+
+                                    await _db.InsertProduct(p);
+                                    await _db.InsertProduct(a);
+                                    await _db.InsertProduct(b);
+                                    await _db.InsertProduct(i);
+
+
+                                    products.Add(p);
+                                    products.Add(a);
+                                    products.Add(b);
+                                    products.Add(i);
+                                    Console.WriteLine("Product(s) Added");
+                                }
+    }
+                            @*
 #b2dab6 - grøn
 #e6bdbc - m.rød
 #f3cac9 - l.rød

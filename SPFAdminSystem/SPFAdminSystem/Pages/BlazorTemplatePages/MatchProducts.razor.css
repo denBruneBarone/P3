@@ -96,9 +96,12 @@ li {
     height: 100%;
     width: 80%;
     height: 500px;
-    max-width: 300px;
+    max-width: 400px;
     border: 2px solid black;
     margin: auto;
+    overflow: scroll;
+    -webkit-overflow-scrolling: auto;
+    overflow-x: hidden;
 }
 
 #currentInfoValues {
