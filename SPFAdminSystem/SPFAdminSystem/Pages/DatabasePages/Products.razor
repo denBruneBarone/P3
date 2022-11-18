@@ -1,9 +1,10 @@
-﻿@page "/product"
+﻿@page "/products"
 @attribute [Authorize(Roles = "Admin, Employee")];
-@using SPFAdminSystem.Database
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
 @inject IProductData _db
 
-<h4>All Products</h4>
+<h5>All Products</h5>
 @if (products is null)
 {
     <p><em>Loading...</em></p>

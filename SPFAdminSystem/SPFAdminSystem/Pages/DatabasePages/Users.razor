@@ -1,0 +1,90 @@
+﻿@page "/users"
+@attribute [Authorize(Roles = "Admin")];
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.UserFiles
+@inject IUserData _db
+
+<h5>All Users</h5>
+@if (users is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>UserName</th>
+                <th>Password</th>
+                <th>Full Name</th>
+                <th>Role</th>
+
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.UserName</td>
+                    <td>****************</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Add User</h3>
+    <input @bind=UserName type="text" placeholder="UserName" required />
+    <input @bind=Password type="text" placeholder="Password" required />
+    <input @bind=FullName type="text" placeholder="Full Name" required />
+
+
+
+    <label for="role">User Role:</label>
+    <select name="role" id="role" @bind=Role>
+        <option value="employee">employee</option>
+        <option value="edmin">admin</option>
+    </select>
+
+
+    <button onclick="@addUser">add new user</button>
+}
+
+@code {
+    // Variables for input bind
+    public string UserName { get; private set; }
+    public string Password { get; private set; }
+    public string FullName { get; private set; }
+    public string Role { get; private set; }
+
+
+    private List<User> users = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        users = await _db.GetUsers();
+    }
+
+
+    public async Task addUser()
+    {
+
+        User u = new User();
+        u.UserName = UserName;
+        u.Password = Password;
+        u.FullName = FullName;
+        u.Role = Role;
+
+        await _db.InsertUser(u);
+
+
+        users.Add(u);
+        Console.WriteLine("User Added");
+    }
+}
+

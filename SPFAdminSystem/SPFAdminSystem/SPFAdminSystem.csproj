@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Users.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="DataAccessLibrary\.vs\VSWorkspaceState.json" />
   </ItemGroup>
 
@@ -17,6 +21,7 @@
     <None Include="DataAccessLibrary\.vs\DataAccessLibrary\FileContentIndex\read.lock" />
     <None Include="DataAccessLibrary\.vs\slnx.sqlite" />
     <None Include="Database\DataAccessLibrary.csproj" />
+    <None Include="Pages\DatabasePages\Users.razor" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +44,14 @@
     <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\v17\" />
     <Folder Include="DataAccessLibrary\bin\Debug\netstandard2.0\" />
     <Folder Include="DataAccessLibrary\bin\Release\netstandard2.0\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Pages\Users.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Users.razor" />
   </ItemGroup>
 
 </Project>

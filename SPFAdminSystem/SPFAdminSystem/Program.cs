@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using SPFAdminSystem.Areas.Identity;
 using SPFAdminSystem.Data;
 using SPFAdminSystem.Database;
+using SPFAdminSystem.Database.ProductFiles;
+using SPFAdminSystem.Database.UserFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IProductData, ProductData>();
+builder.Services.AddTransient<IUserData, UserData>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
 
 var app = builder.Build();
