@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
-using SPFAdminSystem.Areas.Identity;
 using SPFAdminSystem.Authentication;
 using SPFAdminSystem.Data;
 using SPFAdminSystem.Database;
