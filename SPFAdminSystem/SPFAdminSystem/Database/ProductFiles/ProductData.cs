@@ -51,7 +51,18 @@ namespace SPFAdminSystem.Database.ProductFiles
                     products.Add(prod);
                 }
             }
-            string sql = "INSERT INTO Products (ProductId, InHouseTitle)" + $"VALUES (\"{products[0].ProductId}\", \"{products[0].InHouseTitle}\");";
+            /* sql-streng får syntaks fra opslaget på StackOverflow:
+            https://stackoverflow.com/questions/1609637/is-it-possible-to-insert-multiple-rows-at-a-time-in-an-sqlite-database */
+            string sql = "INSERT INTO Products (ProductId, InHouseTitle)" + "VALUES ";
+            foreach (Product product in products)
+            {
+                sql += $"(\"{product.ProductId}\", \"{product.InHouseTitle}\"),";
+            }
+            if (sql[sql.Length-1] == ',')
+            {
+                sql = sql.Substring(0, sql.Length - 1);
+            }
+            sql += ";";
             return _db.SaveDataNoParams<string>(sql);
         }
     }
