@@ -24,7 +24,8 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         public Task InsertProduct(Product product)
         {
-            string sql = "INSERT INTO Products (ProductId, InHouseTitle)" + "VALUES (@ProductId, @InHouseTitle);";
+            string sql = "INSERT INTO Products (ProductId, InHouseTitle, Barcode, ArriveDate, AvailableAmount, OrderAmount, StockAmount, MinOrder, OrderPrice, OrderQuantity, Ordered, PackSize, RemovedFromStockDate, Target, TitleGWS)" +
+                                       "VALUES (@ProductId, @InHouseTitle, @Barcode, @ArriveDate, @AvailableAmount, @OrderAmount, @StockAmount, @MinOrder, @OrderPrice, @OrderQuantity, @Ordered, @PackSize, @RemovedFromStockDate, @Target, @TitleGWS);";
 
             return _db.SaveData(sql, product);
         }

@@ -1,7 +1,7 @@
 ﻿@using SPFAdminSystem.Database;
-@using SPFAdminSystem.Database.ProductFiles
-@using System.Reflection
-@inject IProductData _db
+@using SPFAdminSystem.Database.ProductFiles;
+@using System.Reflection;
+@inject IProductData _db;
 
 @page "/match"
 @*/mapping*@
@@ -19,42 +19,21 @@
 <div class="container">
     <div id="productList">
         @{
-            string[] checkList = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10", "Item 11", "Item 12", "Item 13", "Item 14", "Item 15", "Item 16" };
-            int[] valuesSelect = { 1, 2, 3, 4, 5 };
-
-
-            string[] items = { "ProductID", "InhouseTitle", "Barcode", "OrderQTY" };
-            int[] values = { 1, 2, 3, 4, 5 };
-
-            int counter = 0;
-
-            foreach (var product in checkList)
-            {
-                if (!(items.Contains(product)))
-                {
-                    counter++;
-                }
-            }
+            counter = products.Count();
         }
-
+        <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
-            <li id="listTitle">@counter Unknown Products</li>
+            @{counter = 0;}
             @foreach (var item in products)
             {
                 if (products.Contains(item))
-                {
-                    <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #b2dab6;" id="listButtons">@item.InHouseTitle</button></li>
-                }
-                else
                 {
                     <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
                     counter++;
                 }
             }
         </ul>
-
     </div>
-
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -64,173 +43,486 @@
         </div>
 
         @*----------------------------------------------------------------------------------------------------------------------*@
-
-        <div id="leftItem">
-            <div id="itemTitle">
-                <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
-            </div>
-            <div id="currentInfoTitle">
-                <h3 style="text-align: center;">Current match information:</h3>
-            </div>
-            <div id="leftMatchItemsFlex">
-                <div id="currentInfo">
-                    <ul id="matchListLeft">
-                        @code {
-                                for (int i = 0; i < products.Count(); i++)
-                                {
-                                    foreach (PropertyInfo prop in products[i].GetType().GetProperties())
-                                    {
-                                        if(prop.GetValue(products[i].ProductId, null) == matchTitle){
-                                            Console.WriteLine("WORKS!!");
-                                        }
-                                    }
-                                }
-                                    foreach (PropertyInfo prop in products[0].GetType().GetProperties())
-                                    {
-                                        <li id="itemLi">@prop.Name</li>
-                                    }
-                        }
-                            </ul>
-                        </div>
-                        <div id="currentInfoValues">
-                            <ul style="list-style: none;" id="matchListLeft">
-                                        @{
-                                            foreach (PropertyInfo prop in products[0].GetType().GetProperties())
-                                            {
-                                                if (prop.GetValue(products[0], null) != null)
-                                                {
-                                            <li id="itemLi">@prop.GetValue(products[0], null).ToString()</li>
-                                                }
-                                                else
-                                                {
-                                            <li id="itemLi"></li>
-                                                }
-                                            }
-                                        }
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                                @*----------------------------------------------------------------------------------------------------------------------*@
-
-                <div id="rightItem">
+        @{
+            if (products.Count() > 0)
+            {
+                <div id="leftItem">
                     <div id="itemTitle">
+                        <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
                     </div>
                     <div id="currentInfoTitle">
-                        <h3 style="text-align: center;">Selected match information:</h3>
+                        <h3 style="text-align: center;">Current match information:</h3>
                     </div>
                     <div id="leftMatchItemsFlex">
                         <div id="currentInfo">
                             <ul id="matchListLeft">
-                                                @{
-                                                    int countItemsR = 0;
-                                                    foreach (var item in checkList)
-                                                    {
-                                                        if (countItemsR == 10)
-                                                        {
-                                                            break;
-                                                        }
-                                        <li id="itemLi">@item</li>
-                                                        countItemsR++;
-                                                    }
-                                                }
+                                @{
+                                    foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                    {
+                                        <li id="itemLiTitles">@prop.Name</li>
+                                    }
+                                }
                             </ul>
                         </div>
+
                         <div id="currentInfoValues">
                             <ul style="list-style: none;" id="matchListLeft">
-                                                @{
-                                                    int countItemsValuesR = 0;
-                                                    foreach (var value in valuesSelect)
-                                                    {
-                                                        if (countItemsValuesR == 10)
-                                                        {
-                                                            break;
-                                                        }
-                                        <li id="itemValueLi">@value</li>
-                                                        countItemsValuesR++;
-                                                    }
-                                                }
+                                @{
+                                    foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                    {
+                                        if (prop.GetValue(products[chosenProduct], null) != null)
+                                        {
+                                            if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                            {
+                                                <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                            }
+                                            else
+                                            {
+                                                <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li id="itemLi"></li>
+                                        }
+                                    }
+                                }
                             </ul>
                         </div>
                     </div>
                 </div>
+            }
+        }
+        @*----------------------------------------------------------------------------------------------------------------------*@
 
+        <div id="rightItem">
+            <div id="itemTitle">
             </div>
-
-                                @*----------------------------------------------------------------------------------------------------------------------*@
-
-            <div id="browseBtn">
-                <button id="browseBtnBlue">Browse all products</button>
+            <div id="currentInfoTitle">
+                <h3 style="text-align: center;">Selected match information:</h3>
             </div>
-
-                                @*----------------------------------------------------------------------------------------------------------------------*@
-
+            <div id="leftMatchItemsFlex">
+                <div id="currentInfo">
+                    <ul id="matchListLeft">
+                        @{
+                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                            {
+                                <li id="itemLiTitles">@prop.Name</li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div id="currentInfoValues">
+                    <ul style="list-style: none;" id="matchListLeft">
+                        @{
+                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                            {
+                                if (prop.GetValue(products[chosenProduct], null) != null)
+                                {
+                                    if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                    {
+                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                    }
+                                    else
+                                    {
+                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li id="itemLi"></li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
         </div>
+    </div>
 
-                                @code {
+    @*----------------------------------------------------------------------------------------------------------------------*@
 
-                                string matchTitle = "";
+    <div id="browseBtn">
+        <button id="browseBtnBlue">Browse all products</button>
+    </div>
 
-                                private void GetValue(string item)
-                                {
-                                    matchTitle = item;
-                                }
+    @*----------------------------------------------------------------------------------------------------------------------*@
 
-                                /*Get products from database and insert products into database*/
-                                public string Id { get; private set; }
-                                public string Title { get; private set; }
-                                private List<Product> products = new();
+</div>
 
+@*----------------------------------------------------------------------------------------------------------------------*@
 
-                                protected override async Task OnInitializedAsync()
-                                {
-                                    products = await _db.GetProducts();
-                                }
+@code {
+    int counter = 0;
 
+    string matchTitle = "";
 
-                                public async Task InsertProduct()
-                                {
+    private void GetValue(string item)
+    {
+        matchTitle = item;
 
-                                    Product p = new();
-                                    Product a = new();
-                                    Product b = new();
-                                    Product i = new();
-                                    p.ProductId = "1";
-                                    p.InHouseTitle = "ragnarok";
-                                    p.Barcode = 24311231;
-                                    p.OrderQuantity = 4;
-
-                                    a.ProductId = "2";
-                                    a.InHouseTitle = "Destiny";
-                                    a.Barcode = 24311531;
-                                    a.OrderQuantity = 3;
-
-                                    b.ProductId = "3";
-                                    b.InHouseTitle = "CSGO";
-                                    b.Barcode = 24331231;
-                                    b.OrderQuantity = 5;
-
-                                    i.ProductId = "4";
-                                    i.InHouseTitle = "BOTW";
-                                    i.Barcode = 24311233;
-                                    i.OrderQuantity = 6;
-
-
-                                    await _db.InsertProduct(p);
-                                    await _db.InsertProduct(a);
-                                    await _db.InsertProduct(b);
-                                    await _db.InsertProduct(i);
-
-
-                                    products.Add(p);
-                                    products.Add(a);
-                                    products.Add(b);
-                                    products.Add(i);
-                                    Console.WriteLine("Product(s) Added");
-                                }
+        UpdateMatch(matchTitle);
     }
-                            @*
+
+    int chosenProduct = 0;
+
+    private void UpdateMatch(string currentProduct)
+    {
+        for (int i = 0; i < products.Count(); i++)
+        {
+            foreach (PropertyInfo prop in products[i].GetType().GetProperties())
+            {
+                if (prop.GetValue(products[i], null) != null)
+                {
+                    if (products[i].InHouseTitle == matchTitle)
+                    {
+                        chosenProduct = i;
+                    }
+                }
+            }
+        }
+    }
+
+    /*Get products from database and insert products into database*/
+    private List<Product> products = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await _db.GetProducts();
+    }
+
+    public async Task InsertProduct()
+    {
+        Product p = new();
+        Product a = new();
+        Product b = new();
+        Product i = new();
+        Product k = new();
+        Product f = new();
+        Product o = new();
+        Product u = new();
+        Product y = new();
+        Product g = new();
+        Product c = new();
+        Product x = new();
+        Product s = new();
+        Product q = new();
+        Product t = new();
+        Product r = new();
+        Product d = new();
+        Product m = new();
+        p.ProductId = "1";
+        p.ArriveDate = new DateTime(1996, 08, 16);
+        p.AvailableAmount = 555;
+        p.Barcode = 24311231;
+        p.InHouseTitle = "ragnarok";
+        p.OrderAmount = 12;
+        p.StockAmount = 6;
+        p.MinOrder = 69;
+        p.OrderPrice = 669.31;
+        p.OrderQuantity = 4;
+        p.Ordered = 1;
+        p.PackSize = 15;
+        p.RemovedFromStockDate = new DateTime(2002, 07, 13);
+        p.Target = 64;
+        p.TitleGWS = "GWStitle";
+
+        a.ProductId = "2";
+        a.ArriveDate = new DateTime(1994, 12, 16);
+        a.AvailableAmount = 55;
+        a.Barcode = 24311232;
+        a.InHouseTitle = "narok";
+        a.OrderAmount = 13;
+        a.StockAmount = 7;
+        a.MinOrder = 89;
+        a.OrderPrice = 69.31;
+        a.OrderQuantity = 2;
+        a.Ordered = 2;
+        a.PackSize = 111;
+        a.RemovedFromStockDate = new DateTime(2012, 11, 13);
+        a.Target = 6;
+        a.TitleGWS = "GWStitle2";
+
+        b.ProductId = "3";
+        b.ArriveDate = new DateTime(1990, 01, 16);
+        b.AvailableAmount = 5;
+        b.Barcode = 24311233;
+        b.InHouseTitle = "ok";
+        b.OrderAmount = 1;
+        b.StockAmount = 2;
+        b.MinOrder = 8;
+        b.OrderPrice = 6.3;
+        b.OrderQuantity = 3;
+        b.Ordered = 6;
+        b.PackSize = 11;
+        b.RemovedFromStockDate = new DateTime(2016, 01, 03);
+        b.Target = 3;
+        b.TitleGWS = "GWStitle3";
+
+        i.ProductId = "4";
+        i.ArriveDate = new DateTime(2022, 01, 16);
+        i.AvailableAmount = 3;
+        i.Barcode = 24311234;
+        i.InHouseTitle = "YE";
+        i.OrderAmount = 3;
+        i.StockAmount = 55;
+        i.MinOrder = 66;
+        i.OrderPrice = 66.3;
+        i.OrderQuantity = 8;
+        i.Ordered = 333;
+        i.PackSize = 12;
+        i.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        i.Target = 34;
+        i.TitleGWS = "GWStitle4";
+
+        k.ProductId = "5";
+        k.ArriveDate = new DateTime(2022, 01, 16);
+        k.AvailableAmount = 3;
+        k.Barcode = 24311234;
+        k.InHouseTitle = "YE1";
+        k.OrderAmount = 3;
+        k.StockAmount = 55;
+        k.MinOrder = 66;
+        k.OrderPrice = 66.3;
+        k.OrderQuantity = 8;
+        k.Ordered = 333;
+        k.PackSize = 12;
+        k.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        k.Target = 34;
+        k.TitleGWS = "GWStitle4";
+
+        f.ProductId = "6";
+        f.ArriveDate = new DateTime(2022, 01, 16);
+        f.AvailableAmount = 3;
+        f.Barcode = 24311234;
+        f.InHouseTitle = "YE2";
+        f.OrderAmount = 3;
+        f.StockAmount = 55;
+        f.MinOrder = 66;
+        f.OrderPrice = 66.3;
+        f.OrderQuantity = 8;
+        f.Ordered = 333;
+        f.PackSize = 12;
+        f.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        f.Target = 34;
+        f.TitleGWS = "GWStitle4";
+
+        o.ProductId = "7";
+        o.ArriveDate = new DateTime(2022, 01, 16);
+        o.AvailableAmount = 3;
+        o.Barcode = 24311234;
+        o.InHouseTitle = "YE3";
+        o.OrderAmount = 3;
+        o.StockAmount = 55;
+        o.MinOrder = 66;
+        o.OrderPrice = 66.3;
+        o.OrderQuantity = 8;
+        o.Ordered = 333;
+        o.PackSize = 12;
+        o.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        o.Target = 34;
+        o.TitleGWS = "GWStitle4";
+
+        u.ProductId = "8";
+        u.ArriveDate = new DateTime(2022, 01, 16);
+        u.AvailableAmount = 3;
+        u.Barcode = 24311234;
+        u.InHouseTitle = "YE4";
+        u.OrderAmount = 3;
+        u.StockAmount = 55;
+        u.MinOrder = 66;
+        u.OrderPrice = 66.3;
+        u.OrderQuantity = 8;
+        u.Ordered = 333;
+        u.PackSize = 12;
+        u.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        u.Target = 34;
+        u.TitleGWS = "GWStitle4";
+
+        y.ProductId = "9";
+        y.ArriveDate = new DateTime(2022, 01, 16);
+        y.AvailableAmount = 3;
+        y.Barcode = 24311234;
+        y.InHouseTitle = "YE5";
+        y.OrderAmount = 3;
+        y.StockAmount = 55;
+        y.MinOrder = 66;
+        y.OrderPrice = 66.3;
+        y.OrderQuantity = 8;
+        y.Ordered = 333;
+        y.PackSize = 12;
+        y.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        y.Target = 34;
+        y.TitleGWS = "GWStitle4";
+
+        g.ProductId = "10";
+        g.ArriveDate = new DateTime(2022, 01, 16);
+        g.AvailableAmount = 3;
+        g.Barcode = 24311234;
+        g.InHouseTitle = "YE6";
+        g.OrderAmount = 3;
+        g.StockAmount = 55;
+        g.MinOrder = 66;
+        g.OrderPrice = 66.3;
+        g.OrderQuantity = 8;
+        g.Ordered = 333;
+        g.PackSize = 12;
+        g.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        g.Target = 34;
+        g.TitleGWS = "GWStitle4";
+
+        c.ProductId = "11";
+        c.ArriveDate = new DateTime(2022, 01, 16);
+        c.AvailableAmount = 3;
+        c.Barcode = 24311234;
+        c.InHouseTitle = "YE7";
+        c.OrderAmount = 3;
+        c.StockAmount = 55;
+        c.MinOrder = 66;
+        c.OrderPrice = 66.3;
+        c.OrderQuantity = 8;
+        c.Ordered = 333;
+        c.PackSize = 12;
+        c.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        c.Target = 34;
+        c.TitleGWS = "GWStitle4";
+
+        x.ProductId = "12";
+        x.ArriveDate = new DateTime(2022, 01, 16);
+        x.AvailableAmount = 3;
+        x.Barcode = 24311234;
+        x.InHouseTitle = "YE8";
+        x.OrderAmount = 3;
+        x.StockAmount = 55;
+        x.MinOrder = 66;
+        x.OrderPrice = 66.3;
+        x.OrderQuantity = 8;
+        x.Ordered = 333;
+        x.PackSize = 12;
+        x.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        x.Target = 34;
+        x.TitleGWS = "GWStitle4";
+
+        s.ProductId = "13";
+        s.ArriveDate = new DateTime(2022, 01, 16);
+        s.AvailableAmount = 3;
+        s.Barcode = 24311234;
+        s.InHouseTitle = "YE9";
+        s.OrderAmount = 3;
+        s.StockAmount = 55;
+        s.MinOrder = 66;
+        s.OrderPrice = 66.3;
+        s.OrderQuantity = 8;
+        s.Ordered = 333;
+        s.PackSize = 12;
+        s.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        s.Target = 34;
+        s.TitleGWS = "GWStitle4";
+
+        q.ProductId = "14";
+        q.ArriveDate = new DateTime(2022, 01, 16);
+        q.AvailableAmount = 3;
+        q.Barcode = 24311234;
+        q.InHouseTitle = "YE10";
+        q.OrderAmount = 3;
+        q.StockAmount = 55;
+        q.MinOrder = 66;
+        q.OrderPrice = 66.3;
+        q.OrderQuantity = 8;
+        q.Ordered = 333;
+        q.PackSize = 12;
+        q.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        q.Target = 34;
+        q.TitleGWS = "GWStitle4";
+
+        t.ProductId = "15";
+        t.ArriveDate = new DateTime(2022, 01, 16);
+        t.AvailableAmount = 3;
+        t.Barcode = 24311234;
+        t.InHouseTitle = "YE11";
+        t.OrderAmount = 3;
+        t.StockAmount = 55;
+        t.MinOrder = 66;
+        t.OrderPrice = 66.3;
+        t.OrderQuantity = 8;
+        t.Ordered = 333;
+        t.PackSize = 12;
+        t.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        t.Target = 34;
+        t.TitleGWS = "GWStitle4";
+
+        r.ProductId = "16";
+        r.ArriveDate = new DateTime(2022, 01, 16);
+        r.AvailableAmount = 3;
+        r.Barcode = 24311234;
+        r.InHouseTitle = "YE12";
+        r.OrderAmount = 3;
+        r.StockAmount = 55;
+        r.MinOrder = 66;
+        r.OrderPrice = 66.3;
+        r.OrderQuantity = 8;
+        r.Ordered = 333;
+        r.PackSize = 12;
+        r.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        r.Target = 34;
+        r.TitleGWS = "GWStitle4";
+
+        d.ProductId = "17";
+        d.ArriveDate = new DateTime(2022, 01, 16);
+        d.AvailableAmount = 3;
+        d.Barcode = 24311234;
+        d.InHouseTitle = "YE13";
+        d.OrderAmount = 3;
+        d.StockAmount = 55;
+        d.MinOrder = 66;
+        d.OrderPrice = 66.3;
+        d.OrderQuantity = 8;
+        d.Ordered = 333;
+        d.PackSize = 12;
+        d.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        d.Target = 34;
+        d.TitleGWS = "GWStitle4";
+
+        m.ProductId = "18";
+        m.ArriveDate = new DateTime(2022, 01, 16);
+        m.AvailableAmount = 3;
+        m.Barcode = 24311234;
+        m.InHouseTitle = "YE14";
+        m.OrderAmount = 3;
+        m.StockAmount = 55;
+        m.MinOrder = 66;
+        m.OrderPrice = 66.3;
+        m.OrderQuantity = 8;
+        m.Ordered = 333;
+        m.PackSize = 12;
+        m.RemovedFromStockDate = new DateTime(2015, 02, 03);
+        m.Target = 34;
+        m.TitleGWS = "GWStitle4";
+
+        await _db.InsertProduct(p);
+        await _db.InsertProduct(a);
+        await _db.InsertProduct(b);
+        await _db.InsertProduct(i);
+        await _db.InsertProduct(k);
+        await _db.InsertProduct(f);
+        await _db.InsertProduct(o);
+        await _db.InsertProduct(u);
+        await _db.InsertProduct(y);
+        await _db.InsertProduct(g);
+        await _db.InsertProduct(c);
+        await _db.InsertProduct(x);
+        await _db.InsertProduct(s);
+        await _db.InsertProduct(q);
+        await _db.InsertProduct(t);
+        await _db.InsertProduct(r);
+        await _db.InsertProduct(d);
+        await _db.InsertProduct(m);
+
+        await OnInitializedAsync();
+        Console.WriteLine("Product(s) Added");
+    }
+}
+@*
 #b2dab6 - grøn
 #e6bdbc - m.rød
 #f3cac9 - l.rød

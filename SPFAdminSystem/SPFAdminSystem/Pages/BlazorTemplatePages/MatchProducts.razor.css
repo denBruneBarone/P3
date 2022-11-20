@@ -39,13 +39,21 @@ li {
         border-bottom: none;
     }
 
-#listTitle{
+#listTitle {
     height: 30px;
     padding: 0px;
     padding-left: 5px;
     font-weight: 700;
     background: #c3c3c3;
-    border-bottom: 2px solid black;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-top: 2px solid black;
+    list-style-type: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 10px;
+    padding-right: 0;
+    font-size: 20px;
 }
 
 #matchProductContainer{
@@ -96,7 +104,7 @@ li {
     height: 100%;
     width: 80%;
     height: 500px;
-    max-width: 400px;
+    max-width: 100%;
     border: 2px solid black;
     margin: auto;
     overflow: scroll;
@@ -105,6 +113,7 @@ li {
 }
 
 #currentInfoValues {
+    text-align: right;
     height: 100%;
     width: 40%;
 }
@@ -119,10 +128,9 @@ li {
     width: 100%;
 }
 
-#itemLi, #itemValueLi {
+#itemLi, #itemLiTitles, #itemValueLi {
     color: black;
     border-bottom: none;
-    text-align: left;
 }
 
 #itemValueLi {
@@ -148,4 +156,17 @@ li {
     width: 105%;
     height: 105%;
     text-align: left;
+}
+
+#itemLiTitles {
+    list-style-type: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: left;
+}
+
+#itemLi {
+    text-align: right;
 }
