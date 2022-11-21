@@ -39,9 +39,9 @@ namespace SPFAdminSystem.Database.UserFiles
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByName(string UserName)
+        public async Task<User> GetUserByName(string username)
         {
-            var dbUser = await _context.Users.FindAsync(new Dictionary<string, object> { { "UserName", UserName } });
+            var dbUser = await _context.Users.Where(x => x.UserName == username).FirstAsync();
             if (dbUser == null)
             {
                 throw new Exception("no user here");
