@@ -8,11 +8,11 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SPFAdminSystem
 build_property.RootNamespace = SPFAdminSystem
-build_property.ProjectDir = C:\Users\User\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\
+build_property.ProjectDir = C:\Users\User\Source\Repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\User\source\repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem
+build_property.MSBuildProjectDirectory = C:\Users\User\Source\Repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem
 build_property._RazorSourceGeneratorDebug = 
 
 [C:/Users/User/Source/Repos/denBruneBarone/P3/SPFAdminSystem/SPFAdminSystem/App.razor]

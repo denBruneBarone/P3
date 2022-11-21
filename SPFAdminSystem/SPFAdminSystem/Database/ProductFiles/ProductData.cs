@@ -24,6 +24,12 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             return _db.LoadData<Product, dynamic>(sql, new { });
         }
+        public Task<Product> GetProductById(string id)
+        {
+            string sql = "select * from Products where ProductId="+id;
+
+            return _db.GetSingleData<Product>(sql);
+        }
 
         public Task InsertProduct(Product product)
         {

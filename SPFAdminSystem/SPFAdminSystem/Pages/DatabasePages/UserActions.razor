@@ -2,9 +2,11 @@
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles;
+@using SPFAdminSystem.Database.ProductFiles;
 @inject AuthenticationStateProvider authStateProvider
 @inject IJSRuntime js;
 @inject IUserData _db;
+@inject IProductData _prodDb;
 
 <h3>User Actions</h3>
 @if (actions is null)
@@ -51,13 +53,13 @@ else
     public string Title { get; private set; }
     private List<UserAction> actions = new();
 
-    public async void AddUserAction(string userName)
+    public async void AddUserAction(string userName, string prodId)
     {
         // get username
 
         var currUser = await _db.GetUserByName(userName);
 
-        UserAction action = new UserAction(currUser.UserId,DateTime.Now,"OrderQuantity","7","5011921003747");
+        UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, _prodDb.GetProductById(prodId);
         await _db.InsertAction(action);
         actions.Add(action);
     }
