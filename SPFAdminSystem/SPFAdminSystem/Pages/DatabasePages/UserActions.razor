@@ -1,0 +1,72 @@
+﻿@page "/actions"
+@attribute [Authorize(Roles = "Admin, Employee")];
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.UserFiles;
+@inject AuthenticationStateProvider authStateProvider
+@inject IJSRuntime js;
+@inject IUserData _db;
+
+<h3>User Actions</h3>
+@if (actions is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <AuthorizeView>
+
+        <button @onclick="@(()=>AddUserAction(@context.User.Identity.Name))">Add Dummy Action</button>
+    </AuthorizeView>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>User</th>
+                <th>Product</th>
+                <th>Value</th>
+                <th>Type</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var action in actions)
+            {
+                <tr>
+                    <td>@action.Date</td>
+                    <td>@action.User</td>
+                    <td>@action.Product</td>
+                    <td>@action.Value</td>
+                    <td>@action.ActionType</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+
+@code {
+    public string Id { get; private set; }
+    public string Title { get; private set; }
+    private List<UserAction> actions = new();
+
+    public async void AddUserAction(string userName)
+    {
+        // get username
+
+        var currUser = await _db.GetUserByName(userName);
+
+        UserAction action = new UserAction(currUser.UserId,DateTime.Now,"OrderQuantity","7","5011921003747");
+        await _db.InsertAction(action);
+        actions.Add(action);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        actions = await _db.GetActions();
+    }
+    
+
+
+}

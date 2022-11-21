@@ -1,4 +1,5 @@
 ﻿using DataAccessLibrary.Models;
+using SPFAdminSystem.Pages.DatabasePages;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,13 @@ namespace SPFAdminSystem.Database.UserFiles
         public UserData(ISqlDataAccess db)
         {
             _db = db;
+        }
+
+        public Task<List<UserAction>> GetActions()
+        {
+            string sql = "select * from UserActions";
+
+            return _db.LoadData<UserAction, dynamic>(sql, new { });
         }
 
         public Task<List<User>> GetUsers()
@@ -34,6 +42,12 @@ namespace SPFAdminSystem.Database.UserFiles
             string sql = $"SELECT * FROM 'Users' WHERE UserName='{UserName}';";
 
             return _db.GetSingleData<User>(sql);
+        }
+        public Task InsertAction(UserAction action)
+        {
+            string sql = "INSERT INTO UserActions (UserId, Date, ActionType, Value,ProductId) VALUES (@UserId, @Date,@ActionType, @Value, @ProductId);";
+
+            return _db.SaveData(sql, action);
         }
     }
 }

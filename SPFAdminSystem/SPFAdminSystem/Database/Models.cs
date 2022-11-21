@@ -7,7 +7,6 @@ public class SpilforsyningContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<UserAction> UserActions { get; set; }
-
     public string DbPath { get; }
 
     public SpilforsyningContext()
