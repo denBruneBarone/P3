@@ -3,30 +3,43 @@
 @using SPFAdminSystem.Database
 @using SPFAdminSystem.Database.UserFiles
 @inject IUserService _db
+@using BCrypt.Net   
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
-
-<div class="row">
+<div class="container h-75">
+<div class="row h-100 align-items-center">
     <div class="col-lg-4 offset-lg-4 pt-4 pb-4 border">
         <div class="mb-3 text-center">
-            <h3>LOGIN</h3>
+            <h3>SPFAdminSystem</h3>
         </div>
-        <div class="mb-3">
-            <label>User Name</label>
-            <input @bind="model.UserName" class="form-control" placeholder="User Name" />
+        <EditForm Model="@model" OnValidSubmit="@Authenticate">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3 pt-4 px-4">
+            <input @bind="model.UserName" class="form-control" placeholder="User Name" required />
         </div>
-        <div class="mb-3">
-            <label>Password</label>
-            <input @bind="model.Password" type="password" class="form-control" placeholder="Password" />
+        <div class="mb-3 pb-4 px-4">
+            <input @bind-value="model.Password" type="password" class="form-control" placeholder="Password" required/>
         </div>
-        <div class="mb-3 d-grid gap-2">
-            <button @onclick="Authenticate" class="btn btn-primary">Login</button>
-        </div>
+        <div class="mb-3 d-grid gap-2 flex justify-content-center">
+            <input type="submit" name="Submit" value="LOGIN" class="btn btn-primary"/>
+@*            <button @onclick="Authenticate" class="btn btn-primary">Login</button>
+*@        </div>
+        </EditForm>
     </div>
 </div>
-
+</div>
 @code {
+    private async Task KeyHandler(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await Authenticate();
+        }
+    }
+
     private class Model
     {
 
@@ -38,19 +51,27 @@
 
     private async Task Authenticate()
     {
-        var userAccount = await _db.GetUserByName(model.UserName);
-        if (userAccount == null || userAccount.Password != model.Password)
+        User userAccount = new();
+        try
+        {
+            userAccount = await _db.GetUserByName(model.UserName);
+            if (userAccount == null || !BCrypt.Verify(model.Password,userAccount.Password))
+            {
+                throw new Exception();
+            }
+
+            CustomAuthenticationStateProvider customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
+            await customAuthStateProvider.UpdateAuthenticationState(new UserSession
+                {
+                    UserName = userAccount.UserName,
+                    Role = userAccount.Role,
+                    GivenName = userAccount.FullName
+                });
+            navManager.NavigateTo("/", true);
+        } catch(Exception)
         {
             await js.InvokeVoidAsync("alert", "Invalid User Name or Password");
             return;
         }
-
-        var customAuthStateProvider = (CustomAuthenticationStateProvider)authStateProvider;
-        await customAuthStateProvider.UpdateAuthenticationState(new UserSession
-            {
-                UserName = userAccount.UserName,
-                Role = userAccount.Role
-            });
-        navManager.NavigateTo("/", true);
     }
 }

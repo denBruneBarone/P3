@@ -5,6 +5,7 @@
 
 @using SPFAdminSystem.Authentication
 @using System.Web
+@using BCrypt.Net
 @inject IJSRuntime js
 
 <h1>User Administration</h1>
@@ -58,7 +59,7 @@
         public string FullName { get; set; }
         public string UserName{ get; set; }
         public string Role{ get; set; }
-        public string Password{ get; set; }
+        public string Password { get { return Password; } set { Password = BCrypt.HashPassword(value); } }
     }
     Model model = new Model();
  /*   private async void Register() {

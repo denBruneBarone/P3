@@ -3,6 +3,7 @@
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles
 @inject IUserService _userDb
+@using BCrypt.Net
 @inject IJSRuntime js
 
 <h5>All Users</h5>
@@ -39,9 +40,9 @@ else
     </table>
 
     <h3>Add User</h3>
-    <input @bind=userName type="text" placeholder="UserName" required />
-    <input @bind=password type="text" placeholder="Password" required />
-    <input @bind=fullName type="text" placeholder="Full Name" required />
+    <input @bind=userName @bind:event="oninput" type="text" placeholder="UserName" required />
+    <input @bind=password @bind:event="oninput" type="text" placeholder="Password" required />
+    <input @bind=fullName @bind:event="oninput" type="text" placeholder="Full Name" required />
 
 
 
@@ -58,10 +59,10 @@ else
 
 @code {
     // Variables for input bind
-    public string userName { get; private set; }
-    public string password { get; private set; }
-    public string fullName { get; private set; }
-    public string role { get; private set; } = "Employee";
+    public string? userName { get; private set; }
+    public string? password { get; private set; }
+    public string? fullName { get; private set; }
+    public string? role { get; private set; } = "Employee";
     private User UserTest { get; set; }
 
     private List<User> users = new();
@@ -79,7 +80,7 @@ else
 
         User u = new User();
         u.UserName = userName;
-        u.Password = password;
+        u.Password = BCrypt.HashPassword(password);
         u.FullName = fullName;
         u.Role = role;
 

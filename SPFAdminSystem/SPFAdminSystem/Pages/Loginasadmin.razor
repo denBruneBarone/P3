@@ -10,7 +10,8 @@
         await customAuthStateProvider.UpdateAuthenticationState(new UserSession
             {
                 UserName = "Admin",
-                Role = "Admin"
+                Role = "Admin",
+                GivenName = "Admin Adminson"
             });
         navManager.NavigateTo("/", true);
     }
