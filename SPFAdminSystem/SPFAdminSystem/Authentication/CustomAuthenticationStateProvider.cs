@@ -26,6 +26,7 @@ namespace SPFAdminSystem.Authentication
                 var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, userSession.UserName),
+                    new Claim(ClaimTypes.GivenName, userSession.GivenName),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }, "CustomAuth"));
                 return await Task.FromResult(new AuthenticationState(claimsPrincipal));
@@ -46,6 +47,7 @@ namespace SPFAdminSystem.Authentication
                 claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, userSession.UserName),
+                    new Claim(ClaimTypes.GivenName, userSession.GivenName),
                     new Claim(ClaimTypes.Role, userSession.Role)
                 }));
             }
