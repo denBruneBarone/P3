@@ -9,5 +9,6 @@ namespace SPFAdminSystem.Database
 
         Task<List<T>> LoadData<T, U>(string sql, U parameters);
         Task SaveData<T>(string sql, T parameters);
+        Task<T> GetSingleData<T>(string sql);
     }
 }

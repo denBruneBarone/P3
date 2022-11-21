@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SPFAdminSystem.Database
+namespace SPFAdminSystem.Database.ProductFiles
 {
     public class ProductData : IProductData
     {
