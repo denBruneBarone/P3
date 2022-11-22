@@ -2,8 +2,8 @@
 @using SPFAdminSystem.Authentication
 @using SPFAdminSystem.Database
 @using SPFAdminSystem.Database.UserFiles
+@inject IUserService _db
 @using BCrypt.Net   
-@inject IUserData _db
 @inject IJSRuntime js
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
@@ -42,6 +42,7 @@
 
     private class Model
     {
+
         public string UserName { get; set; }
         public string Password { get; set; }
     }

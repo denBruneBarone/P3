@@ -2,22 +2,19 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace SPFAdminSystem.Migrations
 {
-    [DbContext(typeof(SpilforsyningContext))]
-    [Migration("20221117100516_fix")]
-    partial class fix
+    [DbContext(typeof(DataContext))]
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
 
             modelBuilder.Entity("Product", b =>
                 {
@@ -27,45 +24,44 @@ namespace SPFAdminSystem.Migrations
                     b.Property<DateTime?>("ArriveDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Available")
+                    b.Property<int?>("AvailableAmount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Barcode")
+                    b.Property<int?>("Barcode")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("InHouseTitle")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("InOrder")
+                    b.Property<int?>("MinOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("InStock")
+                    b.Property<int?>("OrderAmount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("MinOrder")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("OrderPrice")
+                    b.Property<double?>("OrderPrice")
                         .HasColumnType("REAL");
 
-                    b.Property<int>("OrderQuantity")
+                    b.Property<int?>("OrderQuantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Ordered")
+                    b.Property<int?>("Ordered")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PackSize")
+                    b.Property<int?>("PackSize")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("RemovedFromStockDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Target")
+                    b.Property<int?>("StockAmount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("Target")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TitleGWS")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProductId");
@@ -80,10 +76,9 @@ namespace SPFAdminSystem.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("DeleteDate")
+                    b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("FullName")
@@ -94,7 +89,7 @@ namespace SPFAdminSystem.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("RegisterDate")
+                    b.Property<DateTime?>("RegisterDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
