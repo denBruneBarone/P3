@@ -41,12 +41,18 @@ else{
     string currentlySortedBy = "date";
     public async void AddUserAction(string userName, string prodId)
     {
-        User currUser = await _userDb.GetUserByName(userName);
-        Product prod = await _prodDb.GetProductById(prodId);
-        UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, prod);
-        await _userDb.InsertAction(action);
-        actions.Add(action);
-        StateHasChanged();
+        try {
+            User currUser = await _userDb.GetUserByName(userName);
+            Product prod = await _prodDb.GetProductById(prodId);
+            UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, prod);
+            await _userDb.InsertAction(action);
+            actions.Add(action);
+            StateHasChanged();
+        }
+        catch (InvalidOperationException)
+        {
+            await js.InvokeVoidAsync("alert", $"The current user doesn't exist in database. Maybe you're in developing mode?");
+        }
     }
 
     protected override async Task OnInitializedAsync()
