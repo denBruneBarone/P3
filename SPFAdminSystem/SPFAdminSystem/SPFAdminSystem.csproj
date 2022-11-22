@@ -45,6 +45,7 @@
     <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\v17\" />
     <Folder Include="DataAccessLibrary\bin\Debug\netstandard2.0\" />
     <Folder Include="DataAccessLibrary\bin\Release\netstandard2.0\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>
