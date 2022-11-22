@@ -12,6 +12,6 @@ Learn more at https://bunit.dev/docs/getting-started/writing-tests.html#creating
         var cut = Render(@<SPFAdminSystem.Pages.DatabasePages.UserActions />);
         var tableCells = cut.FindAll("td");
         // Assert that content of the paragraph shows counter at zero
-        Assert.Equal(tableCells.Count, 4);
+        Assert.Equal(4,tableCells.Count);
     }
 }
