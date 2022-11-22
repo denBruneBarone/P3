@@ -1,9 +1,9 @@
-﻿@*@page "/actions"
+﻿@page "/actions"
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles;
 @using SPFAdminSystem.Database.ProductFiles;
-@inject AuthenticationStateProvider authStateProvider
+@inject AuthenticationStateProvider authStateProvider;
 @inject IJSRuntime js;
 @inject IUserData _db;
 @inject IProductData _prodDb;
@@ -16,9 +16,14 @@
 else
 {
     <AuthorizeView>
+        <Authorized>
+            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Add Dummy Action</button>
+        </Authorized>
+        <NotAuthorized>
 
-        <button @onclick="@(()=>AddUserAction(@context.User.Identity.Name))">Add Dummy Action</button>
+        </NotAuthorized>
     </AuthorizeView>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -27,7 +32,7 @@ else
                 <th>Product</th>
                 <th>Value</th>
                 <th>Type</th>
-                
+
             </tr>
         </thead>
         <tbody>
@@ -35,16 +40,16 @@ else
             {
                 <tr>
                     <td>@action.Date</td>
-                    <td>@action.User</td>
-                    <td>@action.Product</td>
+                    <td>@action.User.UserName</td>
+                    <td>@action.Product.InHouseTitle</td>
                     <td>@action.Value</td>
                     <td>@action.ActionType</td>
                 </tr>
             }
         </tbody>
     </table>
-}
 
+}
 
 
 
@@ -55,21 +60,24 @@ else
 
     public async void AddUserAction(string userName, string prodId)
     {
-        // get username
-
-        var currUser = await _db.GetUserByName(userName);
-
-        UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, _prodDb.GetProductById(prodId);
+        User currUser = await _db.GetUserByName(userName);
+        Product prod = await _prodDb.GetProductById(prodId);
+        UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, prod);
         await _db.InsertAction(action);
         actions.Add(action);
+        StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
     {
         actions = await _db.GetActions();
+        foreach (UserAction action in actions)
+        {
+            action.Product = await _prodDb.GetProductById(action.ProductId);
+            action.User = await _db.GetUserById(action.UserId);
+        }
     }
-    
+
 
 
 }
-*@
