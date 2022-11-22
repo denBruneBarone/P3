@@ -5,9 +5,9 @@
 @inject IUserService _userDb
 @using BCrypt.Net
 @inject IJSRuntime js
+@inject NavigationManager navManager
 
-    <PopupModal user=@curUser showModal=@showModal/>
-
+    <PopupModal userRemove="@removeUser" user=@curUser showModal=@showModal/>
 <h5>All Users</h5>
 @if (users is null)
 {
@@ -81,10 +81,23 @@ else
         users = _userDb.GetUsers();
     }
 
-    public async Task showDeleteModal(User user)
+    public void showDeleteModal(User user)
     {
         curUser = user;
         showModal = null;
+    }
+
+    public void closeDeleteModal()
+    {
+        showModal = "visually-hidden";
+    }
+
+    public async void removeUser(User user)
+    {
+        users.Remove(user);
+        await _userDb.DeleteUser(user);
+        StateHasChanged();
+        closeDeleteModal();
     }
 
     public async Task addUser()
@@ -105,7 +118,6 @@ else
     public async Task getUserByName() {
         try 
         {
-            UserTest = await _userDb.GetUserByName("fdsafdsa");
         } catch(Exception)
         {
             await js.InvokeVoidAsync("alert", "Error: User Not Found");

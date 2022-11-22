@@ -15,6 +15,6 @@ namespace SPFAdminSystem.Database.UserFiles
 
         Task InsertUser(User user);
         Task<User> GetUserByName(string username);
-
+        Task DeleteUser(User user);
     }
 }

@@ -25,7 +25,11 @@ namespace SPFAdminSystem.Database.UserFiles
             Users = await _context.Users.ToListAsync();
         }
 
-        
+        public async Task DeleteUser(User user)
+        {
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
 
 
         public List<User> GetUsers()
