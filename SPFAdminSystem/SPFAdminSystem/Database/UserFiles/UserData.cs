@@ -43,6 +43,12 @@ namespace SPFAdminSystem.Database.UserFiles
 
             return _db.GetSingleData<User>(sql);
         }
+        public Task<User> GetUserById(int UserId)
+        {
+            string sql = $"SELECT * FROM 'Users' WHERE UserId='{UserId}';";
+
+            return _db.GetSingleData<User>(sql);
+        }
         public Task InsertAction(UserAction action)
         {
             string sql = "INSERT INTO UserActions (UserId, Date, ActionType, Value,ProductId) VALUES (@UserId, @Date,@ActionType, @Value, @ProductId);";

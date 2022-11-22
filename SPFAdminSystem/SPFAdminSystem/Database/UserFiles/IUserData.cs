@@ -12,5 +12,6 @@ namespace SPFAdminSystem.Database.UserFiles
         Task InsertAction(UserAction action);
 
         Task<User> GetUserByName(string UserName);
+        Task<User> GetUserById(int UserId);
     }
 }
