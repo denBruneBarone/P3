@@ -47,6 +47,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xVc2Vycy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/User/Source/Repos/denBruneBarone/P3/SPFAdminSystem/SPFAdminSystem/Pages/Dev-table-component.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGV2LXRhYmxlLWNvbXBvbmVudC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/User/Source/Repos/denBruneBarone/P3/SPFAdminSystem/SPFAdminSystem/Pages/InsertFromExcel.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5zZXJ0RnJvbUV4Y2VsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

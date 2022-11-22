@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="BlazorTable" Version="1.17.0" />
     <PackageReference Include="bunit" Version="1.12.6" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="EPPlus" Version="6.1.0" />
@@ -37,6 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Smart.Blazor" Version="14.4.39" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.116" />
   </ItemGroup>

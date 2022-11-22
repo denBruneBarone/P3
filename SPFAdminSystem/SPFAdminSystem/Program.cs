@@ -1,3 +1,4 @@
+using BlazorTable;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -30,6 +31,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddTransient<IProductData, ProductData>();
 builder.Services.AddTransient<IUserData, UserData>();
 builder.Services.AddTransient<ISqlDataAccess, SqlDataAccess>();
+builder.Services.AddBlazorTable(); 
 
 var app = builder.Build();
 

@@ -1,20 +1,19 @@
 ﻿@page "/actions"
-@attribute [Authorize(Roles = "Admin, Employee")];
+
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles;
 @using SPFAdminSystem.Database.ProductFiles;
+@using BlazorTable
 @inject AuthenticationStateProvider authStateProvider;
 @inject IJSRuntime js;
 @inject IUserData _db;
 @inject IProductData _prodDb;
 
-<h3>User Actions</h3>
-@if (actions is null)
-{
-    <p><em>Loading...</em></p>
+<h1>User Actions</h1>
+@if (actions == null){
+    <h3>Loading...</h3>
 }
-else
-{
+else{
     <AuthorizeView>
         <Authorized>
             <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Add Dummy Action</button>
@@ -23,41 +22,23 @@ else
 
         </NotAuthorized>
     </AuthorizeView>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>User</th>
-                <th>Product</th>
-                <th>Value</th>
-                <th>Type</th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var action in actions)
-            {
-                <tr>
-                    <td>@action.Date</td>
-                    <td>@action.User.UserName</td>
-                    <td>@action.Product.InHouseTitle</td>
-                    <td>@action.Value</td>
-                    <td>@action.ActionType</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+    <Table TableItem="UserAction" Items="actions" PageSize="15">
+        <Column TableItem="UserAction" Title="Date" Field="@(x => x.Date)" Sortable="true" Filterable="true" Width="20%" DefaultSortColumn="true" />
+        <Column TableItem="UserAction" Title="User" Field="@(x => x.User.UserName)" Sortable="true" Filterable="true" Width="20%" />
+        <Column TableItem="UserAction" Title="Product" Field="@(x => x.Product.InHouseTitle)" Sortable="true" Filterable="true" Width="20%" />
+        <Column TableItem="UserAction" Title="Value" Field="@(x => x.Value)" Sortable="true" Filterable="true" Width="10%" />
+        <Column TableItem="UserAction" Title="Type" Field="@(x => x.ActionType)" Sortable="true" Filterable="true" Width="10%" Format="C" Align="Align.Right" />
+        <Pager ShowPageNumber="true" ShowTotalCount="true" ShowPageSizes="true" />
+    </Table>
 }
 
-
-
-@code {
+@code
+{
     public string Id { get; private set; }
     public string Title { get; private set; }
     private List<UserAction> actions = new();
-
+    bool sortDesc = false;
+    string currentlySortedBy = "date";
     public async void AddUserAction(string userName, string prodId)
     {
         User currUser = await _db.GetUserByName(userName);
@@ -77,7 +58,5 @@ else
             action.User = await _db.GetUserById(action.UserId);
         }
     }
-
-
 
 }
