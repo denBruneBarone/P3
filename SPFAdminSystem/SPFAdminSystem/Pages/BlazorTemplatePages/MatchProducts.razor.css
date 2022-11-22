@@ -170,3 +170,43 @@ li {
 #itemLi {
     text-align: right;
 }
+#ignoreApplyButtons{
+    padding-right: 30px;
+    padding-top: 12px;
+    display: flex;
+    justify-content:space-evenly;
+    
+}
+#igApButtons{
+    width: 70px;
+}
+
+#applyButton{
+    text-align: right;
+}
+
+#rightAuxItems {
+    display: flex;
+    flex: auto;
+    padding-top: 25px;
+}
+
+#dropdownId{
+    padding-left:40px;
+    padding-right: 10px;
+    font-weight: 700;
+    
+}
+#matches{
+    width: 275px;
+    height: 30px;
+    padding-left: 10px;
+}
+#searchArea {
+    height: 30px;
+    width: 100px;
+}
+
+input[type=number]{
+    
+}

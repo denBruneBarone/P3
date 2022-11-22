@@ -12,7 +12,8 @@
 @*I productList tjekkes om produktet fra list 1 er i list 2 og markere dem med rødt eller grønt*@
 @*matchProduct vise informationerne for produktet fra SF og GSM*@
 @*browseBtn er knappen der tillader at lede efter alle produkter*@
-
+<div>
+</div>
 <div class="tempButton">
     <button @onclick="InsertProduct">Add products</button>
 </div>
@@ -23,7 +24,9 @@
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
-            @{counter = 0;}
+            @{
+                counter = 0;
+            }
             @foreach (var item in products)
             {
                 if (products.Contains(item))
@@ -37,17 +40,23 @@
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
-    <div id="matchProduct">
-        @*Attempt to make a title for the "Match Product" but failed at width*@
-        <div id="matchProductTitle">
-        </div>
+    @{
+        if (products.Count() > 0)
+        {
+            <div id="matchProduct">
+                @*Attempt to make a title for the "Match Product" but failed at width*@
+                <div id="matchProductTitle">
+                </div>
 
-        @*----------------------------------------------------------------------------------------------------------------------*@
-        @{
-            if (products.Count() > 0)
-            {
+                @*----------------------------------------------------------------------------------------------------------------------*@
                 <div id="leftItem">
                     <div id="itemTitle">
+                        @{
+                            if (matchTitle == "" && products.Count > 0)
+                            {
+                                matchTitle = products[0].InHouseTitle;
+                            }
+                        }
                         <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
                     </div>
                     <div id="currentInfoTitle">
@@ -57,9 +66,12 @@
                         <div id="currentInfo">
                             <ul id="matchListLeft">
                                 @{
-                                    foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                    if (matchTitle != "")
                                     {
-                                        <li id="itemLiTitles">@prop.Name</li>
+                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                        {
+                                            <li id="itemLiTitles">@prop.Name</li>
+                                        }
                                     }
                                 }
                             </ul>
@@ -68,17 +80,104 @@
                         <div id="currentInfoValues">
                             <ul style="list-style: none;" id="matchListLeft">
                                 @{
-                                    foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                    if (matchTitle != "")
                                     {
-                                        if (prop.GetValue(products[chosenProduct], null) != null)
+                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
                                         {
-                                            if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                            if (prop.GetValue(products[chosenProduct], null) != null)
                                             {
-                                                <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                                if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                                {
+                                                    <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                                }
+                                                else
+                                                {
+                                                    if (prop.Name == "Target")
+                                                    {
+
+                                                        
+                                                            if (valueEntered == true)
+                                                            {
+                                                                <small>Value updated</small>
+                                                            }
+                                                        <input type="text" @bind="@CurrentValueStr" @oninput="@((e) => {CurrentValueStr=(string)e.Value; onSubmitValue();})" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" style="border:none; text-align: right; width:50px; padding-top:12px; padding-bottom:12px;" />
+                                                            <input type="submit" hidden />
+                                                            Console.WriteLine(CurrentValueStr);
+
+                                                        
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                                    }
+                                                }
                                             }
                                             else
                                             {
-                                                <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                                <li id="itemLi"></li>
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="ignoreApplyButtons">
+                        <button id="ignoreButton" style="background:#f3cac9">Ignore</button>
+                        <button id="applyButton" style="background:#b2dab6">Apply</button>
+                    </div>
+                    
+                </div>
+
+
+                @*----------------------------------------------------------------------------------------------------------------------*@
+
+
+                <div id="rightItem">
+                    <div id="itemTitle">
+                        <div id="rightAuxItems">
+                            <div id="dropdownId">
+                                <label for="matches">Select a match:</label>
+                                <select name="matches" id="matches" @onchange="getChosenMatchIndex">
+                                    @foreach (Product item in products)
+                                    {
+                                        <option value="@item.InHouseTitle">@item.InHouseTitle</option>
+                                    }
+                                </select>
+                            </div>
+                            <input type="search" placeholder="Search" id="searchArea" name="Search">
+                        </div>
+                    </div>
+                    <div id="currentInfoTitle">
+                        <h3 style="text-align: center;">Selected match information:</h3>
+                    </div>
+                    <div id="leftMatchItemsFlex">
+                        <div id="currentInfo">
+                            <ul id="matchListLeft">
+                                @{
+                                    foreach (PropertyInfo prop in products[chosenMatch].GetType().GetProperties())
+                                    {
+                                        <li id="itemLiTitles">@prop.Name</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div id="currentInfoValues">
+                            <ul style="list-style: none;" id="matchListLeft">
+                                @{
+                                    foreach (PropertyInfo prop in products[chosenMatch].GetType().GetProperties())
+                                    {
+                                        if (prop.GetValue(products[chosenMatch], null) != null)
+                                        {
+                                            if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                            {
+                                                <li id="itemLi">@prop.GetValue(products[chosenMatch], null).ToString().Substring(0,10)</li>
+                                            }
+                                            else
+                                            {
+                                                <li id="itemLi">@prop.GetValue(products[chosenMatch], null).ToString()</li>
                                             }
                                         }
                                         else
@@ -90,55 +189,13 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="ignoreApplyButtons">
+                        <button id="acceptButton" style="background:#b2dab6">Accept</button>
+                    </div>
                 </div>
-            }
+            </div>
         }
-        @*----------------------------------------------------------------------------------------------------------------------*@
-
-        <div id="rightItem">
-            <div id="itemTitle">
-            </div>
-            <div id="currentInfoTitle">
-                <h3 style="text-align: center;">Selected match information:</h3>
-            </div>
-            <div id="leftMatchItemsFlex">
-                <div id="currentInfo">
-                    <ul id="matchListLeft">
-                        @{
-                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
-                            {
-                                <li id="itemLiTitles">@prop.Name</li>
-                            }
-                        }
-                    </ul>
-                </div>
-                <div id="currentInfoValues">
-                    <ul style="list-style: none;" id="matchListLeft">
-                        @{
-                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
-                            {
-                                if (prop.GetValue(products[chosenProduct], null) != null)
-                                {
-                                    if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
-                                    {
-                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
-                                    }
-                                    else
-                                    {
-                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
-                                    }
-                                }
-                                else
-                                {
-                                    <li id="itemLi"></li>
-                                }
-                            }
-                        }
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -153,6 +210,18 @@
 @*----------------------------------------------------------------------------------------------------------------------*@
 
 @code {
+    string CurrentValueStr="";
+    
+    bool valueEntered = false;
+    
+    private void onSubmitValue()
+    {
+        Console.WriteLine("WORKETH");
+
+        valueEntered = true;
+
+    }
+
     int counter = 0;
 
     string matchTitle = "";
@@ -165,6 +234,7 @@
     }
 
     int chosenProduct = 0;
+    int chosenMatch = 0;
 
     private void UpdateMatch(string currentProduct)
     {
@@ -182,9 +252,21 @@
             }
         }
     }
+    private void getChosenMatchIndex(ChangeEventArgs e)
+    {
 
+        for (int t = 0; t < products.Count(); t++)
+        {
+            if (e.Value.ToString() == products[t].InHouseTitle)
+            {
+                chosenMatch = t;
+                break;
+            }
+        }
+    }
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
+    private List<Product> productsTemp = new List<Product>{new Product ()};
 
     protected override async Task OnInitializedAsync()
     {
@@ -193,6 +275,7 @@
 
     public async Task InsertProduct()
     {
+
         Product p = new();
         Product a = new();
         Product b = new();
@@ -518,7 +601,9 @@
         await _db.InsertProduct(d);
         await _db.InsertProduct(m);
 
+
         await OnInitializedAsync();
+
         Console.WriteLine("Product(s) Added");
     }
 }
