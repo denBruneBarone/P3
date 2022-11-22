@@ -8,6 +8,7 @@ build_property.PlatformNeutralAssembly =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = SPFAdminSystem
 build_property.RootNamespace = SPFAdminSystem
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\User\Source\Repos\denBruneBarone\P3\SPFAdminSystem\SPFAdminSystem\
 build_property.RazorLangVersion = 6.0
 build_property.SupportLocalizedComponentNames = 
@@ -108,5 +109,95 @@ build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/User/Source/Repos/denBruneBarone/P3/SPFAdminSystem/SPFAdminSystem/Pages/_Layout.cshtml]
+=======
+build_property.ProjectDir = C:\Users\Malthe\Documents\GitHub\P3\SPFAdminSystem\SPFAdminSystem\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\Malthe\Documents\GitHub\P3\SPFAdminSystem\SPFAdminSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xGZXRjaERhdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/Products.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xQcm9kdWN0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xVc2Vycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Loginasadmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5hc2FkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Logout.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9nb3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Upload.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBsb2FkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/UserAdmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlckFkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Shared/LoginDisplay.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXExvZ2luRGlzcGxheS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Shared/DashboardCard.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXERhc2hib2FyZENhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-fwjgy9clvm
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-9ex7y2ima2
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8nvme4m3jv
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Malthe/Documents/GitHub/P3/SPFAdminSystem/SPFAdminSystem/Pages/_Layout.cshtml]
+>>>>>>> origin/master
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
