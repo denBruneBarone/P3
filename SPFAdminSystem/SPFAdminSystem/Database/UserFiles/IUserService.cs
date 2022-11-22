@@ -9,7 +9,8 @@ namespace SPFAdminSystem.Database.UserFiles
     {
 
         Task InsertAction(UserAction action);
-        Task<List<UserAction>> GetActions();
+        List<UserAction> GetActions();
+        Task LoadActions();
 
         Task LoadUsers();
 

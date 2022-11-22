@@ -55,5 +55,12 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
+        public async Task<Product> GetProductById(string prodId)
+        {
+            var prod = await _context.Products.FindAsync(prodId);
+            if (prod == null)
+                throw new KeyNotFoundException("product not found");
+            return prod;
+        }
     }
 }

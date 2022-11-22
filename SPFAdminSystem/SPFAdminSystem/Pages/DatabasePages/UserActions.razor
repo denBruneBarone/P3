@@ -6,8 +6,8 @@
 @using BlazorTable
 @inject AuthenticationStateProvider authStateProvider;
 @inject IJSRuntime js;
-@inject IUserData _db;
-@inject IProductData _prodDb;
+@inject IUserService _userDb;
+@inject IProductService _prodDb;
 
 <h1>User Actions</h1>
 @if (actions == null){
@@ -41,21 +41,22 @@ else{
     string currentlySortedBy = "date";
     public async void AddUserAction(string userName, string prodId)
     {
-        User currUser = await _db.GetUserByName(userName);
+        User currUser = await _userDb.GetUserByName(userName);
         Product prod = await _prodDb.GetProductById(prodId);
         UserAction action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", prodId, prod);
-        await _db.InsertAction(action);
+        await _userDb.InsertAction(action);
         actions.Add(action);
         StateHasChanged();
     }
 
     protected override async Task OnInitializedAsync()
     {
-        actions = await _db.GetActions();
+        await _userDb.LoadActions();
+        actions = _userDb.GetActions();
         foreach (UserAction action in actions)
         {
             action.Product = await _prodDb.GetProductById(action.ProductId);
-            action.User = await _db.GetUserById(action.UserId);
+            action.User = await _userDb.GetUserById(action.UserId);
         }
     }
 

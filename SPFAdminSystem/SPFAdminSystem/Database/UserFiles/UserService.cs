@@ -12,22 +12,16 @@ namespace SPFAdminSystem.Database.UserFiles
     {
         private readonly DataContext _context;
 
+        public List<User> Users { get; set; } = new List<User>();
+        public List<UserAction> UserActions { get; set; } = new List<UserAction>();
         public UserService(DataContext context)
         {
             _context = context;
         }
-
-        public List<User> Users { get; set; } = new List<User>();
-
-
         public async Task LoadUsers()
         {
             Users = await _context.Users.ToListAsync();
         }
-
-        
-
-
         public List<User> GetUsers()
         {
             return Users;
@@ -44,9 +38,33 @@ namespace SPFAdminSystem.Database.UserFiles
             var dbUser = await _context.Users.Where(x => x.UserName == username).FirstAsync();
             if (dbUser == null)
             {
-                throw new Exception("no user here");
+                throw new KeyNotFoundException("no user here");
             }
             return dbUser;
         }
+        public async Task<User> GetUserById(int UserId)
+        {
+            var dbUser = await _context.Users.FindAsync(UserId);
+            if (dbUser == null)
+            {
+                throw new KeyNotFoundException("no user here");
+            }
+            return dbUser;
+        }
+        public async Task LoadActions()
+        {
+            UserActions = await _context.UserActions.ToListAsync();
+        }
+        public List<UserAction> GetActions()
+        {
+            return UserActions;
+        }
+
+        public async Task InsertAction(UserAction action)
+        {
+            _context.UserActions.Add(action);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
