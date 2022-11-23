@@ -27,6 +27,7 @@
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next.StrongName" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="EPPlus" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
@@ -45,7 +46,6 @@
     <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\v17\" />
     <Folder Include="DataAccessLibrary\bin\Debug\netstandard2.0\" />
     <Folder Include="DataAccessLibrary\bin\Release\netstandard2.0\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

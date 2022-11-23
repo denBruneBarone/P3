@@ -12,5 +12,8 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         Task CreateOrUpdateProduct(Product product);
 
+        Task InsertExcelProducts(string fileName);
+
+        Task InsertExcelMapping(string fileName);
     }
 }
