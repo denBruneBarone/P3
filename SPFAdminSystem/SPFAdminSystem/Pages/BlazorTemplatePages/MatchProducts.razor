@@ -20,7 +20,7 @@
 <div class="container">
     <div id="productList">
         @{
-            counter = products.Count();
+            counter = products.Count()-MappedTitles.Count();
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -31,8 +31,17 @@
             {
                 if (products.Contains(item))
                 {
-                    <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
-                    counter++;
+                    if(matchTitle==item.InHouseTitle){
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
+                        counter++;
+                    }else{
+                        if(!IsMapped(item.InHouseTitle)){
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
+                            counter++;
+                        }else{
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #b2dab6;" id="listButtons">@item.InHouseTitle</button></li>
+                        }
+                    }
                 }
             }
         </ul>
@@ -190,7 +199,7 @@
                         </div>
                     </div>
                     <div id="ignoreApplyButtons">
-                        <button id="acceptButton" style="background:#b2dab6">Accept</button>
+                        <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>
                     </div>
                 </div>
             </div>
@@ -211,9 +220,9 @@
 
 @code {
     string CurrentValueStr="";
-    
+
     bool valueEntered = false;
-    
+
     private void onSubmitValue()
     {
         Console.WriteLine("WORKETH");
@@ -264,9 +273,40 @@
             }
         }
     }
+    /*List of strings, is used to check if product is mapped*/
+    private List<string> MappedTitles = new List<string>();
+    /*Function for accepting mapping proposal*/
+    private void AcceptMatch(){
+        string title = products[chosenProduct].InHouseTitle;
+        if(IsMapped(title)){
+            Console.WriteLine("It's already mapped!");
+        }else{
+            MappedTitles.Add(title);
+            Console.WriteLine("Mapping accepted and saved!");
+        }
+
+    }
+
+    /*Check if title is in MappedTitles list*/
+    private bool IsMapped(string title){
+        if(MappedTitles.Count() > 0)
+        {
+            foreach(string prodTitle in MappedTitles){
+                if(title == prodTitle){
+                    return true;
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
-    private List<Product> productsTemp = new List<Product>{new Product ()};
+    private List<Product> unknownProducts = new();
+    private List<Product> productsTemp = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -275,7 +315,6 @@
 
     public async Task InsertProduct()
     {
-
         Product p = new();
         Product a = new();
         Product b = new();
@@ -294,6 +333,7 @@
         Product r = new();
         Product d = new();
         Product m = new();
+
         p.ProductId = "1";
         p.ArriveDate = new DateTime(1996, 08, 16);
         p.AvailableAmount = 555;
