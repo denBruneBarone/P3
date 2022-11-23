@@ -52,5 +52,18 @@ namespace SPFAdminSystem.Database.UserFiles
             }
             return dbUser;
         }
+
+        public async Task<User> GetUserById(int id)
+        {
+            var dbUser = await _context.Users.Where(x=>x.UserId== id).FirstAsync();
+            if (dbUser == null) throw new Exception("User not found");
+            return dbUser;
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

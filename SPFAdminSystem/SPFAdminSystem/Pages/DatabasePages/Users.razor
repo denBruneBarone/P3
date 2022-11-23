@@ -2,12 +2,12 @@
 @attribute [Authorize(Roles = "Admin")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles
+@using SPFAdminSystem.Shared.PopupModals
 @inject IUserService _userDb
 @using BCrypt.Net
 @inject IJSRuntime js
 @inject NavigationManager navManager
-
-    <PopupModal userRemove="@removeUser" user=@curUser showModal=@showModal/>
+<AddUserModal showModal="@showAddModal" closeModal=closeModals/>
 <h5>All Users</h5>
 @if (users is null)
 {
@@ -23,7 +23,7 @@ else
                 <th style="text-align: center;">Password</th>
                 <th style="text-align: center;">Full Name</th>
                 <th style="text-align: center;">Role</th>
-                <th style="text-align: center;">Delete User</th>
+                <th style="text-align: center;">Edit</th>
 
             </tr>
         </thead>
@@ -37,31 +37,20 @@ else
                     <td style="text-align: center;">@user.FullName</td>
                     <td style="text-align: center;">@user.Role</td>
                     <td style="text-align: center;">
-                        <button style="all: unset; cursor: pointer;" @onclick="() => showDeleteModal(user)">
-                            <span class="oi oi-trash"></span>
-                        </button>
+                        <a href="/users/@user.UserId">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+@*                        <button style="all: unset; cursor: pointer;" @onclick="() => showDeleteModal(user)">
+                            <span class="oi oi-pencil"></span>
+                        </button>*@
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-
-    <h3>Add User</h3>
-    <input @bind=userName @bind:event="oninput" type="text" placeholder="UserName" required />
-    <input @bind=password @bind:event="oninput" type="text" placeholder="Password" required />
-    <input @bind=fullName @bind:event="oninput" type="text" placeholder="Full Name" required />
-
-
-
-    <label for="role">User Role:</label>
-    <select name="role" id="role" @bind=role>
-        <option value="Employee">employee</option>
-        <option value="Admin">admin</option>
-    </select>
-
-
-    <button onclick="@addUser">add new user</button>
-    <button onclick="@getUserByName">Test Get User</button>
+    <div style="width: 25%;">
+        <button type="button" class="btn btn-primary" @onclick=showAddPopupModal>Add User</button>
+    </div>
 }   
 
 @code {
@@ -69,9 +58,9 @@ else
     public string? userName { get; private set; }
     public string? password { get; private set; }
     public string? fullName { get; private set; }
+    public string? showAddModal { get; private set; } = "visually-hidden";
     public string? role { get; private set; } = "Employee";
-    public string? showModal { get; set; } = "visually-hidden";
-    public User curUser = new User { UserName = "N/A", FullName = "N/A", Role = "N/A", UserId = 1337 };
+    public User curUser = new User { UserName = "N/A", FullName = "N/A", Role = "N/A", UserId = -3 };
     private List<User> users = new();
     public bool modalDisplay { get; private set; } = false;
 
@@ -81,39 +70,23 @@ else
         users = _userDb.GetUsers();
     }
 
-    public void showDeleteModal(User user)
+    public void closeModals()
     {
-        curUser = user;
-        showModal = null;
+        showAddModal = "visually-hidden";
+        StateHasChanged();
     }
-
-    public void closeDeleteModal()
+    public void showAddPopupModal()
     {
-        showModal = "visually-hidden";
+        showAddModal = null;
     }
-
     public async void removeUser(User user)
     {
         users.Remove(user);
         await _userDb.DeleteUser(user);
         StateHasChanged();
-        closeDeleteModal();
     }
 
-    public async Task addUser()
-    {
 
-        User u = new User();
-        u.UserName = userName;
-        u.Password = BCrypt.HashPassword(password);
-        u.FullName = fullName;
-        u.Role = role;
-
-        await _userDb.InsertUser(u);
-
-        users.Add(u);
-        Console.WriteLine("User Added");
-    }
 
     public async Task getUserByName() {
         try 

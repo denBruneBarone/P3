@@ -1,7 +1,8 @@
 ﻿@using SPFAdminSystem.Database.UserFiles
 @inject IUserService _userdb
-<div class="@showModal bg-black position-fixed bg-opacity-50 top-0" tabindex="-1" role="dialog" style="display: flex; justify-content: center; align-items: center; left: 0; width: 100%; height: 100%;">
-    <div class="modal-dialog" role="document">
+<div class="@showModal" style="height: 100%; width: 100%; position: fixed; top: 0; left: 0; z-index: 5; display: flex; justify-content: center; align-items: center;">
+    <div @onclick=close class="bg-black bg-opacity-50" style="position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 1;"></div>
+    <div class="modal-dialog" role="document" style="z-index: 2; width: 100%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Delete User?</h5>
@@ -42,17 +43,18 @@
 
 @code {
     [Parameter] public User? user { get; set; }
-    [Parameter] public string? showModal { get; set; } = "visually-hidden";
+    [Parameter] public Action? closeModal { get; set; }
     [Parameter] public Action<User> userRemove { get; set; }
+    [Parameter] public string? showModal { get; set; } = "visually-hidden";
     public async Task deleteUser(User user)
     {
         /* CODE FOR DELETING USER GOES HERE!*/
         userRemove.Invoke(user);
-        
+
     }
 
     public void close()
     {
-        showModal = "visually-hidden";
+        closeModal.Invoke();
     }
 }
