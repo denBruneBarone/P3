@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SPFAdminSystem.Migrations
 {
-    /// <inheritdoc />
     public partial class InitialDBCreate : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -16,20 +14,20 @@ namespace SPFAdminSystem.Migrations
                 columns: table => new
                 {
                     ProductId = table.Column<string>(type: "TEXT", nullable: false),
-                    ArriveDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    RemovedFromStockDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ArriveDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    RemovedFromStockDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     InHouseTitle = table.Column<string>(type: "TEXT", nullable: false),
-                    TitleGWS = table.Column<string>(type: "TEXT", nullable: false),
-                    OrderPrice = table.Column<double>(type: "REAL", nullable: false),
-                    InStock = table.Column<int>(type: "INTEGER", nullable: false),
-                    InOrder = table.Column<int>(type: "INTEGER", nullable: false),
-                    Available = table.Column<int>(type: "INTEGER", nullable: false),
-                    Ordered = table.Column<int>(type: "INTEGER", nullable: false),
-                    Barcode = table.Column<int>(type: "INTEGER", nullable: false),
-                    PackSize = table.Column<int>(type: "INTEGER", nullable: false),
-                    Target = table.Column<int>(type: "INTEGER", nullable: false),
-                    MinOrder = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderQuantity = table.Column<int>(type: "INTEGER", nullable: false)
+                    TitleGWS = table.Column<string>(type: "TEXT", nullable: true),
+                    OrderPrice = table.Column<double>(type: "REAL", nullable: true),
+                    StockAmount = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrderAmount = table.Column<int>(type: "INTEGER", nullable: true),
+                    AvailableAmount = table.Column<int>(type: "INTEGER", nullable: true),
+                    Ordered = table.Column<int>(type: "INTEGER", nullable: true),
+                    Barcode = table.Column<int>(type: "INTEGER", nullable: true),
+                    PackSize = table.Column<int>(type: "INTEGER", nullable: true),
+                    Target = table.Column<int>(type: "INTEGER", nullable: true),
+                    MinOrder = table.Column<int>(type: "INTEGER", nullable: true),
+                    OrderQuantity = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -42,12 +40,12 @@ namespace SPFAdminSystem.Migrations
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RegisterDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: false),
+                    RegisterDate = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", nullable: false),
                     Password = table.Column<string>(type: "TEXT", nullable: false),
                     FullName = table.Column<string>(type: "TEXT", nullable: false),
-                    DeleteDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DeleteDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     Role = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -95,7 +93,6 @@ namespace SPFAdminSystem.Migrations
                 column: "UserId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

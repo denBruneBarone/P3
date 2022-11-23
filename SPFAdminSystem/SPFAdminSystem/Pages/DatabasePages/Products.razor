@@ -2,7 +2,7 @@
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
-@inject IProductData _db
+@inject IProductService _productDb
 
 <h5>All Products</h5>
 @if (products is null)
@@ -69,7 +69,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        products = await _db.GetProducts();
+        await _productDb.LoadProducts();
+        products = _productDb.GetProducts();
     }
     
 
@@ -79,9 +80,9 @@ else
         p.ProductId = Id;
         p.InHouseTitle = Title;
 
-        await _db.InsertProduct(p);
+        await _productDb.CreateOrUpdateProduct(p);
 
-
+        // Bad pratice
         products.Add(p);
         Console.WriteLine("Product Added");
     }

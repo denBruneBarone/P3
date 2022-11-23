@@ -2,8 +2,8 @@
 @attribute [Authorize(Roles = "Admin")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles
+@inject IUserService _userDb
 @using BCrypt.Net
-@inject IUserData _db
 @inject IJSRuntime js
 
 <h5>All Users</h5>
@@ -70,7 +70,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        users = await _db.GetUsers();
+        await _userDb.LoadUsers();
+        users = _userDb.GetUsers();
     }
 
 
@@ -83,7 +84,7 @@ else
         u.FullName = fullName;
         u.Role = role;
 
-        await _db.InsertUser(u);
+        await _userDb.InsertUser(u);
 
         users.Add(u);
         Console.WriteLine("User Added");
@@ -92,7 +93,7 @@ else
     public async Task getUserByName() {
         try 
         {
-            UserTest = await _db.GetUserByName("fdsafdsa");
+            UserTest = await _userDb.GetUserByName("fdsafdsa");
         } catch(Exception)
         {
             await js.InvokeVoidAsync("alert", "Error: User Not Found");
