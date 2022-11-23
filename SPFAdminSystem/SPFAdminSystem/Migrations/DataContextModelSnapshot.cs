@@ -119,14 +119,12 @@ namespace SPFAdminSystem.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProductId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserActionId");
@@ -142,9 +140,7 @@ namespace SPFAdminSystem.Migrations
                 {
                     b.HasOne("Product", "Product")
                         .WithMany("UserActions")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("User", "User")
                         .WithMany("UserActions")
