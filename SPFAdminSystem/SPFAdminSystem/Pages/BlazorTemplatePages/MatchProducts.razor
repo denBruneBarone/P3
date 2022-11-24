@@ -1,6 +1,8 @@
 ﻿@using System.Reflection;
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles;
+@using System.Reflection;
+@using OfficeOpenXml;
 @inject IProductData _db;
 
 @page "/match"
@@ -12,14 +14,16 @@
 @*I productList tjekkes om produktet fra list 1 er i list 2 og markere dem med rødt eller grønt*@
 @*matchProduct vise informationerne for produktet fra SF og GSM*@
 @*browseBtn er knappen der tillader at lede efter alle produkter*@
-
-<div class="tempButton">
+<div>
+</div>
+<div class="tempButtons">
     <button @onclick="InsertProduct">Add products</button>
+    <button @onclick="GetUnknownProducts">Add unknown prods</button>
 </div>
 <div class="container">
     <div id="productList">
         @{
-            counter = products.Count();
+            counter = products.Count()-MappedTitles.Count();
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -28,9 +32,20 @@
             }
             @foreach (var item in products)
             {
-
-                <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
-                counter++;
+                if (products.Contains(item))
+                {
+                    if(matchTitle==item.InHouseTitle){
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
+                        counter++;
+                    }else{
+                        if(!IsMapped(item.InHouseTitle)){
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
+                            counter++;
+                        }else{
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #b2dab6;" id="listButtons">@item.InHouseTitle</button></li>
+                        }
+                    }
+                }
             }
         </ul>
         <button id="browseBtnBlue">Browse all products</button>
@@ -201,13 +216,13 @@
                                 }
                             </ul>
                         </div>
-                    }
-                </div>
-                <div id="ignoreApplyButtons">
-                    <button id="acceptButton" style="background:#b2dab6">Accept</button>
+                    </div>
+                    <div id="ignoreApplyButtons">
+                        <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
@@ -450,10 +465,44 @@
 
 
 
+    /*List of strings, is used to check if product is mapped*/
+    private List<string> MappedTitles = new List<string>();
+    /*Function for accepting mapping proposal*/
+    private void AcceptMatch(){
+        string title = products[chosenProduct].InHouseTitle;
+
+
+
+        if(IsMapped(title)){
+            Console.WriteLine("It's already mapped!");
+        }else{
+            MappedTitles.Add(title);
+            Console.WriteLine("Mapping accepted and saved!");
+        }
+
+    }
+
+    /*Check if title is in MappedTitles list*/
+    private bool IsMapped(string title){
+        if(MappedTitles.Count() > 0)
+        {
+            foreach(string prodTitle in MappedTitles){
+                if(title == prodTitle){
+                    return true;
+                }
+            }
+            return false;
+        }else{
+            return false;
+        }
+    }
+
+
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
-    private List<Product> productsTemp = new List<Product> { new Product() };
-    private List<Product> productsBackup = new List<Product> { new Product() };
+    private List<Product> UnknownProducts = new();
+
+    private List<Product> productsTemp = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -462,7 +511,6 @@
 
     public async Task InsertProduct()
     {
-
         Product p = new();
         Product a = new();
         Product b = new();
@@ -481,6 +529,7 @@
         Product r = new();
         Product d = new();
         Product m = new();
+
         p.ProductId = "1";
         p.ArriveDate = new DateTime(1996, 08, 16);
         p.AvailableAmount = 555;
@@ -793,6 +842,60 @@
 
         Console.WriteLine("Product(s) Added");
     }
+
+    private void GetUnknownProducts (){
+
+        var FilePath = @"C:\Users\rudnu\source\repos\P3\SPFAdminSystem\SPFAdminSystem\wwwroot\PricelistEurope3.xls";
+        FileInfo fileInfo = new FileInfo(FilePath);
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+        using (ExcelPackage package = new ExcelPackage(fileInfo))
+        {
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+
+            int rowCount = worksheet.Dimension.End.Row;
+            int col = 6;
+            List<Product> unknownProducts = new List<Product>();
+            for (int row = 5; row <= rowCount; row++)
+            {
+                Product product = new Product();
+                int found = 0;
+                if (worksheet.Cells[row, col].Value == null)
+                {
+                    worksheet.Cells[row, col].Value = "empty";
+                }
+                int barcode = (int)worksheet.Cells[row, col].Value;
+                /*Check if barcode from the worksheet is in any of the products from the "database"*/
+                foreach (Product prod in products){
+                    if (barcode == prod.Barcode)
+                    {
+                        found++;
+                        break;
+                    }
+                }
+                /*In case the barcode wasn't found, add from row to product, and add product to List<Product>unknownProducts*/
+                if(found==0){
+                    string dateString = worksheet.Cells[row, 1].Value.ToString().Replace("-", "/");
+
+                    product.Barcode = (int)worksheet.Cells[row, 6].Value;
+                    product.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
+                    product.PackSize = (int)worksheet.Cells[row, 9].Value;
+                    product.OrderPrice = (int)worksheet.Cells[row, 16].Value;
+                    product.ArriveDate = DateTime.Parse(dateString);
+
+                    unknownProducts.Add(product);
+                }
+
+                    //else if (col == 1) produkt.ProductId = worksheet.Cells[row, col].Value.ToString();
+                    //else if (col == 2) produkt.InHouseTitle = worksheet.Cells[row, col].Value.ToString();
+                    //else if (col == 4) produkt.OrderPrice = worksheet.Cells[row, col].GetValue<double>();
+            }
+
+
+        UnknownProducts= unknownProducts;
+        }
+    }
+
 }
 @*
 #b2dab6 - grøn
