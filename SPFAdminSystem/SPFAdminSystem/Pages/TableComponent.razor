@@ -2,20 +2,20 @@
 
 <table>
     <tr>
-        <button onclick="@((object e)=>DateToggleArrow.changeDirection("date"))">
-            <th>Date<icon class="oi oi-caret-@DateToggleArrow.directionEnding"></icon></th>
+        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[DateS]].changeDirection(DateS))">
+        <th>Date<icon hidden=@Toggles[ToggleArrowIdentifier[DateS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[DateS]].directionEnding"></icon></th>
         </button>
-        <button onclick="@((object e)=>UserToggleArrow.changeDirection("user"))">
-        <th>User<icon class="oi oi-caret-@UserToggleArrow.directionEnding"></icon></th>
+        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[UserS]].changeDirection(UserS))">
+        <th>User<icon hidden=@Toggles[ToggleArrowIdentifier[UserS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[UserS]].directionEnding"></icon></th>
         </button>
-        <button onclick="@((object e)=>TypeToggleArrow.changeDirection("type"))">
-        <th>Type<icon class="oi oi-caret-@TypeToggleArrow.directionEnding"></icon></th>
+        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[TypeS]].changeDirection(TypeS))">
+        <th>Type<icon hidden=@Toggles[ToggleArrowIdentifier[TypeS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[TypeS]].directionEnding"></icon></th>
         </button>
-        <button onclick="@((object e)=>ValueToggleArrow.changeDirection("value"))">
-        <th>Value<icon class="oi oi-caret-@ValueToggleArrow.directionEnding"></icon></th>
+        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[ValueS]].changeDirection(ValueS))">
+        <th>Value<icon hidden=@Toggles[ToggleArrowIdentifier[ValueS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[ValueS]].directionEnding"></icon></th>
         </button>
-        <button onclick="@((object e)=>ProductToggleArrow.changeDirection("product"))">
-        <th>Product<icon class="oi oi-caret-@ProductToggleArrow.directionEnding"></icon></th>
+        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[ProductS]].changeDirection(ProductS))">
+        <th>Product<icon hidden=@Toggles[ToggleArrowIdentifier[ProductS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[ProductS]].directionEnding"></icon></th>
         </button>
     </tr>
     @foreach(var action in actions){
@@ -35,19 +35,41 @@
     [Parameter]
     public List<UserAction> actions{ get; set; }
 
-    public ToggleArrow DateToggleArrow = new ToggleArrow();
-    public ToggleArrow UserToggleArrow = new ToggleArrow();
-    public ToggleArrow TypeToggleArrow = new ToggleArrow();
-    public ToggleArrow ValueToggleArrow = new ToggleArrow();
-    public ToggleArrow ProductToggleArrow = new ToggleArrow();
+    public string DateS = "date";
+    public string UserS="user";
+    public string TypeS = "type";
+    public string ValueS="value";
+    public string ProductS = "product";
+
+    static public List<ToggleArrow> Toggles = new List<ToggleArrow> { 
+        new ToggleArrow(), new ToggleArrow(), new ToggleArrow(), new ToggleArrow(), new ToggleArrow() };
+
+    public Dictionary<string, int> ToggleArrowIdentifier = new Dictionary<string, int>(){
+        {"date",0},
+        {"user",1},
+        {"type",2},
+        {"value",3},
+        {"product",4}
+    };
+
+    protected override async Task OnInitializedAsync(){
+        Toggles[ToggleArrowIdentifier[DateS]].hidden = false;
+    }
 
     public class ToggleArrow
     {
         public string directionEnding = "bottom";
+        public bool hidden = true;
         bool sortingDirection = true;
         public void changeDirection(string sortingAttribute){
             directionEnding = directionEnding == "bottom" ? "top" : "bottom";
             sortingDirection = !sortingDirection;
+            if(hidden){ // This toggle is hidden, hence another toggle must be visible, so we hide all
+                foreach(var toggle in Toggles){
+                    toggle.hidden = true;
+                }
+            }
+            hidden = false;
             //actions=SortActionsBy(actions,sortingAttribute,sortingDirection);
         }
     }
