@@ -18,7 +18,8 @@
         <th>Product<icon hidden=@Toggles[ToggleArrowIdentifier[ProductS]].hidden class="oi oi-caret-@Toggles[ToggleArrowIdentifier[ProductS]].directionEnding"></icon></th>
         </button>
     </tr>
-    @foreach(var action in Actions){
+    @foreach (var action in actions_previewer)
+    {
     <tr>
         <td>
             @action.Date
@@ -34,7 +35,7 @@
 @code{
     [Parameter]
     public List<UserAction> Actions{ get; set; }
-    static private List<UserAction> actions { get; set; }
+    static private List<UserAction> actions_previewer { get; set; }
 
     public string DateS = "date";
     public string UserS="user";
@@ -55,7 +56,7 @@
 
     protected override async Task OnInitializedAsync(){
         Toggles[ToggleArrowIdentifier[DateS]].hidden = false;
-        actions = Actions;
+        actions_previewer = Actions;
     }
 
     public class ToggleArrow
@@ -72,7 +73,7 @@
                 }
             }
             hidden = false;
-            actions=SortActionsBy(actions,sortingAttribute,sortingDirection);
+            actions_previewer = SortActionsBy(actions_previewer, sortingAttribute, sortingDirection);
         }
     }
 
