@@ -1,6 +1,6 @@
-﻿@using SPFAdminSystem.Database;
+﻿@using System.Reflection;
+@using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles;
-@using System.Reflection;
 @inject IProductData _db;
 
 @page "/match"
@@ -12,8 +12,7 @@
 @*I productList tjekkes om produktet fra list 1 er i list 2 og markere dem med rødt eller grønt*@
 @*matchProduct vise informationerne for produktet fra SF og GSM*@
 @*browseBtn er knappen der tillader at lede efter alle produkter*@
-<div>
-</div>
+
 <div class="tempButton">
     <button @onclick="InsertProduct">Add products</button>
 </div>
@@ -29,57 +28,65 @@
             }
             @foreach (var item in products)
             {
-                if (products.Contains(item))
-                {
-                    <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
-                    counter++;
-                }
+
+                <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
+                counter++;
             }
         </ul>
+        <button id="browseBtnBlue">Browse all products</button>
     </div>
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
     @{
-        if (products.Count() > 0)
-        {
-            <div id="matchProduct">
-                @*Attempt to make a title for the "Match Product" but failed at width*@
-                <div id="matchProductTitle">
-                </div>
+        <div id="matchProduct">
+            @*Attempt to make a title for the "Match Product" but failed at width*@
+            <div id="matchProductTitle">
+            </div>
 
-                @*----------------------------------------------------------------------------------------------------------------------*@
-                <div id="leftItem">
-                    <div id="itemTitle">
-                        @{
-                            if (matchTitle == "" && products.Count > 0)
-                            {
-                                matchTitle = products[0].InHouseTitle;
-                            }
+            @*----------------------------------------------------------------------------------------------------------------------*@
+            <div id="leftItem">
+                <div id="itemTitle">
+                    @{
+                        if (matchTitle == "" && products.Count > 0)
+                        {
+                            matchTitle = products[0].InHouseTitle;
                         }
-                        <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
-                    </div>
-                    <div id="currentInfoTitle">
-                        <h3 style="text-align: center;">Current match information:</h3>
-                    </div>
-                    <div id="leftMatchItemsFlex">
-                        <div id="currentInfo">
-                            <ul id="matchListLeft">
-                                @{
+                    }
+                    <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
+                </div>
+                <div id="currentInfoTitle">
+                    <h3 style="text-align: center;">Current match information:</h3>
+                </div>
+                <div id="leftMatchItemsFlex">
+                    <div id="currentInfo">
+                        <ul id="matchListLeft">
+                            @{
+                                if (products.Count() > 0)
+                                {
                                     if (matchTitle != "")
                                     {
                                         foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
                                         {
-                                            <li id="itemLiTitles">@prop.Name</li>
+                                            if (prop.Name.ToLower() == "target" && targetUpdated == true || prop.Name.ToLower() == "inhousetitle" && inHouseTitleUpdated == true)
+                                            {
+                                                <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
+                                            }
+                                            else
+                                            {
+                                                <li id="itemLiTitles">@prop.Name</li>
+                                            }
                                         }
                                     }
                                 }
-                            </ul>
-                        </div>
-
-                        <div id="currentInfoValues">
-                            <ul style="list-style: none;" id="matchListLeft">
-                                @{
+                            }
+                        </ul>
+                    </div>
+                    <div id="currentInfoValues">
+                        <ul style="list-style: none;" id="matchListLeft">
+                            @{
+                                if (products.Count() > 0)
+                                {
                                     if (matchTitle != "")
                                     {
                                         foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
@@ -94,22 +101,20 @@
                                                 {
                                                     if (prop.Name == "Target")
                                                     {
+                                                        <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                       @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
-                                                        
-                                                            if (valueEntered == true)
-                                                            {
-                                                                <small>Value updated</small>
-                                                            }
-                                                        <input type="text" @bind="@CurrentValueStr" @oninput="@((e) => {CurrentValueStr=(string)e.Value; onSubmitValue();})" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" style="border:none; text-align: right; width:50px; padding-top:12px; padding-bottom:12px;" />
-                                                            <input type="submit" hidden />
-                                                            Console.WriteLine(CurrentValueStr);
+                                                        <input type="submit" hidden />
+                                                    }
+                                                    else if (prop.Name == "InHouseTitle")
+                                                    {
+                                                        <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                       @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
-                                                        
-
+                                                        <input type="submit" hidden />
                                                     }
                                                     else
                                                     {
-
                                                         <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
                                                     }
                                                 }
@@ -121,39 +126,47 @@
                                         }
                                     }
                                 }
-                            </ul>
-                        </div>
+                            }
+                        </ul>
                     </div>
-                    <div id="ignoreApplyButtons">
-                        <button id="ignoreButton" style="background:#f3cac9">Ignore</button>
-                        <button id="applyButton" style="background:#b2dab6">Apply</button>
-                    </div>
-                    
                 </div>
+                <div id="ignoreApplyButtons">
+                    <button id="ignoreButton" style="background:#f3cac9" @onclick="@IgnoreChanges">Ignore</button>
+                    <button id="applyButton" style="background:#b2dab6" @onclick="@ApplyChanges">Apply</button>
+                </div>
+            </div>
 
+            @*----------------------------------------------------------------------------------------------------------------------*@
 
-                @*----------------------------------------------------------------------------------------------------------------------*@
+            <div id="rightItem">
+                @code {
+                    int justBooted = 0;
 
-
-                <div id="rightItem">
-                    <div id="itemTitle">
-                        <div id="rightAuxItems">
-                            <div id="dropdownId">
-                                <label for="matches">Select a match:</label>
-                                <select name="matches" id="matches" @onchange="getChosenMatchIndex">
-                                    @foreach (Product item in products)
-                                    {
-                                        <option value="@item.InHouseTitle">@item.InHouseTitle</option>
-                                    }
-                                </select>
-                            </div>
-                            <input type="search" placeholder="Search" id="searchArea" name="Search">
+                    private void updateJustBooted()
+                    {
+                        justBooted = 1;
+                    }
+                }
+                <div id="itemTitle">
+                    <div id="rightAuxItems">
+                        <div id="dropdownId">
+                            <select name="matches" id="matches" @onchange="checkIfMatchChosen">
+                                <option value="" disabled selected>Select a match</option>
+                                @foreach (Product item in products)
+                                {
+                                    <option value="@item.InHouseTitle">@item.InHouseTitle</option>
+                                }
+                            </select>
                         </div>
+                        <input type="search" placeholder="Search" id="searchArea" name="Search">
                     </div>
-                    <div id="currentInfoTitle">
-                        <h3 style="text-align: center;">Selected match information:</h3>
-                    </div>
-                    <div id="leftMatchItemsFlex">
+                </div>
+                <div id="currentInfoTitle">
+                    <h3 style="text-align: center;">Selected match information:</h3>
+                </div>
+                <div id="leftMatchItemsFlex">
+                    @if (justBooted == 1)
+                    {
                         <div id="currentInfo">
                             <ul id="matchListLeft">
                                 @{
@@ -188,47 +201,55 @@
                                 }
                             </ul>
                         </div>
-                    </div>
-                    <div id="ignoreApplyButtons">
-                        <button id="acceptButton" style="background:#b2dab6">Accept</button>
-                    </div>
+                    }
+                </div>
+                <div id="ignoreApplyButtons">
+                    <button id="acceptButton" style="background:#b2dab6">Accept</button>
                 </div>
             </div>
-        }
+        </div>
     }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
-    <div id="browseBtn">
-        <button id="browseBtnBlue">Browse all products</button>
-    </div>
+    @*<div id="browseBtn">
+    <button id="browseBtnBlue">Browse all products</button>
+    </div>*@
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
 </div>
 
+<div id="changeOverview">
+    @{
+        if(targetUpdated == true || inHouseTitleUpdated == true)
+        {
+            <h3>Changes Overview:</h3>
+            <p></p>
+        }
+        if(inHouseTitleUpdated == true)
+        {
+            <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
+        }
+        if(targetUpdated == true)
+        {
+            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@commitedChangeInt"</p>
+        }
+    }
+</div>
+
 @*----------------------------------------------------------------------------------------------------------------------*@
 
 @code {
-    string CurrentValueStr="";
-    
-    bool valueEntered = false;
-    
-    private void onSubmitValue()
-    {
-        Console.WriteLine("WORKETH");
-
-        valueEntered = true;
-
-    }
-
     int counter = 0;
-
     string matchTitle = "";
+    string titleOfEdit = "";
 
     private void GetValue(string item)
     {
         matchTitle = item;
+
+        IgnoreChanges();
 
         UpdateMatch(matchTitle);
     }
@@ -244,29 +265,195 @@
             {
                 if (prop.GetValue(products[i], null) != null)
                 {
-                    if (products[i].InHouseTitle == matchTitle)
+                    if (products[i].InHouseTitle == matchTitle && chosenProduct != i)
                     {
                         chosenProduct = i;
+                        productsBackup[0] = products[chosenProduct];
                     }
                 }
             }
         }
     }
-    private void getChosenMatchIndex(ChangeEventArgs e)
-    {
 
+    private void UpdateMatchTitle(string updatedTitle)
+    {
+        matchTitle = updatedTitle;
+    }
+
+    int val = 0;
+    int? commitedChangeInt = -1;
+    bool targetUpdated = false;
+    bool inHouseTitleUpdated = false;
+    string targetString = "";
+    string commitedChange = "";
+    string InHouseTitleString = "";
+    string InHouseCommit = "";
+
+    private void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            if (titleOfEdit.ToLower() == "target")
+            {
+                if (targetString == "")
+                {
+                    targetUpdated = false;
+                    commitedChangeInt = products[chosenProduct].Target;
+                }
+                else
+                {
+                    Int32.TryParse(targetString, out val);
+                    if (val > 0)
+                    {
+                        commitedChangeInt = Convert.ToInt32(targetString);
+                    }
+                    if (commitedChangeInt != products[chosenProduct].Target && commitedChangeInt >= 0)
+                    {
+                        targetUpdated = true;
+                    }
+                    else
+                    {
+                        targetUpdated = false;
+                        commitedChangeInt = products[chosenProduct].Target;
+                    }
+                }
+            }
+            else if (titleOfEdit.ToLower() == "inhousetitle")
+            {
+                if (InHouseTitleString == null || InHouseTitleString == "" || InHouseTitleString == products[chosenProduct].InHouseTitle)
+                {
+                    inHouseTitleUpdated = false;
+                }
+                else
+                {
+                    InHouseCommit = InHouseTitleString;
+                    inHouseTitleUpdated = true;
+                }
+            }
+        }
+    }
+
+    private void getChosenMatchIndex(string dropDownList)
+    {
         for (int t = 0; t < products.Count(); t++)
         {
-            if (e.Value.ToString() == products[t].InHouseTitle)
+            if (dropDownList == products[t].InHouseTitle)
             {
                 chosenMatch = t;
                 break;
             }
         }
     }
+
+    string dropDownList = "";
+
+    private void checkIfMatchChosen(ChangeEventArgs e)
+    {
+        dropDownList = e.Value.ToString();
+
+        if (dropDownList != "" && dropDownList != null && dropDownList != "Select a match")
+        {
+            getChosenMatchIndex(dropDownList);
+        }
+        updateJustBooted();
+    }
+
+    private void ApplyChanges()
+    {
+        if (commitedChangeInt >= 0 && targetUpdated == true)
+        {
+            products[chosenProduct].Target = commitedChangeInt;
+        }
+        if (InHouseCommit != "" && InHouseCommit != products[chosenProduct].InHouseTitle && inHouseTitleUpdated == true)
+        {
+            products[chosenProduct].InHouseTitle = InHouseCommit;
+            UpdateMatchTitle(InHouseCommit);
+        }
+
+        IgnoreChanges();
+    }
+
+    private void IgnoreChanges()
+    {
+        targetString = "";
+        targetUpdated = false;
+        InHouseTitleString = "";
+        inHouseTitleUpdated = false;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
-    private List<Product> productsTemp = new List<Product>{new Product ()};
+    private List<Product> productsTemp = new List<Product> { new Product() };
+    private List<Product> productsBackup = new List<Product> { new Product() };
 
     protected override async Task OnInitializedAsync()
     {
