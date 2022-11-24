@@ -2,31 +2,31 @@
 
 <table>
     <tr>
-        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[dateIdentifier]].changeDirection(dateIdentifier))">
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[dateIdentifier]].changeDirection(dateIdentifier))">
             <th>Date<icon 
                     hidden=@Toggles[ToggleArrowIdentifier[dateIdentifier]].hidden 
                     class="oi oi-caret-@Toggles[ToggleArrowIdentifier[dateIdentifier]].directionEnding">
             </icon></th>
         </button>
-        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[userIdentifier]].changeDirection(userIdentifier))">
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[userIdentifier]].changeDirection(userIdentifier))">
             <th>User<icon 
                     hidden=@Toggles[ToggleArrowIdentifier[userIdentifier]].hidden 
                     class="oi oi-caret-@Toggles[ToggleArrowIdentifier[userIdentifier]].directionEnding">
             </icon></th>
         </button>
-        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[typeIdentifier]].changeDirection(typeIdentifier))">
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[typeIdentifier]].changeDirection(typeIdentifier))">
             <th>Type<icon 
                 hidden=@Toggles[ToggleArrowIdentifier[typeIdentifier]].hidden 
                 class="oi oi-caret-@Toggles[ToggleArrowIdentifier[typeIdentifier]].directionEnding">
             </icon></th>
         </button>
-        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[valueIdentifier]].changeDirection(valueIdentifier))">
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[valueIdentifier]].changeDirection(valueIdentifier))">
             <th>Value<icon 
                 hidden=@Toggles[ToggleArrowIdentifier[valueIdentifier]].hidden 
                 class="oi oi-caret-@Toggles[ToggleArrowIdentifier[valueIdentifier]].directionEnding">
             </icon></th>
         </button>
-        <button onclick="@((object e)=>Toggles[ToggleArrowIdentifier[productIdentifier]].changeDirection(productIdentifier))">
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[productIdentifier]].changeDirection(productIdentifier))">
             <th>Product<icon 
                 hidden=@Toggles[ToggleArrowIdentifier[productIdentifier]].hidden 
                 class="oi oi-caret-@Toggles[ToggleArrowIdentifier[productIdentifier]].directionEnding">
