@@ -1,0 +1,95 @@
+﻿@inject IJSRuntime js;
+
+<table>
+    <tr>
+        <button onclick="@((object e)=>DateToggleArrow.changeDirection("date"))">
+            <th>Date<icon class="oi oi-caret-@DateToggleArrow.directionEnding"></icon></th>
+        </button>
+        <button onclick="@((object e)=>UserToggleArrow.changeDirection("user"))">
+        <th>User<icon class="oi oi-caret-@UserToggleArrow.directionEnding"></icon></th>
+        </button>
+        <button onclick="@((object e)=>TypeToggleArrow.changeDirection("type"))">
+        <th>Type<icon class="oi oi-caret-@TypeToggleArrow.directionEnding"></icon></th>
+        </button>
+        <button onclick="@((object e)=>ValueToggleArrow.changeDirection("value"))">
+        <th>Value<icon class="oi oi-caret-@ValueToggleArrow.directionEnding"></icon></th>
+        </button>
+        <button onclick="@((object e)=>ProductToggleArrow.changeDirection("product"))">
+        <th>Product<icon class="oi oi-caret-@ProductToggleArrow.directionEnding"></icon></th>
+        </button>
+    </tr>
+    @foreach(var action in actions){
+    <tr>
+        <td>
+            @action.Date
+        </td>
+        <td>@action.User.FullName</td>
+        <td>@action.ActionType</td>
+        <td>@action.Value</td>
+        <td>@action.Product.InHouseTitle</td>
+    </tr>
+    }
+</table>
+
+@code{
+    [Parameter]
+    public List<UserAction> actions{ get; set; }
+
+    public ToggleArrow DateToggleArrow = new ToggleArrow();
+    public ToggleArrow UserToggleArrow = new ToggleArrow();
+    public ToggleArrow TypeToggleArrow = new ToggleArrow();
+    public ToggleArrow ValueToggleArrow = new ToggleArrow();
+    public ToggleArrow ProductToggleArrow = new ToggleArrow();
+
+    public class ToggleArrow
+    {
+        public string directionEnding = "bottom";
+        bool sortingDirection = true;
+        public void changeDirection(string sortingAttribute){
+            directionEnding = directionEnding == "bottom" ? "top" : "bottom";
+            sortingDirection = !sortingDirection;
+            actions=SortActionsBy(actions,sortingAttribute,sortingDirection);
+        }
+    }
+
+    public static List<UserAction> SortActionsBy(List<UserAction> actions,string sortBy,bool desc)
+    {
+        switch (sortBy)
+        {
+            case "date":
+                if (desc)
+                    actions = actions.OrderByDescending(a => a.Date).ToList();
+                else
+                    actions = actions.OrderBy(a => a.Date).ToList();
+                break;
+            case "user":
+                if (desc)
+                    actions = actions.OrderByDescending(a => a.User).ToList();
+                else
+                    actions = actions.OrderBy(a => a.User).ToList();
+                break;
+            case "type":
+                if (desc)
+                    actions = actions.OrderByDescending(a => a.ActionType).ToList();
+                else
+                    actions = actions.OrderBy(a => a.ActionType).ToList();
+                break;
+            case "value":
+                if (desc)
+                    actions = actions.OrderByDescending(a => a.Value).ToList();
+                else
+                    actions = actions.OrderBy(a => a.Value).ToList();
+                break;
+            case "product":
+                if (desc)
+                    actions = actions.OrderByDescending(a => a.Product).ToList();
+                else
+                    actions = actions.OrderBy(a => a.Product).ToList();
+                break;
+        }
+        return actions;
+    }
+    public static void DoSmt(){
+
+    }
+}

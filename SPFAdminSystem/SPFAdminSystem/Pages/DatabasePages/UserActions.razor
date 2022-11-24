@@ -1,5 +1,4 @@
 ﻿@page "/actions"
-
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles;
 @using SPFAdminSystem.Database.ProductFiles;
@@ -18,20 +17,24 @@ else{
         <Authorized>
             <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Change Product Detail</button>
             <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Save Excel File</button>
-            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Upload Excel File</button>
+            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Upload Excel File</button>
         </Authorized>
         <NotAuthorized>
 
         </NotAuthorized>
     </AuthorizeView>
+    <TableComponent actions="@actions"></TableComponent>
+@*
     <Table TableItem="UserAction" Items="actions" PageSize="15">
         <Column TableItem="UserAction" Title="Date" Field="@(x => x.Date)" Sortable="true" Filterable="true" Width="20%" DefaultSortColumn="true" />
         <Column TableItem="UserAction" Title="User" Field="@(x => x.User.UserName)" Sortable="true" Filterable="true" Width="20%" />
         <Column TableItem="UserAction" Title="Product" Field="@(x => x.Product.InHouseTitle)" Sortable="true" Filterable="true" Width="20%" />
         <Column TableItem="UserAction" Title="Value" Field="@(x => x.Value)" Sortable="true" Filterable="true" Width="10%" />
-        <Column TableItem="UserAction" Title="Type" Field="@(x => x.ActionType)" Sortable="true"  Filterable="true" Width="10%" Format="C" Align="Align.Right" />
+        <a href="google.com">
+            <Column TableItem="UserAction" Title="Type" Field="@(x => x.ActionType)" Sortable="true"  Filterable="true" Width="10%" Format="C" Align="Align.Right" />
+        </a>
         <Pager ShowPageNumber="true" ShowTotalCount="true" ShowPageSizes="true" />
-    </Table>
+    </Table>*@
 }
 
 @code
