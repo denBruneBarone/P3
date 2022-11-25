@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SPFAdminSystem.Database.ProductFiles;
+using SPFAdminSystem.Database.UserFiles;
+using System.ComponentModel.DataAnnotations;
 
 public class UserAction
 {
@@ -29,5 +31,27 @@ public class UserAction
         Value = value;
         ProductId = productId;
         Product = product;
+    }
+
+    public async Task<UserAction> CreateUserAction(string userName, string identifier, IUserService userDb, IProductService prodDb)
+    {
+        User currUser = await userDb.GetUserByName(userName);
+        UserAction action;
+        if (identifier == "Excel File Upload")
+        {
+            //dev
+            string prodId = "5011921003747";
+            Product prod = await prodDb.GetProductById(prodId);
+
+            action = new UserAction(currUser.UserId, currUser, DateTime.Now, "Excel File Upload", "", prodId, prod);
+        }
+        else
+        {
+            Product prod = await prodDb.GetProductById(identifier);
+            action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", identifier, prod);
+        }
+
+        await userDb.InsertAction(action);
+        return action;
     }
 }

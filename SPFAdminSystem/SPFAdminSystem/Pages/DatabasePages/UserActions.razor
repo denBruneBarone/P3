@@ -1,4 +1,5 @@
 ﻿@page "/actions"
+@attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles;
 @using SPFAdminSystem.Database.ProductFiles;
@@ -14,10 +15,10 @@
 else{
     <AuthorizeView>
         <Authorized>
-            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Change Product Detail</button>
+            <button onclick="@(()=>UserActionHandler(context.User.Identity.Name,"5011921003747"))">Change Product Detail</button>
             @*<button onclick="@(()=>AddUserAction(context.User.Identity.Name,"1"))">Change Product Detail</button>*@
-            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Save Excel File</button>
-            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Upload Excel File</button>
+            <button onclick="@(()=>UserActionHandler(context.User.Identity.Name,"Excel File Upload"))">Save Excel File</button>
+            <button onclick="@(()=>UserActionHandler(context.User.Identity.Name,"Excel File Upload"))">Upload Excel File</button>
         </Authorized>
         <NotAuthorized>
 
@@ -29,56 +30,6 @@ else{
 @code
 {
     private List<UserAction> actions = new();
-    public async void AddUserAction(string userName, string identifier)
-    {
-        try {
-            User currUser = await _userDb.GetUserByName(userName);
-            UserAction action;
-            if (identifier == "Excel File Upload")
-            {
-                //dev
-                string prodId = "5011921003747";
-                Product prod = await _prodDb.GetProductById(prodId);
-
-                action = new UserAction(currUser.UserId, currUser, DateTime.Now, "Excel File Upload","",prodId,prod);
-            }
-            else{
-                Product prod = await _prodDb.GetProductById(identifier);
-                action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", identifier, prod);
-            }
-
-            await _userDb.InsertAction(action);
-            actions.Add(action);
-            StateHasChanged();
-        }
-        catch (InvalidOperationException e)
-        {
-            if (userName == "Admin")
-                await js.InvokeVoidAsync("alert", "You are currently logged on as 'Admin'. Please change to a real user in the database to add a user action.");
-        }
-        catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
-        {
-            await js.InvokeVoidAsync("alert", $"db update error {e}");
-        }
-        catch (OverflowException)
-        {
-            await js.InvokeVoidAsync("alert", $"User action yould not be saved with identifier '{identifier}'");
-        }
-    }
-
-    public async void OpenThis(UserAction action){
-        switch(action.ActionType){
-            case "Excel File Upload":
-            // show affected products
-            break;
-            case "Excel File Saved":
-            // dont do anything
-            break;
-            default:
-            // look up product in db
-            break;
-        }
-    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,6 +39,34 @@ else{
         {
             action.Product = await _prodDb.GetProductById(action.ProductId);
             action.User = await _userDb.GetUserById(action.UserId);
+        }
+    }
+
+    // creates the user action in the database, adds it to the model and refreshes
+    public async void UserActionHandler(string userName, string identifier){
+        try
+        {
+            UserAction action = new();
+            action = await action.CreateUserAction(userName, identifier, _userDb,_prodDb);
+            actions.Add(action);
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            if (userName == "Admin")
+                await js.InvokeVoidAsync("alert", "You are currently logged in with a developer account, that does not exist in the database. Please change to a real user to add a user action.");
+        }
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
+        {
+            await js.InvokeVoidAsync("alert", $"db update error {e}");
+        }
+        catch (OverflowException)
+        {
+            await js.InvokeVoidAsync("alert", $"User action yould not be saved with identifier '{identifier}'");
+        }
+        catch (KeyNotFoundException)
+        {
+            await js.InvokeVoidAsync("alert", $"An error occurred while saving the user action, the product id '{identifier}' was not recognized.");
         }
     }
 
