@@ -1,0 +1,132 @@
+﻿@page "/users/{UserID:int}"
+@using SPFAdminSystem.Database.UserFiles
+@using SPFAdminSystem.Shared.PopupModals
+@inject IUserService _userDB
+@inject NavigationManager navManager
+<DeleteUserPopup userRemove="@removeUser" user=@user closeModal=@closeModal showModal=@showDeleteUserModal />
+<ChangePasswordPopup showModal="@showPasswordModal" closeModal=@closeModal user=@user />
+<ChangeUserNamePopup showModal="@ShowUsernameModal" closeModal=@closeModal user=@user/>
+<ChangeFullnamePopup showModal="@ShowFullnameModal" closeModal=@closeModal user=@user/>
+<ChangeRolePopup showModal="@ShowRoleModal" closeModal=@closeModal user=@user />
+<h3><a href="users" class="text-reset"><span class="oi oi-arrow-circle-left"></span></a></h3>
+<h3 class="align-middle">Editing User:  @user.FullName</h3>
+<div class="container informationContainer">
+    <div class="info-column w-100">
+        <table class="table table-striped table-hover border-info h-100">
+            <thead>
+                <tr>
+                    <th scope="col">Item</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="align-middle" scope="row">UserID:</th>
+                    <td class="align-middle">@user.UserId</td>
+                    <td class="align-middle" style="width: 5%;"></td>
+                </tr>
+                <tr>
+                    <th class="align-middle" scope="row">Username:</th>
+                    <td class="align-middle">@user.UserName</td>
+                    <td class="align-middle" style="width: 5%;">
+                        <button style="all: unset; cursor: pointer;" @onclick=showChangeUserNameModal>
+                            <span class="oi oi-pencil"></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-middle" scope="row">Full Name:</th>
+                    <td class="align-middle">@user.FullName</td>
+                    <td class="align-middle" style="width: 5%;">
+                        <button style="all: unset; cursor: pointer;" @onclick=ShowChangeFullNameModal>
+                            <span class="oi oi-pencil"></span>
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="align-middle" scope="row">Role:</th>
+                    <td class="align-middle">@user.Role</td>
+                    <td class="align-middle" style="width: 5%;">
+                        <button style="all: unset; cursor: pointer;" @onclick=ShowChangeRoleModal>
+                            <span class="oi oi-pencil"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="info-column w-50">
+        <div class="h-50 w-75" style="display: flex; flex-direction: column; justify-content: space-around;">
+            <button type="button" class="btn btn-info" @onclick=showChangePasswordModal>
+                Change Password
+            </button>
+            <button type="button" class="btn btn-danger" @onclick=showDeleteModal>
+                DELETE USER
+            </button>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    [Parameter] public int UserID { get; set; }
+    public User user = new();
+    public string? showDeleteUserModal { get; set; } = "visually-hidden";
+    public string? showPasswordModal { get; set; } = "visually-hidden";
+    public string? showValueModal { get; set; } = "visually-hidden";
+    public string? ShowUsernameModal { get; set; } = "visually-hidden";
+    public string? ShowFullnameModal { get; set; } = "visually-hidden";
+    public string? ShowRoleModal { get; set; } = "visually-hidden";
+
+
+    private List<User> users = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _userDB.LoadUsers();
+        users = _userDB.GetUsers();
+        user = await _userDB.GetUserById(UserID);
+    }
+
+    public void showDeleteModal()
+    {
+        showDeleteUserModal = null;
+    }
+
+    public void showChangePasswordModal()
+    {
+        showPasswordModal = null;
+    }
+
+    public void showChangeUserNameModal()
+    {
+        ShowUsernameModal = null;
+    }
+
+    public void ShowChangeFullNameModal()
+    {
+        ShowFullnameModal = null;
+    }
+
+    public void ShowChangeRoleModal()
+    {
+        ShowRoleModal = null;
+    }
+
+    //Closes all modals
+    public void closeModal()
+    {
+        showDeleteUserModal = ShowUsernameModal = ShowRoleModal = ShowFullnameModal = showPasswordModal = "visually-hidden";
+        StateHasChanged();
+    }
+    
+    //Removes the user from both the list and the DB
+    public async void removeUser(User user)
+    {
+        users.Remove(user);
+        await _userDB.DeleteUser(user);
+        closeModal();
+        navManager.NavigateTo("users", true);
+    }
+}
