@@ -28,7 +28,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddBlazorTable(); 
 
 
 var folder = Environment.SpecialFolder.LocalApplicationData;
