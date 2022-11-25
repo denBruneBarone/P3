@@ -1,0 +1,152 @@
+is_global = true
+build_property.TargetFramework = net6.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = SPFAdminSystem
+build_property.RootNamespace = SPFAdminSystem
+build_property.ProjectDir = C:\Users\rudnu\source\repos\P3\SPFAdminSystem\SPFAdminSystem\
+build_property.RazorLangVersion = 6.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\rudnu\source\repos\P3\SPFAdminSystem\SPFAdminSystem
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/Counter.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/FetchData.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xGZXRjaERhdGEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/MappingsList.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xNYXBwaW5nc0xpc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/Products.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xQcm9kdWN0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/UserActions.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xVc2VyQWN0aW9ucy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/Users.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xVc2Vycy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Loginasadmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5hc2FkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Logout.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9nb3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/TableComponent.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGFibGVDb21wb25lbnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/UserAdmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXNlckFkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/LoginDisplay.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXExvZ2luRGlzcGxheS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/BlazorTemplatePages/MatchProducts.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQmxhem9yVGVtcGxhdGVQYWdlc1xNYXRjaFByb2R1Y3RzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-021ec9jtkj
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/DatabasePages/EditUser.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGF0YWJhc2VQYWdlc1xFZGl0VXNlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-c3e0aswn0e
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Upload.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVXBsb2FkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-l3jffqad65
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/DashboardCard.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXERhc2hib2FyZENhcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-fwjgy9clvm
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/FileCard.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEZpbGVDYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-2ha9q2cfn5
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-9ex7y2ima2
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-8nvme4m3jv
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/AddUserModal.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXEFkZFVzZXJNb2RhbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-hdqgluum5v
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/ChangeFullnamePopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXENoYW5nZUZ1bGxuYW1lUG9wdXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-a3swecfzxo
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/ChangePasswordPopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXENoYW5nZVBhc3N3b3JkUG9wdXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-9ndpzfulml
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/ChangeRolePopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXENoYW5nZVJvbGVQb3B1cC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-7ch1xhwzjc
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/ChangeUserNamePopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXENoYW5nZVVzZXJOYW1lUG9wdXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-d0yueu8q8o
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/ChangeValuePopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXENoYW5nZVZhbHVlUG9wdXAucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-1qie2nwbw7
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Shared/PopupModals/DeleteUserPopup.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBvcHVwTW9kYWxzXERlbGV0ZVVzZXJQb3B1cC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-bloj7kn5kx
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/rudnu/source/repos/P3/SPFAdminSystem/SPFAdminSystem/Pages/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

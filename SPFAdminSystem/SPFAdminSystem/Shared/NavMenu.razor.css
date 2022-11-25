@@ -51,12 +51,10 @@
 }
 
 @media (min-width: 930px) {
-    .navbar-toggler {
-        display: none;
-    }
-
-    .collapse {
-        /* Never collapse the sidebar for wide screens */
-        display: block;
-    }
+    
+}
+.collapse {
+    /* Never collapse the sidebar for wide screens */
+    max-width: 0;
+    display: block;
 }
