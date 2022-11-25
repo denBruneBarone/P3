@@ -2,7 +2,9 @@
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles;
 @using System.Reflection;
-@using OfficeOpenXml;
+@using System.Collections.Generic;
+@using System.Runtime.InteropServices;
+@using Excel = Microsoft.Office.Interop.Excel;
 @inject IProductData _db;
 
 @page "/match"
@@ -10,10 +12,6 @@
 
 <div id="topSpacer"></div>
 
-@*Container div holder alle andre divs*@
-@*I productList tjekkes om produktet fra list 1 er i list 2 og markere dem med rødt eller grønt*@
-@*matchProduct vise informationerne for produktet fra SF og GSM*@
-@*browseBtn er knappen der tillader at lede efter alle produkter*@
 <div>
 </div>
 <div class="tempButtons">
@@ -28,13 +26,18 @@
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
             @{
+                int endLoop = 0;
                 counter = 0;
             }
             @foreach (var item in products)
             {
                 if (products.Contains(item))
                 {
-                    if(matchTitle==item.InHouseTitle){
+                    if(matchTitle=="" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
+                    {
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
+                    }
+                    else if(matchTitle==item.InHouseTitle){
                         <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
                         counter++;
                     }else{
@@ -46,6 +49,7 @@
                         }
                     }
                 }
+                endLoop = 1;
             }
         </ul>
         <button id="browseBtnBlue">Browse all products</button>
@@ -77,6 +81,24 @@
                     <div id="currentInfo">
                         <ul id="matchListLeft">
                             @{
+                                if (InHouseTitleString == InHouseCommit && InHouseCommit != "")
+                                {
+                                    inHouseTitleUpdated = true;
+                                }
+                                else
+                                {
+                                    inHouseTitleUpdated = false;
+                                }
+
+                                if(targetString == targetBuffer && targetBuffer != "")
+                                {
+                                    targetUpdated = true;
+                                }
+                                else
+                                {
+                                    targetUpdated = false;
+                                }
+
                                 if (products.Count() > 0)
                                 {
                                     if (matchTitle != "")
@@ -117,14 +139,14 @@
                                                     if (prop.Name == "Target")
                                                     {
                                                         <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                       @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
                                                         <input type="submit" hidden />
                                                     }
                                                     else if (prop.Name == "InHouseTitle")
                                                     {
                                                         <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                       @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
                                                         <input type="submit" hidden />
                                                     }
@@ -216,14 +238,14 @@
                                 }
                             </ul>
                         </div>
-                    </div>
+                    }
+                </div>
                     <div id="ignoreApplyButtons">
                         <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>
                     </div>
                 </div>
             </div>
         }
-    }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -237,18 +259,18 @@
 
 <div id="changeOverview">
     @{
-        if(targetUpdated == true || inHouseTitleUpdated == true)
+        if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "" || targetCommit != products[chosenProduct].Target && InHouseCommit != "" && targetCommit != -1)
         {
             <h3>Changes Overview:</h3>
             <p></p>
         }
-        if(inHouseTitleUpdated == true)
+        if(InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "")
         {
             <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
         }
-        if(targetUpdated == true)
+        if(targetCommit != products[chosenProduct].Target && targetCommit != -1)
         {
-            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@commitedChangeInt"</p>
+            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@targetCommit"</p>
         }
     }
 </div>
@@ -283,7 +305,6 @@
                     if (products[i].InHouseTitle == matchTitle && chosenProduct != i)
                     {
                         chosenProduct = i;
-                        productsBackup[0] = products[chosenProduct];
                     }
                 }
             }
@@ -296,11 +317,12 @@
     }
 
     int val = 0;
-    int? commitedChangeInt = -1;
+    int? targetCommit = -1;
     bool targetUpdated = false;
     bool inHouseTitleUpdated = false;
     string targetString = "";
     string commitedChange = "";
+    string targetBuffer = "";
     string InHouseTitleString = "";
     string InHouseCommit = "";
 
@@ -313,23 +335,24 @@
                 if (targetString == "")
                 {
                     targetUpdated = false;
-                    commitedChangeInt = products[chosenProduct].Target;
+                    targetCommit = products[chosenProduct].Target;
                 }
                 else
                 {
+                    targetBuffer = targetString;
                     Int32.TryParse(targetString, out val);
                     if (val > 0)
                     {
-                        commitedChangeInt = Convert.ToInt32(targetString);
+                        targetCommit = Convert.ToInt32(targetString);
                     }
-                    if (commitedChangeInt != products[chosenProduct].Target && commitedChangeInt >= 0)
+                    if (targetCommit != products[chosenProduct].Target && targetCommit >= 0)
                     {
                         targetUpdated = true;
                     }
                     else
                     {
                         targetUpdated = false;
-                        commitedChangeInt = products[chosenProduct].Target;
+                        targetCommit = products[chosenProduct].Target;
                     }
                 }
             }
@@ -375,11 +398,11 @@
 
     private void ApplyChanges()
     {
-        if (commitedChangeInt >= 0 && targetUpdated == true)
+        if (targetCommit >= 0)
         {
-            products[chosenProduct].Target = commitedChangeInt;
+            products[chosenProduct].Target = targetCommit;
         }
-        if (InHouseCommit != "" && InHouseCommit != products[chosenProduct].InHouseTitle && inHouseTitleUpdated == true)
+        if (InHouseCommit != "" && InHouseCommit != products[chosenProduct].InHouseTitle)
         {
             products[chosenProduct].InHouseTitle = InHouseCommit;
             UpdateMatchTitle(InHouseCommit);
@@ -845,8 +868,25 @@
 
     private void GetUnknownProducts (){
 
-        var FilePath = @"C:\Users\rudnu\source\repos\P3\SPFAdminSystem\SPFAdminSystem\wwwroot\PricelistEurope3.xls";
-        FileInfo fileInfo = new FileInfo(FilePath);
+        string pathFile = "C:\\Users\\cerip\\Documents\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\PricelistEurope3New.xlsx";
+
+        Excel.Application excel = null;
+        Excel.Workbook wb = null;
+        Excel.Worksheet ws = null;
+        Excel.Range range = null;
+
+        try
+        {
+            excel = new Excel.Application();
+            wb = excel.Workbooks.Open(pathFile);
+            ws = (Microsoft.Office.Interop.Excel.Worksheet)wb.Worksheets[1];
+        }
+        catch
+        {
+            
+        }
+
+        FileInfo fileInfo = new FileInfo(pathFile);
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
         using (ExcelPackage package = new ExcelPackage(fileInfo))
@@ -866,7 +906,8 @@
                 }
                 int barcode = (int)worksheet.Cells[row, col].Value;
                 /*Check if barcode from the worksheet is in any of the products from the "database"*/
-                foreach (Product prod in products){
+                foreach (Product prod in products)
+                {
                     if (barcode == prod.Barcode)
                     {
                         found++;
@@ -874,7 +915,8 @@
                     }
                 }
                 /*In case the barcode wasn't found, add from row to product, and add product to List<Product>unknownProducts*/
-                if(found==0){
+                if (found == 0)
+                {
                     string dateString = worksheet.Cells[row, 1].Value.ToString().Replace("-", "/");
 
                     product.Barcode = (int)worksheet.Cells[row, 6].Value;
@@ -886,16 +928,14 @@
                     unknownProducts.Add(product);
                 }
 
-                    //else if (col == 1) produkt.ProductId = worksheet.Cells[row, col].Value.ToString();
-                    //else if (col == 2) produkt.InHouseTitle = worksheet.Cells[row, col].Value.ToString();
-                    //else if (col == 4) produkt.OrderPrice = worksheet.Cells[row, col].GetValue<double>();
+                //else if (col == 1) produkt.ProductId = worksheet.Cells[row, col].Value.ToString();
+                //else if (col == 2) produkt.InHouseTitle = worksheet.Cells[row, col].Value.ToString();
+                //else if (col == 4) produkt.OrderPrice = worksheet.Cells[row, col].GetValue<double>();
             }
 
-
-        UnknownProducts= unknownProducts;
+            UnknownProducts = unknownProducts;
         }
     }
-
 }
 @*
 #b2dab6 - grøn
