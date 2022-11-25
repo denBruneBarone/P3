@@ -1,0 +1,89 @@
+﻿@page "/actions"
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.UserFiles;
+@using SPFAdminSystem.Database.ProductFiles;
+@using BlazorTable
+@inject AuthenticationStateProvider authStateProvider;
+@inject IJSRuntime js;
+@inject IUserService _userDb;
+@inject IProductService _prodDb;
+
+<h1>User Actions</h1>
+@if (actions == null){
+    <h3>Loading...</h3>
+}
+else{
+    <AuthorizeView>
+        <Authorized>
+            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"5011921003747"))">Change Product Detail</button>
+            @*<button onclick="@(()=>AddUserAction(context.User.Identity.Name,"1"))">Change Product Detail</button>*@
+            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Save Excel File</button>
+            <button onclick="@(()=>AddUserAction(context.User.Identity.Name,"Excel File Upload"))">Upload Excel File</button>
+        </Authorized>
+        <NotAuthorized>
+
+        </NotAuthorized>
+    </AuthorizeView>
+    <TableComponent Actions="@actions"></TableComponent>
+}
+
+@code
+{
+    private List<UserAction> actions = new();
+    public async void AddUserAction(string userName, string identifier)
+    {
+        try {
+            User currUser = await _userDb.GetUserByName(userName);
+            UserAction action;
+            if (identifier == "Excel File Upload")
+            {
+                //dev
+                string prodId = "5011921003747";
+                Product prod = await _prodDb.GetProductById(prodId);
+
+                action = new UserAction(currUser.UserId, currUser, DateTime.Now, "Excel File Upload","",prodId,prod);
+            }
+            else{
+                Product prod = await _prodDb.GetProductById(identifier);
+                action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", identifier, prod);
+            }
+
+            await _userDb.InsertAction(action);
+            actions.Add(action);
+            StateHasChanged();
+        }
+        catch (InvalidOperationException e)
+        {
+            await js.InvokeVoidAsync("alert", $"The current user doesn't exist in database. Maybe you're in developing mode? {e}");
+        }
+        catch(Microsoft.EntityFrameworkCore.DbUpdateException e){
+            await js.InvokeVoidAsync("alert", $"db update error {e}");
+        }
+    }
+
+    public async void OpenThis(UserAction action){
+        switch(action.ActionType){
+            case "Excel File Upload":
+            // show affected products
+            break;
+            case "Excel File Saved":
+            // dont do anything
+            break;
+            default:
+            // look up product in db
+            break;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _userDb.LoadActions();
+        actions = _userDb.GetActions();
+        foreach (UserAction action in actions)
+        {
+            action.Product = await _prodDb.GetProductById(action.ProductId);
+            action.User = await _userDb.GetUserById(action.UserId);
+        }
+    }
+
+}

@@ -8,6 +8,9 @@ namespace SPFAdminSystem.Database.UserFiles
     public interface IUserService
     {
 
+        Task InsertAction(UserAction action);
+        List<UserAction> GetActions();
+        Task LoadActions();
 
         Task LoadUsers();
 

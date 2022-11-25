@@ -1,3 +1,4 @@
+using BlazorTable;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
@@ -28,6 +29,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddBlazorTable(); 
 
 
 var folder = Environment.SpecialFolder.LocalApplicationData;

@@ -18,4 +18,16 @@ public class UserAction
     public string? ProductId { get; set; }
 
     public Product Product { get; set; }
+    public UserAction() { }
+
+    public UserAction(int userId, User user, DateTime date, string actionType, string value, string productId, Product product)
+    {
+        UserId = userId;
+        User = user;
+        Date = date;
+        ActionType = actionType;
+        Value = value;
+        ProductId = productId;
+        Product = product;
+    }
 }
