@@ -53,10 +53,16 @@ else{
         }
         catch (InvalidOperationException e)
         {
-            await js.InvokeVoidAsync("alert", $"The current user doesn't exist in database. Maybe you're in developing mode? {e}");
+            if (userName == "Admin")
+                await js.InvokeVoidAsync("alert", "You are currently logged on as 'Admin'. Please change to a real user in the database to add a user action.");
         }
-        catch(Microsoft.EntityFrameworkCore.DbUpdateException e){
+        catch (Microsoft.EntityFrameworkCore.DbUpdateException e)
+        {
             await js.InvokeVoidAsync("alert", $"db update error {e}");
+        }
+        catch (OverflowException)
+        {
+            await js.InvokeVoidAsync("alert", $"User action yould not be saved with identifier '{identifier}'");
         }
     }
 

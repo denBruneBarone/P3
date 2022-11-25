@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221125105630_changeNameForTable_1")]
+    partial class changeNameForTable_1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -95,14 +97,13 @@ namespace SPFAdminSystem.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SPFAdminSystem.Database.UserFiles.UploadMappingFileChangeProduct", b =>
+            modelBuilder.Entity("SPFAdminSystem.Database.UserFiles.UploadFileChangeProduct", b =>
                 {
                     b.Property<int>("FileChangeProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ProductId")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserActionId")
@@ -114,7 +115,7 @@ namespace SPFAdminSystem.Migrations
 
                     b.HasIndex("UserActionId");
 
-                    b.ToTable("UploadMappingFileChangeProducts");
+                    b.ToTable("FileChangeProducts");
                 });
 
             modelBuilder.Entity("User", b =>
@@ -185,13 +186,11 @@ namespace SPFAdminSystem.Migrations
                     b.ToTable("UserActions");
                 });
 
-            modelBuilder.Entity("SPFAdminSystem.Database.UserFiles.UploadMappingFileChangeProduct", b =>
+            modelBuilder.Entity("SPFAdminSystem.Database.UserFiles.UploadFileChangeProduct", b =>
                 {
                     b.HasOne("Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductId");
 
                     b.HasOne("UserAction", "UserAction")
                         .WithMany()

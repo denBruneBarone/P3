@@ -2,48 +2,63 @@
 
 <table>
     <tr>
-        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[dateIdentifier]].changeDirection(dateIdentifier))">
-            <th>Date<icon 
-                    hidden=@Toggles[ToggleArrowIdentifier[dateIdentifier]].hidden 
-                    class="oi oi-caret-@Toggles[ToggleArrowIdentifier[dateIdentifier]].directionEnding">
-            </icon></th>
-        </button>
-        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[userIdentifier]].changeDirection(userIdentifier))">
-            <th>User<icon 
-                    hidden=@Toggles[ToggleArrowIdentifier[userIdentifier]].hidden 
-                    class="oi oi-caret-@Toggles[ToggleArrowIdentifier[userIdentifier]].directionEnding">
-            </icon></th>
-        </button>
-        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[typeIdentifier]].changeDirection(typeIdentifier))">
-            <th>Type<icon 
-                hidden=@Toggles[ToggleArrowIdentifier[typeIdentifier]].hidden 
-                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[typeIdentifier]].directionEnding">
-            </icon></th>
-        </button>
-        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[valueIdentifier]].changeDirection(valueIdentifier))">
-            <th>Value<icon 
-                hidden=@Toggles[ToggleArrowIdentifier[valueIdentifier]].hidden 
-                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[valueIdentifier]].directionEnding">
-            </icon></th>
-        </button>
-        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[productIdentifier]].changeDirection(productIdentifier))">
-            <th>Product<icon 
-                hidden=@Toggles[ToggleArrowIdentifier[productIdentifier]].hidden 
-                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[productIdentifier]].directionEnding">
-            </icon></th>
-        </button>
+            <th>Date
+                <button onclick="@(()=>Toggles[ToggleArrowIdentifier[dateIdentifier]].changeDirection(dateIdentifier))">
+                    <icon 
+                        hidden=@Toggles[ToggleArrowIdentifier[dateIdentifier]].hidden 
+                        class="oi oi-caret-@Toggles[ToggleArrowIdentifier[dateIdentifier]].directionEnding">
+                    </icon>
+                </button>
+            </th>
+            <th>User
+                <button onclick="@(()=>Toggles[ToggleArrowIdentifier[userIdentifier]].changeDirection(userIdentifier))">
+                    <icon 
+                        hidden=@Toggles[ToggleArrowIdentifier[userIdentifier]].hidden 
+                        class="oi oi-caret-@Toggles[ToggleArrowIdentifier[userIdentifier]].directionEnding">
+                    </icon>
+                </button>
+            </th>
+            <th>Type
+                <button onclick="@(()=>Toggles[ToggleArrowIdentifier[typeIdentifier]].changeDirection(typeIdentifier))">
+                    <icon 
+                        hidden=@Toggles[ToggleArrowIdentifier[typeIdentifier]].hidden 
+                        class="oi oi-caret-@Toggles[ToggleArrowIdentifier[typeIdentifier]].directionEnding">
+                    </icon>
+                </button>
+            </th>
+            <th>Value
+                <button onclick="@(()=>Toggles[ToggleArrowIdentifier[valueIdentifier]].changeDirection(valueIdentifier))">
+                    <icon 
+                        hidden=@Toggles[ToggleArrowIdentifier[valueIdentifier]].hidden 
+                        class="oi oi-caret-@Toggles[ToggleArrowIdentifier[valueIdentifier]].directionEnding">
+                    </icon>
+                </button>
+            </th>
+            <th>Product
+                <button onclick="@(()=>Toggles[ToggleArrowIdentifier[productIdentifier]].changeDirection(productIdentifier))">
+                    <icon 
+                        hidden=@Toggles[ToggleArrowIdentifier[productIdentifier]].hidden 
+                        class="oi oi-caret-@Toggles[ToggleArrowIdentifier[productIdentifier]].directionEnding">
+                    </icon>
+                </button>
+            </th>
     </tr>
     @foreach (var action in actionsPreviewer)
     {
-        <button onclick="@(()=>OpenThis(action))">
             <tr>
                 <td>@action.Date</td>
                 <td>@action.User.FullName</td>
                 <td>@action.ActionType</td>
                 <td>@action.Value</td>
-                <td>@action.Product.InHouseTitle</td>
+                <button onclick="@(()=>OpenThis(action))">
+                    @if(action.ActionType == "Excel File Upload"||action.ActionType=="Excel File Save"){
+                        <td>View Affected Products</td>
+                    }
+                    else{
+                        <td>@action.Product.InHouseTitle</td>
+                    }
+                </button>
             </tr>
-        </button>
     }
 </table>
 

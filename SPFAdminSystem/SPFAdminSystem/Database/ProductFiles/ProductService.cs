@@ -54,6 +54,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 // update /TOTEST
                 dbProduct.ProductId = product.ProductId;
             }
+
             await _context.SaveChangesAsync();
         }
 
@@ -82,11 +83,29 @@ namespace SPFAdminSystem.Database.ProductFiles
                     products.Add(prod);
                 }
             }
+            UserAction userActionId=await AddFileUploadUserAction(fileName);
             foreach (Product product in products)
             {
                 CreateOrUpdateProduct(product);
+                AddUploadFileChangesProductAction(userActionId,product);
             }
             await _context.SaveChangesAsync();
+        }
+        // adds an action to the correct database
+        public async void AddUploadFileChangesProductAction(UserAction userAction,Product product) 
+        { 
+            
+        }
+        // adds the correct user action and returns it's id
+        public async Task<UserAction> AddFileUploadUserAction(string fileName)
+        {
+            UserAction createdFileUserAction=new();
+            switch (fileName)
+            {
+                case "Mapping.xlsx":
+                    break;
+            }
+            return createdFileUserAction;
         }
 
         public async Task CreateOrUpdateMapping(Mapping mapping)
