@@ -35,15 +35,15 @@
     </tr>
     @foreach (var action in actionsPreviewer)
     {
-    <tr>
-        <td>
-            @action.Date
-        </td>
-        <td>@action.User.FullName</td>
-        <td>@action.ActionType</td>
-        <td>@action.Value</td>
-        <td>@action.Product.InHouseTitle</td>
-    </tr>
+        <button onclick="@(()=>OpenThis(action))">
+            <tr>
+                <td>@action.Date</td>
+                <td>@action.User.FullName</td>
+                <td>@action.ActionType</td>
+                <td>@action.Value</td>
+                <td>@action.Product.InHouseTitle</td>
+            </tr>
+        </button>
     }
 </table>
 
@@ -93,6 +93,16 @@
     static void hideToggles(){
         foreach (var t in Toggles)
             t.hidden = true;
+    }
+    public void OpenThis(UserAction action){
+        switch (action.ActionType){
+            case "Excel File Upload":
+            case:"Excel File Save":
+                //OpenRelatedProducts(action.ActionId);
+                break;
+            default://product change
+                break;
+        }
     }
 
     static public List<UserAction> SortActionsBy(string sortBy,bool desc)
