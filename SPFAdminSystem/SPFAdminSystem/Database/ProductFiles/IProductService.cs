@@ -6,12 +6,12 @@ namespace SPFAdminSystem.Database.ProductFiles
 {
     public interface IProductService
     {
-        Task<Product> GetProductById(string prodId);
         List<Product> GetProducts();
+
+        Product GetInMemmorySingleProduct(string _);
         Task LoadProducts();
-        Task<Product> GetSingleProduct(string productId);
 
         Task CreateOrUpdateProduct(Product product);
-
+        Task<Product> GetProductById(string prodId, bool forceUpdate = false);
     }
 }
