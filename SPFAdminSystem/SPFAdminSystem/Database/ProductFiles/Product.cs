@@ -27,17 +27,22 @@ public class Product
 
     public int? OrderQuantity { get; set; }
 
-    public Mapping Mapping{ get; set; }
-}
+    public string? TitleGWS { get; set; }
 
+    public string? Barcode { get; set; }
+
+    public int? Packsize { get; set; }
+
+    public int? MinOrder { get; set; }
+
+    public int? Target { get; set; }
+}
 
 public class Mapping
 {
     [Required]
     [Key]
-    public string ProductId { get; set; }
-
-    public Product Product { get; set; }
+    public string ProductIdMapping { get; set; }
 
     public string? Barcode { get; set; }
 

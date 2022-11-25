@@ -19,6 +19,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         }
 
         public List<Product> Products { get; set; } = new List<Product>();
+        public List<Mapping> Mappings { get; set; } = new List<Mapping>();
 
         public async Task LoadProducts()
         {
@@ -56,6 +57,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
+        
+
         public async Task InsertExcelProducts(string fileName)
         {
             List<Product> products = new();
@@ -81,17 +84,14 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             foreach (Product product in products)
             {
-                _context.Products.Add(product);
+                CreateOrUpdateProduct(product);
             }
             await _context.SaveChangesAsync();
         }
 
-
-
-
         public async Task CreateOrUpdateMapping(Mapping mapping)
         {
-            var dbMapping = await _context.Mappings.FindAsync(mapping.ProductId);
+            var dbMapping = await _context.Mappings.FindAsync(mapping.ProductIdMapping);
             if (dbMapping == null)
             {
                 //create
@@ -100,15 +100,14 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbMapping.ProductId = mapping.ProductId;
+                dbMapping.ProductIdMapping = mapping.ProductIdMapping;
             }
             await _context.SaveChangesAsync();
         }
 
-
-        public async Task InsertExcelMapping(string fileName)
+            public async Task InsertExcelMapping(string fileName)
         {
-            List<Mapping> Mapping = new();
+            List<Mapping> mappings = new();
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -120,31 +119,66 @@ namespace SPFAdminSystem.Database.ProductFiles
                 for (int row = 2; row <= rowCount; row++)
                 {
                     Mapping Map = new Mapping();
-                    if (Map.ProductId == null)
-                    {
+                   
                         //create
-                        Map.ProductId = worksheet.Cells[row, 2].Value == null ? string.Empty : worksheet.Cells[row, 2].Value.ToString();
-                    }
-                    else
-                    {
-                        // update /TOTEST
-                        Map.ProductId = worksheet.Cells[row, 2].Value == null ? string.Empty : worksheet.Cells[row, 2].Value.ToString();
-                    }
-
+                    Map.ProductIdMapping = worksheet.Cells[row, 2].Value == null ? string.Empty : worksheet.Cells[row, 2].Value.ToString();
                     Map.TitleGWS = worksheet.Cells[row, 3].Value.ToString();
                     Map.Barcode = worksheet.Cells[row, 1].Value == null ? string.Empty : worksheet.Cells[row, 1].Value.ToString();
                     Map.Target = Convert.ToInt32(worksheet.Cells[row, 5].Value);
                     Map.MinOrder = Convert.ToInt32(worksheet.Cells[row, 7].Value);
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
-                    Mapping.Add(Map);
+                    mappings.Add(Map);
+                    Console.WriteLine(Map.ProductIdMapping);
                 }
             }
-            foreach (Mapping Map in Mapping)
+            foreach (Mapping map in mappings)
             {
-                _context.Mappings.Add(Map);
+                CreateOrUpdateMapping(map);
             }
+
             await _context.SaveChangesAsync();
         }
 
+        public async Task LoadMappings()
+        {
+            Mappings = await _context.Mappings.ToListAsync();
+        }
+
+        public List<Mapping> GetMappings()
+        {
+            return Mappings;
+        }
+
+        public async Task AddToProduct(Mapping mapping)
+        {
+            var dbProduct = await _context.Products.FindAsync(mapping.ProductIdMapping);
+
+            if (dbProduct == null)
+            {
+                Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
+            }
+            else { 
+                dbProduct.TitleGWS = mapping.TitleGWS;
+                dbProduct.Barcode = mapping.Barcode;
+                dbProduct.Packsize = mapping.PackSize;
+                dbProduct.Target = mapping.Target;
+                dbProduct.MinOrder = mapping.MinOrder;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task JoinMappingToProducts (){ 
+            await LoadMappings();
+            await LoadProducts();
+            foreach (Mapping map in Mappings)
+            {
+                await AddToProduct(map);
+            }
+        }
     }
+
+    
+    
+
 }

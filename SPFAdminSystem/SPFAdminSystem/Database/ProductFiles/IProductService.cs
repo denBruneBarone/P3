@@ -15,5 +15,10 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task InsertExcelProducts(string fileName);
 
         Task InsertExcelMapping(string fileName);
+        Task CreateOrUpdateMapping(Mapping mapping);
+        List<Mapping> GetMappings();
+        Task LoadMappings();
+        Task JoinMappingToProducts();
+        Task AddToProduct(Mapping mapping);
     }
 }

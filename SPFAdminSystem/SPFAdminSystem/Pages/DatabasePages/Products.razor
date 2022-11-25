@@ -16,13 +16,15 @@ else
             <tr>
                 <th>ProductId</th>
                 <th>Inhouse Title</th>
-                <th>Order Price</th>
+                <th>GWS title</th>
+                <th>GWS Barcode</th>
                 <th>Stock Amount</th>
                 <th>Order Amount</th>
                 <th>AvailableAmount</th>
-                <th>Ordered</th>
                 <th>Order Quantity</th>
-                
+                <th>PackSize</th>
+                <th>MinOrder</th>
+                <th>Target</th>
             </tr>
         </thead>
         <tbody>
@@ -31,15 +33,24 @@ else
                 <tr>
                     <td>@product.ProductId</td>
                     <td>@product.InHouseTitle</td>
-                    <td>@product.OrderPrice</td>
+                    <td>@product.TitleGWS</td>
+                    <td>@product.Barcode</td>
                     <td>@product.StockAmount</td>
                     <td>@product.OrderAmount</td>
                     <td>@product.AvailableAmount</td>
                     <td>@product.OrderQuantity</td>
+                    <td>@product.Packsize</td>
+                    <td>@product.MinOrder</td>
+                    <td>@product.Target</td>
                 </tr>
             }
         </tbody>
     </table>
+
+
+
+
+
 
     <h3>AddProduct</h3>
     <input @bind=Id type="text" placeholder="Id" required />
