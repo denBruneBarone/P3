@@ -22,6 +22,11 @@ namespace SPFAdminSystem.Database.UserFiles
         {
             Users = await _context.Users.ToListAsync();
         }
+        public async Task DeleteUser(User user)
+        {
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+        }
         public List<User> GetUsers()
         {
             return Users;
@@ -42,15 +47,6 @@ namespace SPFAdminSystem.Database.UserFiles
             }
             return dbUser;
         }
-        public async Task<User> GetUserById(int UserId)
-        {
-            var dbUser = await _context.Users.FindAsync(UserId);
-            if (dbUser == null)
-            {
-                throw new KeyNotFoundException("no user here");
-            }
-            return dbUser;
-        }
         public async Task LoadActions()
         {
             UserActions = await _context.UserActions.ToListAsync();
@@ -65,6 +61,17 @@ namespace SPFAdminSystem.Database.UserFiles
             _context.UserActions.Add(action);
             await _context.SaveChangesAsync();
         }
+        public async Task<User> GetUserById(int id)
+        {
+            var dbUser = await _context.Users.Where(x=>x.UserId== id).FirstAsync();
+            if (dbUser == null) throw new Exception("User not found");
+            return dbUser;
+        }
 
+        public async Task UpdateUser(User user)
+        {
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }
