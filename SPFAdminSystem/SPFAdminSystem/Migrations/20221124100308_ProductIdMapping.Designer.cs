@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221124100308_ProductIdMapping")]
+    partial class ProductIdMapping
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -53,15 +55,9 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("AvailableAmount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Barcode")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("InHouseTitle")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("MinOrder")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("OrderAmount")
                         .HasColumnType("INTEGER");
@@ -75,20 +71,11 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("Ordered")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Packsize")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("RemovedFromStockDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("StockAmount")
                         .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Target")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("TitleGWS")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("ProductId");
 
@@ -145,12 +132,14 @@ namespace SPFAdminSystem.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProductId")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Value")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserActionId");
@@ -166,7 +155,9 @@ namespace SPFAdminSystem.Migrations
                 {
                     b.HasOne("Product", "Product")
                         .WithMany("UserActions")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("User", "User")
                         .WithMany("UserActions")

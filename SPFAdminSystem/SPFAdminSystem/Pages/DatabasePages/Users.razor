@@ -2,10 +2,12 @@
 @attribute [Authorize(Roles = "Admin")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.UserFiles
+@using SPFAdminSystem.Shared.PopupModals
 @inject IUserService _userDb
 @using BCrypt.Net
 @inject IJSRuntime js
-
+@inject NavigationManager navManager
+<AddUserModal showModal="@showAddModal" closeModal=closeModals/>
 <h5>All Users</h5>
 @if (users is null)
 {
@@ -16,12 +18,12 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>UserId</th>
-                <th>UserName</th>
-                <th>Password</th>
-                <th>Full Name</th>
-                <th>Role</th>
-
+                <th style="text-align: center;">UserId</th>
+                <th style="text-align: center;">UserName</th>
+                <th style="text-align: center;">Password</th>
+                <th style="text-align: center;">Full Name</th>
+                <th style="text-align: center;">Role</th>
+                <th style="text-align: center;">Edit</th>
 
             </tr>
         </thead>
@@ -29,32 +31,26 @@ else
             @foreach (var user in users)
             {
                 <tr>
-                    <td>@user.UserId</td>
-                    <td>@user.UserName</td>
-                    <td>****************</td>
-                    <td>@user.FullName</td>
-                    <td>@user.Role</td>
+                    <td style="text-align: center;">@user.UserId</td>
+                    <td style="text-align: center;">@user.UserName</td>
+                    <td style="text-align: center;">****************</td>
+                    <td style="text-align: center;">@user.FullName</td>
+                    <td style="text-align: center;">@user.Role</td>
+                    <td style="text-align: center;">
+                        <a href="/users/@user.UserId">
+                            <span class="oi oi-pencil"></span>
+                        </a>
+@*                        <button style="all: unset; cursor: pointer;" @onclick="() => showDeleteModal(user)">
+                            <span class="oi oi-pencil"></span>
+                        </button>*@
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
-
-    <h3>Add User</h3>
-    <input @bind=userName @bind:event="oninput" type="text" placeholder="UserName" required />
-    <input @bind=password @bind:event="oninput" type="text" placeholder="Password" required />
-    <input @bind=fullName @bind:event="oninput" type="text" placeholder="Full Name" required />
-
-
-
-    <label for="role">User Role:</label>
-    <select name="role" id="role" @bind=role>
-        <option value="Employee">employee</option>
-        <option value="Admin">admin</option>
-    </select>
-
-
-    <button onclick="@addUser">add new user</button>
-    <button onclick="@getUserByName">Test Get User</button>
+    <div style="width: 25%;">
+        <button type="button" class="btn btn-primary" @onclick=showAddPopupModal>Add User</button>
+    </div>
 }   
 
 @code {
@@ -62,11 +58,11 @@ else
     public string? userName { get; private set; }
     public string? password { get; private set; }
     public string? fullName { get; private set; }
+    public string? showAddModal { get; private set; } = "visually-hidden";
     public string? role { get; private set; } = "Employee";
-    private User UserTest { get; set; }
-
+    public User curUser = new User { UserName = "N/A", FullName = "N/A", Role = "N/A", UserId = -3 };
     private List<User> users = new();
-
+    public bool modalDisplay { get; private set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,26 +70,27 @@ else
         users = _userDb.GetUsers();
     }
 
-
-    public async Task addUser()
+    public void closeModals()
     {
-
-        User u = new User();
-        u.UserName = userName;
-        u.Password = BCrypt.HashPassword(password);
-        u.FullName = fullName;
-        u.Role = role;
-
-        await _userDb.InsertUser(u);
-
-        users.Add(u);
-        Console.WriteLine("User Added");
+        showAddModal = "visually-hidden";
+        StateHasChanged();
     }
+    public void showAddPopupModal()
+    {
+        showAddModal = null;
+    }
+    public async void removeUser(User user)
+    {
+        users.Remove(user);
+        await _userDb.DeleteUser(user);
+        StateHasChanged();
+    }
+
+
 
     public async Task getUserByName() {
         try 
         {
-            UserTest = await _userDb.GetUserByName("fdsafdsa");
         } catch(Exception)
         {
             await js.InvokeVoidAsync("alert", "Error: User Not Found");
