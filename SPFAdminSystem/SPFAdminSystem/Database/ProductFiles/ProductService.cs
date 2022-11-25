@@ -19,7 +19,9 @@ namespace SPFAdminSystem.Database.ProductFiles
         }
 
         public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> UnknownProducts { get; set; } = new List<Product>();
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
+
 
         public async Task LoadProducts()
         {
@@ -41,6 +43,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             return product;
         }
+
+        
 
         public async Task CreateOrUpdateProduct(Product product)
         {
@@ -182,6 +186,38 @@ namespace SPFAdminSystem.Database.ProductFiles
             if (prod == null)
                 throw new KeyNotFoundException("product not found");
             return prod;
+        }
+
+        public List<Product> GetUnknownProducts()
+        {
+            
+            return UnknownProducts;
+        }
+
+        public async Task LoadUnknownProducts()
+        {
+            List<Product> products = new();
+            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "";
+            FileInfo fileInfo = new FileInfo(FilePath);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (ExcelPackage package = new ExcelPackage(fileInfo))
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+                int colCount = worksheet.Dimension.End.Column;
+                int rowCount = worksheet.Dimension.End.Row;
+                for (int row = 5; row <= rowCount; row++)
+                {
+                    Product prod = new Product();
+                    prod.ProductId = worksheet.Cells[row, 1].Value.ToString();
+                    prod.InHouseTitle = worksheet.Cells[row, 2].Value.ToString();
+                    prod.AvailableAmount = Convert.ToInt32(worksheet.Cells[row, 9].Value);
+                    prod.StockAmount = Convert.ToInt32(worksheet.Cells[row, 7].Value);
+                    prod.OrderAmount = Convert.ToInt32(worksheet.Cells[row, 10].Value);
+                    prod.Ordered = Convert.ToInt32(worksheet.Cells[row, 8].Value);
+                    products.Add(prod);
+                }
+            }
+
         }
     }
 
