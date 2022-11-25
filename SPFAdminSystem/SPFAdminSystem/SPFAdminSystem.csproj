@@ -25,10 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorTable" Version="1.17.0" />
     <PackageReference Include="BCrypt.Net-Next.StrongName" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="EPPlus" Version="6.1.0" />
+    <PackageReference Include="EPPlus" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
@@ -38,7 +37,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Smart.Blazor" Version="14.4.39" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.116" />
   </ItemGroup>
@@ -48,7 +46,6 @@
     <Folder Include="DataAccessLibrary\.vs\DataAccessLibrary\v17\" />
     <Folder Include="DataAccessLibrary\bin\Debug\netstandard2.0\" />
     <Folder Include="DataAccessLibrary\bin\Release\netstandard2.0\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
   <ItemGroup>

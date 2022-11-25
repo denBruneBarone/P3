@@ -2,6 +2,9 @@
 @using System.IO
 @inject IWebHostEnvironment env
 @inject NavigationManager NavManager
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
+@inject IProductService _productDb
 
 <PageTitle>Upload</PageTitle>
 
@@ -16,25 +19,55 @@
                 </label>
             </div>  
         </div>
-        <small>@Message</small>
+            <small>@Message</small>
+            <p>@addedString</p>
+
+        
         <div class="nav-buttons">
-            <button type="button" class="cancel-button" @onclick="CancelClicked">Cancel</button>
-            <button @onclick="ContinueClicked" type="button" class="continue-button">Continue</button>
+            <button @onclick="ContinueClicked" type="button" class="btn btn-primary">Continue</button>
         </div>
     </div>
 </center>
 
+<FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb isLoading="@isProdukterLoading"></FileCard>
+<FileCard Title="Mapping"   State=@mappingState   Text=@mappingText   ButtonText="Upload Mapping.xlsx to DB"   _callback=insertMappingInDb   isLoading="@isMappingLoading"></FileCard>
+<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist"                                          isLoading="@isPricelistLoading"></FileCard>
+
+@if (isMapping == true)
+{
+    <p>Loading....</p>
+}
+else if (isMapping == false)
+{
+    <p>Mapping merged into Products!</p>
+}
+
+<button onclick="@mapMappingsToDb" class="btn btn-primary">Merge Mappings into Products' DB'</button>
 @code {
     string Message = "No files are selected";
+    string? addedString;
+    string produkterState = "not ready";
+    string mappingState = "not ready";
+    string pricelistState = "not ready";
+    bool? isProdukterLoading = null;
+    bool? isMappingLoading = null;
+    bool? isPricelistLoading = null;
+    string? produkterText;
+    string? mappingText;
+    string? pricelistText;
+    public bool? isMapping;
+
     IReadOnlyList<IBrowserFile> selectedFiles;
-    //href didn't work on the cancel button for some reason
-    private void CancelClicked(){
-        NavManager.NavigateTo("/");
-    }
     //"selectedFiles gets 
     private void HandleSelectedFile(InputFileChangeEventArgs e){
+        addedString = "";
         selectedFiles = e.GetMultipleFiles();
-        Message = $"{selectedFiles[0].Name.ToString()} is chosen";
+        Message = "files chosen:";
+        foreach (var file in selectedFiles) {
+            string filename = file.Name.ToString();
+            if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length-5).Replace("_","") + "' ";
+
+        }
         this.StateHasChanged();
     }
     private async void ContinueClicked() {
@@ -54,11 +87,47 @@
                 /*The two streams are closed again*/
                 stream.Close();
                 fs.Close();
+                string filename = file.Name.ToString();
+
+                if (filename.Contains("Pricelist")) { 
+                    pricelistState = "ready";
+                    pricelistText = filename + " was last modified on " + file.LastModified.DateTime;
+                } 
+                if (filename.Contains("Mapping"))
+                {
+                    mappingState = "ready";
+                    mappingText = filename + " was last modified on " + file.LastModified.DateTime;
+                }
+                if (filename.Contains("Produkter"))
+                {
+                    produkterState = "ready";
+                    produkterText = filename + " was last modified on " + file.LastModified.DateTime;
+                }
             }
             this.StateHasChanged();
-            NavManager.NavigateTo("/mapping");
         }catch(NullReferenceException e){
             Message = "You have to add a price list file before continuing!";
         }
+    }
+
+    private async void insertProdukterInDb()
+    {
+        isProdukterLoading = true;
+        await _productDb.InsertExcelProducts("Produkter.xlsx");
+        isProdukterLoading = false;
+    }
+    private async void insertMappingInDb()
+    {
+        isMappingLoading = false;
+        await _productDb.InsertExcelMapping("Mapping.xlsx");
+        isMappingLoading = true;
+    }
+    private async void mapMappingsToDb()
+    {
+
+        isMapping = true;
+        StateHasChanged();
+        await _productDb.JoinMappingToProducts();
+        isMapping = false;
     }
 }
