@@ -15,8 +15,6 @@ public class Product
     [Required]
     public string InHouseTitle { get; set; }
 
-    public string? TitleGWS { get; set; }
-
     public double? OrderPrice { get; set; }
 
     public int? StockAmount { get; set; }
@@ -27,13 +25,33 @@ public class Product
 
     public int? Ordered { get; set; }
 
-    public int? Barcode { get; set; }
+    public int? OrderQuantity { get; set; }
 
-    public int? PackSize { get; set; }
+    public string? TitleGWS { get; set; }
 
-    public int? Target { get; set; }
+    public string? Barcode { get; set; }
+
+    public int? Packsize { get; set; }
 
     public int? MinOrder { get; set; }
 
-    public int? OrderQuantity { get; set; }
+    public int? Target { get; set; }
+}
+
+public class Mapping
+{
+    [Required]
+    [Key]
+    public string ProductIdMapping { get; set; }
+
+    public string? Barcode { get; set; }
+
+    [Required]
+    public string TitleGWS { get; set; }
+
+    public int? PackSize { get; set; }
+
+    public int? MinOrder { get; set; }
+
+    public int? Target { get; set; }
 }

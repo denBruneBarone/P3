@@ -1,0 +1,44 @@
+﻿@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
+@inject IProductService _productDb
+
+<div id="outerDiv">
+        <span class="oi oi-file"></span>
+        <h3>@Title</h3>
+        <p>@Text</p>
+    @if (isLoading != null)
+    {
+        @if (isLoading == true)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            <p>@Title done!</p>
+        }
+    }
+
+
+    @if (State == "ready") {
+        <div id="buttonDiv">
+          <button class="btn btn-primary" onclick="@_callback">@ButtonText</button>
+           <span style="color:green" class="oi oi-check"></span>
+        </div>
+    }
+    else
+    {
+        <p>@Title has not been added yet.</p>
+    }
+    
+</div>
+
+@code {
+    [Parameter] public Action? _callback { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Text { get; set; }
+    [Parameter] public string? State { get; set; }
+    [Parameter] public string? ButtonText { get; set; }
+    [Parameter] public bool? isLoading { get; set; }
+}
+
+
