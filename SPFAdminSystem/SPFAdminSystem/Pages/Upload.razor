@@ -29,33 +29,27 @@
     </div>
 </center>
 
-<FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb isLoading="@isProdukterLoading"></FileCard>
-<FileCard Title="Mapping"   State=@mappingState   Text=@mappingText   ButtonText="Upload Mapping.xlsx to DB"   _callback=insertMappingInDb   isLoading="@isMappingLoading"></FileCard>
-<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist"                                          isLoading="@isPricelistLoading"></FileCard>
+<FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb        ></FileCard>
+<FileCard Title="Mapping"   State=@mappingState   Text=@mappingText   ButtonText="Upload Mapping.xlsx to DB"   _callback=insertMappingInDb          ></FileCard>
+<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist"            _callback="doSomethingWithPricelist" ></FileCard>
 
-@if (isMapping == true)
-{
-    <p>Loading....</p>
-}
-else if (isMapping == false)
-{
-    <p>Mapping merged into Products!</p>
-}
-
-<button onclick="@mapMappingsToDb" class="btn btn-primary">Merge Mappings into Products' DB'</button>
+@* Det her skal laves finere. Ved bare ikke hvor knappen skal være henne :)*@
+<button onclick="@mapMappingsToDb" class="btn btn-primary">Merge Mappings into Products' DB'</button><br />
+<div class="container-fluid">
+    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" style="width:auto" hidden=@isProgressHidden />
+</div>
+<p>@mergedString</p>
 @code {
     string Message = "No files are selected";
     string? addedString;
     string produkterState = "not ready";
     string mappingState = "not ready";
     string pricelistState = "not ready";
-    bool? isProdukterLoading = null;
-    bool? isMappingLoading = null;
-    bool? isPricelistLoading = null;
     string? produkterText;
     string? mappingText;
     string? pricelistText;
-    public bool? isMapping;
+    private bool isProgressHidden = true;
+    private string mergedString = "";
 
     IReadOnlyList<IBrowserFile> selectedFiles;
     //"selectedFiles gets 
@@ -112,22 +106,23 @@ else if (isMapping == false)
 
     private async void insertProdukterInDb()
     {
-        isProdukterLoading = true;
         await _productDb.InsertExcelProducts("Produkter.xlsx");
-        isProdukterLoading = false;
     }
     private async void insertMappingInDb()
     {
-        isMappingLoading = false;
         await _productDb.InsertExcelMapping("Mapping.xlsx");
-        isMappingLoading = true;
     }
     private async void mapMappingsToDb()
     {
-
-        isMapping = true;
-        StateHasChanged();
+        isProgressHidden = false;
+        await Task.Delay(1);
         await _productDb.JoinMappingToProducts();
-        isMapping = false;
+        isProgressHidden = true;
+        mergedString = "Mappings merged into products!";
+        StateHasChanged();
+    }
+    // Alijas og Ozzy's funktioner her. Alle Filecards skal have en _callback. Derfor nødvendig.
+    private void doSomethingWithPricelist()
+    {
     }
 }
