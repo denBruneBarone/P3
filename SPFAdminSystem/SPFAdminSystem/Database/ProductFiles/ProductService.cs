@@ -10,6 +10,11 @@ using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
+    public class ProductScore
+    {
+        public double score { get; set; }
+        public Product _product = new();
+    }
     public class ProductService : IProductService
     {
         private readonly DataContext _context;
@@ -22,6 +27,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public List<Product> Products { get; set; } = new List<Product>();
         public List<Product> UnknownProducts { get; set; } = new List<Product>();
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
+        public List<Product> MatchSuggestions { get; set; } = new List<Product>();
 
 
         public async Task LoadProducts()
@@ -192,15 +198,15 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
             
+            /*Calls function to assure products from database is in List<Product> Products*/
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
         }
+           
 
         public async Task LoadUnknownProducts(string fileName)
         {
-            /*Calls function to assure products from database is in List<Product> Products*/
-           
 
             /*EPPLUS - Excel functionality*/
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
@@ -213,16 +219,12 @@ namespace SPFAdminSystem.Database.ProductFiles
                 int rowCount = worksheet.Dimension.End.Row;
                 for (int row = 3; row <= rowCount; row++)
                 {
-                    Console.WriteLine("HEY");
                     Product prod = new Product();
                     int isFound = 0;
                     foreach(Mapping mapping in Mappings)
                     {
                         string ExcelBarcode = worksheet.Cells[row, 6].Value.ToString();
-                        if (mapping.Barcode.ToString() == ExcelBarcode)
-                        {
-                            Console.WriteLine("HERE IT IS " + mapping.Barcode + " HERE IT IS");
-                            Console.WriteLine($"Product found in mapping db");
+                        if (mapping.Barcode.ToString() == ExcelBarcode) { 
                             isFound++;
                             break;
                         }
@@ -241,6 +243,108 @@ namespace SPFAdminSystem.Database.ProductFiles
                 }
             }
 
+        }
+        public async Task<List<Product>> GetMatchSuggestions(Product product)
+        {
+            List<ProductScore> prodScore = new List<ProductScore>();
+            List<ProductScore> sortedProdScore = new();
+
+            foreach(Mapping map in Mappings) 
+            {
+                ProductScore prod = new();
+                prod.score = NameMatch(map.TitleGWS, product.TitleGWS);
+                prod._product.Target = map.Target;
+                prod._product.TitleGWS = map.TitleGWS;
+                prod._product.Barcode = map.Barcode;
+                prod._product.Packsize = map.PackSize;
+                prod._product.MinOrder = map.MinOrder;
+                prodScore.Add(prod);
+            }
+
+            sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
+
+           
+
+
+            MatchSuggestions.Add(sortedProdScore[0]._product);
+            MatchSuggestions.Add(sortedProdScore[1]._product);
+            MatchSuggestions.Add(sortedProdScore[2]._product);
+
+
+            return MatchSuggestions;
+
+        }
+        static double StringCompare(string a, string b)
+        {
+            if (a == b) //Same string, no iteration needed.
+                return 100;
+            if ((a.Length == 0) || (b.Length == 0)) //One is empty, second is not
+            {
+                return 0;
+            }
+            double maxLen = a.Length > b.Length ? a.Length : b.Length;
+            int minLen = a.Length < b.Length ? a.Length : b.Length;
+            int sameCharAtIndex = 0;
+            for (int i = 0; i < minLen; i++) //Compare char by char
+            {
+                if (a[i] == b[i])
+                {
+                    sameCharAtIndex++;
+                }
+            }
+            return sameCharAtIndex / maxLen * 100;
+        }
+        static double NameMatch(string a, string b)
+        {
+            bool ignoreChecked = false;
+            string[] ignoreWords = {"the", "of", "a", "to"};
+            a = a.ToLower();
+            b = b.ToLower();
+
+
+            string[] aString = a.Split();
+            double score = 0;
+            string charString = "";
+            for(int i = 0; i<aString.Length; i++)
+            {
+                charString = aString[i];
+                for(int j = 0; j < charString.Length; j++)
+                {
+                    if (charString[j] == ':')
+                    {
+                        charString.Replace(':','a');
+                        Console.WriteLine(charString);
+                    }
+                }
+            }
+            if(!b.Contains(a))
+            {
+                for (int i = 0; i < aString.Length; i++)
+                {
+                    ignoreChecked = false;
+                    for(int j = 0; j < ignoreWords.Length; j++)
+                    {
+                        if (aString[i].Contains(ignoreWords[j]))
+                        {
+                            ignoreChecked = true;
+                        }
+
+                    }
+                    if (b.Contains(aString[i]) && ignoreChecked == false) 
+                    {
+                    
+                        score++; 
+                    }
+                }
+            }
+            else
+            {
+                
+            }
+            
+
+
+            return score;
         }
     }
 

@@ -37,15 +37,15 @@
                     {
                         <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                     }
-                    else if(matchTitle==item.InHouseTitle){
+                    else if(matchTitle==item.TitleGWS){
                         <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                         counter++;
                     }else{
-                        if(!IsMapped(item.InHouseTitle)){
-                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
+                        if(!IsMapped(item.TitleGWS)){
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
                             counter++;
                         }else{
-                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
                         }
                     }
                 }
@@ -58,29 +58,29 @@
     @*----------------------------------------------------------------------------------------------------------------------*@
 
     @{
-        <div id="matchProduct">
-            @*Attempt to make a title for the "Match Product" but failed at width*@
-            <div id="matchProductTitle">
-            </div>
+                <div id="matchProduct">
+                    @*Attempt to make a title for the "Match Product" but failed at width*@
+                    <div id="matchProductTitle">
+                    </div>
 
-            @*----------------------------------------------------------------------------------------------------------------------*@
-            <div id="leftItem">
-                <div id="itemTitle">
-                    @{
+                    @*----------------------------------------------------------------------------------------------------------------------*@
+                    <div id="leftItem">
+                        <div id="itemTitle">
+                            @{
                         if (matchTitle == "" && products.Count > 0)
                         {
                             matchTitle = products[0].TitleGWS;
                         }
-                    }
-                    <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
-                </div>
-                <div id="currentInfoTitle">
-                    <h3 style="text-align: center;">Current match information:</h3>
-                </div>
-                <div id="leftMatchItemsFlex">
-                    <div id="currentInfo">
-                        <ul id="matchListLeft">
-                            @{
+                            }
+                            <h1 style="font-weight: 700; font-size: 24px;">@matchTitle</h1> @*dynamisk item title*@
+                        </div>
+                        <div id="currentInfoTitle">
+                            <h3 style="text-align: center;">Current match information:</h3>
+                        </div>
+                        <div id="leftMatchItemsFlex">
+                            <div id="currentInfo">
+                                <ul id="matchListLeft">
+                                    @{
                                 if (InHouseTitleString == InHouseCommit && InHouseCommit != "")
                                 {
                                     inHouseTitleUpdated = true;
@@ -107,21 +107,21 @@
                                         {
                                             if (prop.Name.ToLower() == "target" && targetUpdated == true || prop.Name.ToLower() == "inhousetitle" && inHouseTitleUpdated == true)
                                             {
-                                                <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
+                                                                <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
                                             }
                                             else
                                             {
-                                                <li id="itemLiTitles">@prop.Name</li>
+                                                                <li id="itemLiTitles">@prop.Name</li>
                                             }
                                         }
                                     }
                                 }
-                            }
-                        </ul>
-                    </div>
-                    <div id="currentInfoValues">
-                        <ul style="list-style: none;" id="matchListLeft">
-                            @{
+                                    }
+                                </ul>
+                            </div>
+                            <div id="currentInfoValues">
+                                <ul style="list-style: none;" id="matchListLeft">
+                                    @{
                                 if (products.Count() > 0)
                                 {
                                     if (matchTitle != "")
@@ -132,119 +132,118 @@
                                             {
                                                 if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
                                                 {
-                                                    <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                                                    <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
                                                 }
                                                 else
                                                 {
                                                     if (prop.Name == "Target")
                                                     {
-                                                        <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+                                                                        <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
-                                                        <input type="submit" hidden />
+                                                                        <input type="submit" hidden />
                                                     }
                                                     else if (prop.Name == "InHouseTitle")
                                                     {
-                                                        <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+                                                                        <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                                                                @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
 
-                                                        <input type="submit" hidden />
+                                                                        <input type="submit" hidden />
                                                     }
                                                     else
                                                     {
-                                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
                                                     }
                                                 }
                                             }
                                             else
                                             {
-                                                <li id="itemLi"></li>
+                                                                <li id="itemLi"></li>
                                             }
                                         }
                                     }
                                 }
-                            }
-                        </ul>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="ignoreApplyButtons">
+                            <button id="ignoreButton" style="background:#f3cac9" @onclick="@IgnoreChanges">Ignore</button>
+                            <button id="applyButton" style="background:#b2dab6" @onclick="@ApplyChanges">Apply</button>
+                        </div>
                     </div>
-                </div>
-                <div id="ignoreApplyButtons">
-                    <button id="ignoreButton" style="background:#f3cac9" @onclick="@IgnoreChanges">Ignore</button>
-                    <button id="applyButton" style="background:#b2dab6" @onclick="@ApplyChanges">Apply</button>
-                </div>
-            </div>
 
-            @*----------------------------------------------------------------------------------------------------------------------*@
+                    @*----------------------------------------------------------------------------------------------------------------------*@
 
-            <div id="rightItem">
-                @code {
+                    <div id="rightItem">
+                        @code {
                     int justBooted = 0;
 
                     private void updateJustBooted()
                     {
                         justBooted = 1;
                     }
-                }
-                <div id="itemTitle">
-                    <div id="rightAuxItems">
-                        <div id="dropdownId">
-                            <select name="matches" id="matches" @onchange="checkIfMatchChosen">
-                                <option value="" disabled selected>Select a match</option>
-                                @foreach (Product item in products)
+                        }
+                        <div id="itemTitle">
+                            <div id="rightAuxItems">
+                                <div id="dropdownId">
+                                    <select name="matches" id="matches" @onchange="checkIfMatchChosen">
+                                        <option value="" disabled selected>Select a match</option>
+                                        @foreach (Product item in matchSuggestions)
                                 {
-                                    <option value="@item.InHouseTitle">@item.InHouseTitle</option>
+                                            <option value="@item.TitleGWS">@item.TitleGWS</option>
                                 }
-                            </select>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                        <input type="search" placeholder="Search" id="searchArea" name="Search">
-                    </div>
-                </div>
-                <div id="currentInfoTitle">
-                    <h3 style="text-align: center;">Selected match information:</h3>
-                </div>
-                <div id="leftMatchItemsFlex">
-                    @if (justBooted == 1)
+                        <div id="currentInfoTitle">
+                            <h3 style="text-align: center;">Selected match information:</h3>
+                        </div>
+                        <div id="leftMatchItemsFlex">
+                            @if (justBooted == 1)
                     {
-                        <div id="currentInfo">
-                            <ul id="matchListLeft">
-                                @{
-                                    foreach (PropertyInfo prop in products[chosenMatch].GetType().GetProperties())
+                                <div id="currentInfo">
+                                    <ul id="matchListLeft">
+                                        @{
+                                    foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                     {
-                                        <li id="itemLiTitles">@prop.Name</li>
+                                                        <li id="itemLiTitles">@prop.Name</li>
                                     }
-                                }
-                            </ul>
-                        </div>
-                        <div id="currentInfoValues">
-                            <ul style="list-style: none;" id="matchListLeft">
-                                @{
-                                    foreach (PropertyInfo prop in products[chosenMatch].GetType().GetProperties())
+                                        }
+                                    </ul>
+                                </div>
+                                <div id="currentInfoValues">
+                                    <ul style="list-style: none;" id="matchListLeft">
+                                        @{
+                                    foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                     {
-                                        if (prop.GetValue(products[chosenMatch], null) != null)
+                                        if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                                         {
                                             if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
                                             {
-                                                <li id="itemLi">@prop.GetValue(products[chosenMatch], null).ToString().Substring(0,10)</li>
+                                                                <li id="itemLi">@prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)</li>
                                             }
                                             else
                                             {
-                                                <li id="itemLi">@prop.GetValue(products[chosenMatch], null).ToString()</li>
+                                                                <li id="itemLi">@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()</li>
                                             }
                                         }
                                         else
                                         {
-                                            <li id="itemLi"></li>
+                                                            <li id="itemLi"></li>
                                         }
                                     }
-                                }
-                            </ul>
-                        </div>
+                                        }
+                                    </ul>
+                                </div>
                     }
-                </div>
-                    <div id="ignoreApplyButtons">
-                        <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>
+                        </div>
+                            <div id="ignoreApplyButtons">
+                                <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
         }
 
     @*----------------------------------------------------------------------------------------------------------------------*@
@@ -261,16 +260,16 @@
     @{
         if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "" || targetCommit != products[chosenProduct].Target && InHouseCommit != "" && targetCommit != -1)
         {
-            <h3>Changes Overview:</h3>
-            <p></p>
+                    <h3>Changes Overview:</h3>
+                    <p></p>
         }
         if(InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "")
         {
-            <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
+                    <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
         }
         if(targetCommit != products[chosenProduct].Target && targetCommit != -1)
         {
-            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@targetCommit"</p>
+                    <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@targetCommit"</p>
         }
     }
 </div>
@@ -302,7 +301,7 @@
             {
                 if (prop.GetValue(products[i], null) != null)
                 {
-                    if (products[i].InHouseTitle == matchTitle && chosenProduct != i)
+                    if (products[i].TitleGWS == matchTitle && chosenProduct != i)
                     {
                         chosenProduct = i;
                     }
@@ -373,9 +372,9 @@
 
     private void getChosenMatchIndex(string dropDownList)
     {
-        for (int t = 0; t < products.Count(); t++)
+        for (int t = 0; t < matchSuggestions.Count(); t++)
         {
-            if (dropDownList == products[t].InHouseTitle)
+            if (dropDownList == matchSuggestions[t].TitleGWS)
             {
                 chosenMatch = t;
                 break;
@@ -492,7 +491,7 @@
     private List<string> MappedTitles = new List<string>();
     /*Function for accepting mapping proposal*/
     private void AcceptMatch(){
-        string title = products[chosenProduct].InHouseTitle;
+        string title = products[chosenProduct].TitleGWS;
 
 
 
@@ -527,13 +526,24 @@
 
 
     private List<Product> UnknownProducts = new();
+    private List<Product> matchSuggestions = new();
 
     private List<Product> productsTemp = new();
+
+    private async void suggestedMapping(){
+        matchSuggestions.Clear();
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+
+    }
 
     protected override async Task OnInitializedAsync()
     {
         //await _db.LoadProducts();
         products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+
+        
+
     }
 
     
