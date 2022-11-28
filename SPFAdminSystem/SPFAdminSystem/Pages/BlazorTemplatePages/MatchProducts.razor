@@ -35,17 +35,17 @@
                 {
                     if(matchTitle=="" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
                     {
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                     }
                     else if(matchTitle==item.InHouseTitle){
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: dodgerblue;" id="listButtons">@item.InHouseTitle</button></li>
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                         counter++;
                     }else{
                         if(!IsMapped(item.InHouseTitle)){
-                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #f3cac9;" id="listButtons">@item.InHouseTitle</button></li>
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
                             counter++;
                         }else{
-                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.InHouseTitle)) style="background-color: #b2dab6;" id="listButtons">@item.InHouseTitle</button></li>
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
                         }
                     }
                 }
@@ -69,7 +69,7 @@
                     @{
                         if (matchTitle == "" && products.Count > 0)
                         {
-                            matchTitle = products[0].InHouseTitle;
+                            matchTitle = products[0].TitleGWS;
                         }
                     }
                     <h1 style="font-weight: 700">@matchTitle</h1> @*dynamisk item title*@
@@ -532,7 +532,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        products = _db.GetUnknownProducts();
+        //await _db.LoadProducts();
+        products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
     }
 
     

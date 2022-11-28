@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -188,16 +189,21 @@ namespace SPFAdminSystem.Database.ProductFiles
             return prod;
         }
 
-        public List<Product> GetUnknownProducts()
+        public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
             
+            await LoadMappings();
+            await LoadUnknownProducts(fileName);
             return UnknownProducts;
         }
 
-        public async Task LoadUnknownProducts()
+        public async Task LoadUnknownProducts(string fileName)
         {
-            List<Product> products = new();
-            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "";
+            /*Calls function to assure products from database is in List<Product> Products*/
+           
+
+            /*EPPLUS - Excel functionality*/
+            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo))
@@ -205,16 +211,33 @@ namespace SPFAdminSystem.Database.ProductFiles
                 ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
                 int colCount = worksheet.Dimension.End.Column;
                 int rowCount = worksheet.Dimension.End.Row;
-                for (int row = 5; row <= rowCount; row++)
+                for (int row = 3; row <= rowCount; row++)
                 {
+                    Console.WriteLine("HEY");
                     Product prod = new Product();
-                    prod.ProductId = worksheet.Cells[row, 1].Value.ToString();
-                    prod.InHouseTitle = worksheet.Cells[row, 2].Value.ToString();
-                    prod.AvailableAmount = Convert.ToInt32(worksheet.Cells[row, 9].Value);
-                    prod.StockAmount = Convert.ToInt32(worksheet.Cells[row, 7].Value);
-                    prod.OrderAmount = Convert.ToInt32(worksheet.Cells[row, 10].Value);
-                    prod.Ordered = Convert.ToInt32(worksheet.Cells[row, 8].Value);
-                    products.Add(prod);
+                    int isFound = 0;
+                    foreach(Mapping mapping in Mappings)
+                    {
+                        string ExcelBarcode = worksheet.Cells[row, 6].Value.ToString();
+                        if (mapping.Barcode.ToString() == ExcelBarcode)
+                        {
+                            Console.WriteLine("HERE IT IS " + mapping.Barcode + " HERE IT IS");
+                            Console.WriteLine($"Product found in mapping db");
+                            isFound++;
+                            break;
+                        }
+                        
+                    }
+                    if (isFound == 0)
+                    {
+                        prod.Barcode = worksheet.Cells[row, 6].Value.ToString();
+                        prod.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
+                        prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
+                        prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
+                        UnknownProducts.Add(prod);
+                        Console.WriteLine("Product added");
+                    }
+
                 }
             }
 
