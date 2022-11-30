@@ -208,7 +208,10 @@
                                         @{
                                     foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                     {
-                                                        <li id="itemLiTitles">@prop.Name</li>
+                                        <div id="CheckboxInfo">
+                                            <input type="checkbox"/>
+                                            <li id="itemLiTitles">@prop.Name</li>
+                                        </div>
                                     }
                                         }
                                     </ul>
@@ -420,73 +423,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /*List of strings, is used to check if product is mapped*/
     private List<string> MappedTitles = new List<string>();
     /*Function for accepting mapping proposal*/
@@ -541,9 +477,6 @@
         //await _db.LoadProducts();
         products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
-
-        
-
     }
 
     

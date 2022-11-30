@@ -114,7 +114,13 @@ li {
 
 #matchListLeft {
     height: 100px;
-    width: 100%;
+    width: 100%;   
+}
+
+#CheckboxInfo{
+    display: flex;
+    justify-content: space-between;
+    
 }
 
 #itemLi, #itemLiTitles, #itemValueLi {
@@ -152,7 +158,7 @@ li {
     list-style-type: none;
     margin-left: 0;
     margin-right: 0;
-    padding-left: 0;
+    padding-left: 10;
     padding-right: 0;
     text-align: left;
 }

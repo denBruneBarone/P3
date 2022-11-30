@@ -43,7 +43,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task<Product> GetSingleProduct(string productId)
         {
             Product? product = await _context.Products.FindAsync(productId);
-            
+
             if (product == null)
             {
                 throw new Exception("no product here");
@@ -51,7 +51,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             return product;
         }
 
-        
+
 
         public async Task CreateOrUpdateProduct(Product product)
         {
@@ -60,7 +60,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             {
                 //create
                 _context.Products.Add(product);
-            } else
+            }
+            else
             {
                 // update /TOTEST
                 dbProduct.ProductId = product.ProductId;
@@ -68,7 +69,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
-        
+
 
         public async Task InsertExcelProducts(string fileName)
         {
@@ -116,7 +117,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
-            public async Task InsertExcelMapping(string fileName)
+        public async Task InsertExcelMapping(string fileName)
         {
             List<Mapping> mappings = new();
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + fileName;
@@ -130,8 +131,8 @@ namespace SPFAdminSystem.Database.ProductFiles
                 for (int row = 2; row <= rowCount; row++)
                 {
                     Mapping Map = new Mapping();
-                   
-                        //create
+
+                    //create
                     Map.ProductIdMapping = worksheet.Cells[row, 2].Value == null ? string.Empty : worksheet.Cells[row, 2].Value.ToString();
                     Map.TitleGWS = worksheet.Cells[row, 3].Value.ToString();
                     Map.Barcode = worksheet.Cells[row, 1].Value == null ? string.Empty : worksheet.Cells[row, 1].Value.ToString();
@@ -168,7 +169,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             {
                 Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
             }
-            else { 
+            else
+            {
                 dbProduct.TitleGWS = mapping.TitleGWS;
                 dbProduct.Barcode = mapping.Barcode;
                 dbProduct.Packsize = mapping.PackSize;
@@ -179,7 +181,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
-        public async Task JoinMappingToProducts (){ 
+        public async Task JoinMappingToProducts()
+        {
             await LoadMappings();
             await LoadProducts();
             foreach (Mapping map in Mappings)
@@ -197,13 +200,13 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
-            
+
             /*Calls function to assure products from database is in List<Product> Products*/
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
         }
-           
+
 
         public async Task LoadUnknownProducts(string fileName)
         {
@@ -221,14 +224,15 @@ namespace SPFAdminSystem.Database.ProductFiles
                 {
                     Product prod = new Product();
                     int isFound = 0;
-                    foreach(Mapping mapping in Mappings)
+                    foreach (Mapping mapping in Mappings)
                     {
                         string ExcelBarcode = worksheet.Cells[row, 6].Value.ToString();
-                        if (mapping.Barcode.ToString() == ExcelBarcode) { 
+                        if (mapping.Barcode.ToString() == ExcelBarcode)
+                        {
                             isFound++;
                             break;
                         }
-                        
+
                     }
                     if (isFound == 0)
                     {
@@ -237,10 +241,10 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
                         UnknownProducts.Add(prod);
-                        Console.WriteLine("Product added");
                     }
 
                 }
+                Console.WriteLine("Unknown Products added");
             }
 
         }
@@ -249,10 +253,10 @@ namespace SPFAdminSystem.Database.ProductFiles
             List<ProductScore> prodScore = new List<ProductScore>();
             List<ProductScore> sortedProdScore = new();
 
-            foreach(Mapping map in Mappings) 
+            foreach (Mapping map in Mappings)
             {
                 ProductScore prod = new();
-                prod.score = NameMatch(map.TitleGWS, product.TitleGWS);
+                prod.score = NameMatch(product.TitleGWS, map.TitleGWS);
                 prod._product.Target = map.Target;
                 prod._product.TitleGWS = map.TitleGWS;
                 prod._product.Barcode = map.Barcode;
@@ -263,17 +267,19 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
 
-           
-
 
             MatchSuggestions.Add(sortedProdScore[0]._product);
             MatchSuggestions.Add(sortedProdScore[1]._product);
             MatchSuggestions.Add(sortedProdScore[2]._product);
+            MatchSuggestions.Add(sortedProdScore[3]._product);
+            MatchSuggestions.Add(sortedProdScore[4]._product);
 
 
             return MatchSuggestions;
 
         }
+
+
         static double StringCompare(string a, string b)
         {
             if (a == b) //Same string, no iteration needed.
@@ -294,61 +300,75 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             return sameCharAtIndex / maxLen * 100;
         }
+
+
+
         static double NameMatch(string a, string b)
         {
             bool ignoreChecked = false;
-            string[] ignoreWords = {"the", "of", "a", "to"};
+            string[] ignoreWords = { " the ", " of ", " a ", " to " };
             a = a.ToLower();
             b = b.ToLower();
 
 
             string[] aString = a.Split();
+            string[] bString = b.Split();
             double score = 0;
             string charString = "";
-            for(int i = 0; i<aString.Length; i++)
+            
+            for (int i = 0; i < aString.Length; i++)
             {
                 charString = aString[i];
-                for(int j = 0; j < charString.Length; j++)
+                for (int j = 0; j < charString.Length; j++)
                 {
                     if (charString[j] == ':')
                     {
-                        charString.Replace(':','a');
-                        Console.WriteLine(charString);
+                        charString = charString.Remove(j, 1);
                     }
                 }
+                aString[i] = charString;
             }
-            if(!b.Contains(a))
+            for (int i = 0; i < bString.Length; i++)
             {
-                for (int i = 0; i < aString.Length; i++)
+                charString = bString[i];
+                for (int j = 0; j < charString.Length; j++)
                 {
-                    ignoreChecked = false;
-                    for(int j = 0; j < ignoreWords.Length; j++)
+                    if (charString[j] == ':')
                     {
-                        if (aString[i].Contains(ignoreWords[j]))
-                        {
-                            ignoreChecked = true;
-                        }
-
-                    }
-                    if (b.Contains(aString[i]) && ignoreChecked == false) 
-                    {
-                    
-                        score++; 
+                        charString = charString.Replace(":", "");
                     }
                 }
+                bString[i] = charString;
             }
-            else
+            b = string.Join(" ", bString);
+            a = string.Join(" ", aString);
+
+            for (int i = 0; i < aString.Length; i++)
             {
-                
+                ignoreChecked = false;
+                for (int j = 0; j < ignoreWords.Length; j++)
+                {
+                    
+                    if (aString[i].Contains(ignoreWords[j]))
+                    {
+                        ignoreChecked = true;
+                        break;
+                    }
+
+                }
+                if (b.Contains(aString[i], StringComparison.OrdinalIgnoreCase) && ignoreChecked == false)
+                {
+
+                    score++;
+                }
             }
-            
+
 
 
             return score;
         }
+
+
+
     }
-
-    
-    
-
 }
