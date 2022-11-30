@@ -169,7 +169,6 @@
                         </div>
                         <div id="ignoreApplyButtons">
                             <button id="ignoreButton" style="background:#f3cac9" @onclick="@IgnoreChanges">Ignore</button>
-                            <button id="applyButton" style="background:#b2dab6" @onclick="@ApplyChanges">Apply</button>
                         </div>
                     </div>
 
@@ -188,7 +187,6 @@
                             <div id="rightAuxItems">
                                 <div id="dropdownId">
                                     <select name="matches" id="matches" @onchange="checkIfMatchChosen">
-                                        <option value="" disabled selected>Select a match</option>
                                         @foreach (Product item in matchSuggestions)
                                 {
                                             <option value="@item.TitleGWS">@item.TitleGWS</option>
@@ -201,8 +199,6 @@
                             <h3 style="text-align: center;">Selected match information:</h3>
                         </div>
                         <div id="leftMatchItemsFlex">
-                            @if (justBooted == 1)
-                    {
                                 <div id="currentInfo">
                                     <ul id="matchListLeft">
                                         @{
@@ -240,7 +236,6 @@
                                         }
                                     </ul>
                                 </div>
-                    }
                         </div>
                             <div id="ignoreApplyButtons">
                                 <button @onclick="AcceptMatch" id="acceptButton" style="background:#b2dab6">Accept</button>

@@ -107,12 +107,18 @@ namespace SPFAdminSystem.Database.ProductFiles
             if (dbMapping == null)
             {
                 //create
+
                 _context.Mappings.Add(mapping);
             }
+/*            else if (dbMapping.ProductIdMapping.ToString() == "N/A")
+            {
+
+            }*/
             else
             {
                 // update /TOTEST
                 dbMapping.ProductIdMapping = mapping.ProductIdMapping;
+                
             }
             await _context.SaveChangesAsync();
         }
@@ -131,9 +137,9 @@ namespace SPFAdminSystem.Database.ProductFiles
                 for (int row = 2; row <= rowCount; row++)
                 {
                     Mapping Map = new Mapping();
-
+                    
                     //create
-                    Map.ProductIdMapping = worksheet.Cells[row, 2].Value == null ? string.Empty : worksheet.Cells[row, 2].Value.ToString();
+                    Map.ProductIdMapping = (worksheet.Cells[row, 2].Value == null || worksheet.Cells[row, 2].Value == string.Empty) ? $"N/A{row}" : worksheet.Cells[row, 2].Value.ToString();
                     Map.TitleGWS = worksheet.Cells[row, 3].Value.ToString();
                     Map.Barcode = worksheet.Cells[row, 1].Value == null ? string.Empty : worksheet.Cells[row, 1].Value.ToString();
                     Map.Target = Convert.ToInt32(worksheet.Cells[row, 5].Value);
@@ -266,7 +272,10 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
 
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
-
+            foreach(ProductScore prod in sortedProdScore)
+            {
+                Console.WriteLine(prod.score + "      " + prod._product.TitleGWS);
+            }
 
             MatchSuggestions.Add(sortedProdScore[0]._product);
             MatchSuggestions.Add(sortedProdScore[1]._product);
@@ -306,19 +315,21 @@ namespace SPFAdminSystem.Database.ProductFiles
         static double NameMatch(string a, string b)
         {
             bool ignoreChecked = false;
-            string[] ignoreWords = { " the ", " of ", " a ", " to " };
-            a = a.ToLower();
-            b = b.ToLower();
+            string[] ignoreWords = { " the ", " of ", " a ", " to ", " & " };
+            /*a = a.ToLower();
+            b = b.ToLower();*/
 
-
-            string[] aString = a.Split();
-            string[] bString = b.Split();
+            bool bigScore = true;
+            double stringLength = 0;
+            string partString = "";
+            string[] searchString = a.Split();
+            string[] mappingString = b.Split();
             double score = 0;
             string charString = "";
             
-            for (int i = 0; i < aString.Length; i++)
+            for (int i = 0; i < searchString.Length; i++)
             {
-                charString = aString[i];
+                charString = searchString[i];
                 for (int j = 0; j < charString.Length; j++)
                 {
                     if (charString[j] == ':')
@@ -326,11 +337,11 @@ namespace SPFAdminSystem.Database.ProductFiles
                         charString = charString.Remove(j, 1);
                     }
                 }
-                aString[i] = charString;
+                searchString[i] = charString;
             }
-            for (int i = 0; i < bString.Length; i++)
+            for (int i = 0; i < mappingString.Length; i++)
             {
-                charString = bString[i];
+                charString = mappingString[i];
                 for (int j = 0; j < charString.Length; j++)
                 {
                     if (charString[j] == ':')
@@ -338,32 +349,46 @@ namespace SPFAdminSystem.Database.ProductFiles
                         charString = charString.Replace(":", "");
                     }
                 }
-                bString[i] = charString;
+                mappingString[i] = charString;
             }
-            b = string.Join(" ", bString);
-            a = string.Join(" ", aString);
+            b = string.Join(" ", mappingString);
+            a = string.Join(" ", searchString);
 
-            for (int i = 0; i < aString.Length; i++)
+            stringLength = searchString.Length;
+            stringLength = Math.Floor(stringLength/2);
+            
+            for(int x = 0; x < stringLength; x++)
+            {
+                partString += searchString[x] + " ";
+            }
+
+            if(b.Contains(partString, StringComparison.OrdinalIgnoreCase) && bigScore == true)
+            {
+                score = 1;
+                bigScore = false;
+            }
+            else
+            {
+                bigScore = false;
+            }
+
+            for (int i = 0; i < searchString.Length; i++)
             {
                 ignoreChecked = false;
                 for (int j = 0; j < ignoreWords.Length; j++)
                 {
-                    
-                    if (aString[i].Contains(ignoreWords[j]))
+                    if (searchString[i].Contains(ignoreWords[j], StringComparison.OrdinalIgnoreCase))
                     {
                         ignoreChecked = true;
                         break;
                     }
-
                 }
-                if (b.Contains(aString[i], StringComparison.OrdinalIgnoreCase) && ignoreChecked == false)
-                {
 
+                if (b.Contains(searchString[i], StringComparison.OrdinalIgnoreCase) && ignoreChecked == false)
+                {
                     score++;
                 }
             }
-
-
 
             return score;
         }
