@@ -281,7 +281,7 @@
 <div class="w-100" style="display: flex; justify-content: center; align-items: center;">
     <div class="w-25" style="display: flex; justify-content: space-between;">
         <button class="btn btn-danger btn-lg">IGNORE PRODUCT</button>
-        <button class="btn btn-primary btn-lg" disabled>ACCEPT</button>
+        <button class="btn btn-primary btn-lg">ACCEPT</button>
     </div>
 </div>
 
@@ -487,16 +487,30 @@
         inHouseTitleUpdated = false;
     }
 
-
-
     /*List of strings, is used to check if product is mapped*/
     private List<string> MappedTitles = new List<string>();
+
     /*Function for accepting mapping proposal*/
-    private void AcceptMatch()
-    {
+    private async void AcceptMatch(){
+
         string title = products[chosenProduct].TitleGWS;
+        /*To create or update the new product, in the product database*/
+        if (products[chosenProduct].ProductId != null && products[chosenProduct].ProductId != string.Empty)
+        {
 
+            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+            {
 
+                if (prop.Name.ToString() == "TitleGWS" && prop.GetValue(products[chosenProduct], null) != null)
+                {
+                    products[chosenProduct].InHouseTitle = prop.GetValue(products[chosenProduct], null).ToString();
+                }
+
+            }
+
+            await _db.CreateOrUpdateProduct(products[chosenProduct]);
+            await _db.CreateOrUpdateMapping(productToMapping(products[chosenProduct]));
+        }
 
         if (IsMapped(title))
         {
@@ -528,6 +542,27 @@
         {
             return false;
         }
+    }
+
+    private Mapping productToMapping(Product product){
+        Mapping mapping = new Mapping();
+        foreach (PropertyInfo prop in product.GetType().GetProperties())
+        {
+            if(prop.Name == "ProductId"){
+                mapping.ProductIdMapping = prop.GetValue(product, null).ToString();
+            }else if(prop.Name == "Barcode"){
+                mapping.Barcode = prop.GetValue(product, null).ToString();
+            }else if(prop.Name == "TitleGWS"){
+                mapping.TitleGWS = prop.GetValue(product, null).ToString();
+            }else if(prop.Name=="MinOrder"){
+                mapping.MinOrder= Convert.ToInt32(prop.GetValue(product, null));
+            }else if(prop.Name=="Packsize"){
+                mapping.PackSize = Convert.ToInt32(prop.GetValue(product, null));
+            }else if(prop.Name == "Target"){
+                mapping.Target = Convert.ToInt32(prop.GetValue(product, null));
+            }
+        }
+        return mapping;
     }
 
 

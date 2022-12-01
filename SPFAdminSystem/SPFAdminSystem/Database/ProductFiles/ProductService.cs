@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using Microsoft.Office.Interop.Excel;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -242,6 +243,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                     }
                     if (isFound == 0)
                     {
+                        prod.ProductId = worksheet.Cells[row, 5].Value.ToString();
                         prod.Barcode = worksheet.Cells[row, 6].Value.ToString();
                         prod.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
                         prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
@@ -272,10 +274,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
 
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
-            foreach(ProductScore prod in sortedProdScore)
-            {
-                Console.WriteLine(prod.score + "      " + prod._product.TitleGWS);
-            }
 
             MatchSuggestions.Add(sortedProdScore[0]._product);
             MatchSuggestions.Add(sortedProdScore[1]._product);
@@ -286,28 +284,6 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             return MatchSuggestions;
 
-        }
-
-
-        static double StringCompare(string a, string b)
-        {
-            if (a == b) //Same string, no iteration needed.
-                return 100;
-            if ((a.Length == 0) || (b.Length == 0)) //One is empty, second is not
-            {
-                return 0;
-            }
-            double maxLen = a.Length > b.Length ? a.Length : b.Length;
-            int minLen = a.Length < b.Length ? a.Length : b.Length;
-            int sameCharAtIndex = 0;
-            for (int i = 0; i < minLen; i++) //Compare char by char
-            {
-                if (a[i] == b[i])
-                {
-                    sameCharAtIndex++;
-                }
-            }
-            return sameCharAtIndex / maxLen * 100;
         }
 
 
