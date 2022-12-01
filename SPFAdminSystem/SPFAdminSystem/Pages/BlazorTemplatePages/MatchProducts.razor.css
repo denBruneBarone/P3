@@ -63,6 +63,7 @@ li {
     border: 2px solid black;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 #leftItem {
@@ -102,8 +103,6 @@ li {
 
 #currentInfo {
     height: 100%;
-    width: 50%;
-    max-width: 10ch;
 }
 
 #currentInfoValues {
@@ -115,12 +114,6 @@ li {
 #matchListLeft {
     height: 100px;
     width: 100%;   
-}
-
-#CheckboxInfo{
-    display: flex;
-    justify-content: space-between;
-    
 }
 
 #itemLi, #itemLiTitles, #itemValueLi {

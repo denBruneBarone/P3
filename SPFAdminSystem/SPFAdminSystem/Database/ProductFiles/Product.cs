@@ -36,6 +36,8 @@ public class Product
     public int? MinOrder { get; set; }
 
     public int? Target { get; set; }
+
+    public bool? IsChecked { get; set; }
 }
 
 public class Mapping
