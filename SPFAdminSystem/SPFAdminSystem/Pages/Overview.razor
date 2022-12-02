@@ -1,0 +1,73 @@
+﻿@page "/order/overview"
+@using BlazorTable
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles;
+@using System.Reflection;
+@inject IProductService database
+<h3>Order Overview</h3>
+<div class="w-100" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div id="table-div">
+        <Table TableItem="Product" Items="productlist" IsEditMode="true" PageSize="8" @ref="Table" ColumnReorder="true">
+            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="false" Filterable="true" Width="10%" />
+            <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="false" Filterable="false" Width="20%">
+            </Column>
+            <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="false" Filterable="false" Width="20%" />
+            <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="20%">
+            </Column>
+            <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
+            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right">
+                <EditTemplate>
+                    <input type="number" @bind-value="context.Target" @onfocusout="() => updatequantity(context)" class="form-control form-control-sm" required />
+                </EditTemplate>
+            </Column>
+            <Column TableItem="Product" Title="Order Quantity" Field="@(x => x.OrderQuantity)" Sortable="false" Width="10%" />
+            <Pager ShowPageNumber="true" ShowTotalCount="true" />
+        </Table>
+    </div>
+    <div>
+        <input type="submit" class="btn btn-success" value="SAVE ORDER">
+    </div>
+</div>
+
+@code {
+    private ITable<Product>? Table;
+    List<Product> productlist = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await database.LoadProducts();
+        productlist = database.GetProducts();
+        foreach(Product product in productlist)
+        {
+            if(product.StockAmount < 0 || product.StockAmount == null)
+            {
+                product.StockAmount = 0;
+            }
+            if (product.Ordered < 0 || product.Ordered == null)
+            {
+                product.Ordered = 0;
+            }
+            if (product.OrderQuantity < 0 || product.OrderQuantity == null)
+            {
+                product.OrderQuantity = 0;
+            }
+        }
+    }
+
+    private void updatequantity(Product product)
+    {
+        product.OrderQuantity = product.Target - (product.StockAmount + product.Ordered);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!Table.IsEditMode)
+        {
+            Table.ToggleEditMode();
+        }
+        foreach(Product product in productlist)
+        {
+            
+        }
+    }
+
+}

@@ -1,11 +1,11 @@
 ﻿@using System.Reflection;
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles;
-@using System.Reflection;
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
 @using Excel = Microsoft.Office.Interop.Excel;
 @inject IProductService _db;
+@inject NavigationManager navManager;
 
 @page "/match"
 @*/mapping*@
@@ -18,7 +18,7 @@
     <button @onclick="InsertProduct">Add products</button>
     <button @onclick="GetUnknownProducts">Add unknown prods</button>
 </div>*@
-<div class="container">
+<div class="container" style="display:flex; flex-direction: row;">
     <div id="productList">
         @{
             counter = products.Count() - MappedTitles.Count();
@@ -170,6 +170,7 @@
                     </div>
                 </div>
                 <div id="ignoreApplyButtons">
+                    <button class="btn btn-danger">IGNORE PRODUCT</button>
                     <button class="btn btn-warning" @onclick="@IgnoreChanges">Undo Changes</button>
                 </div>
             </div>
@@ -184,14 +185,21 @@
                     {
                         justBooted = 1;
                     }
-}
+                }
                 <div id="itemTitle">
                     <div id="rightAuxItems">
                         <div id="dropdownId">
                             <select name="matches" id="matches" @onchange="checkIfMatchChosen">
                                 @foreach (Product item in matchSuggestions)
                                 {
-                                    <option value="@item.TitleGWS">@item.TitleGWS</option>
+                                    if (item == matchSuggestions[5])
+                                    {
+                                        <option value="new">-- ADD AS NEW PRODUCT --</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.TitleGWS">@item.TitleGWS</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -206,31 +214,46 @@
                             @{
                                 foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                 {
-                                    <div class="w-100">
-                                        <li style="display: flex; justify-content: space-between;">
-                                            <div>
-                                                @if(!checkboxclearer)
+                                    <div class="w-100" style="padding: 0; margin: 0;">
+                                    <li style="display: flex; justify-content: space-between; padding-left: 0; margin-left: 0;">
+                                        <div>
+                                                @if (!checkboxclearer)
                                                 {
-                                                    <input class="form-check-input" type="checkbox" id="@prop.Name-checkbox" @onchange="eventArgs => { CheckboxClicked(prop, eventArgs.Value); }">
+                                                <input class="form-check-input" type="checkbox" id="@prop.Name-checkbox" @onchange="eventArgs => { CheckboxClicked(prop, eventArgs.Value); }">
                                                 }
-                                                <label class="form-check-label" for="@prop.Name-checkbox">
-                                                @prop.Name
+                                            <label class="form-check-label" for="@prop.Name-checkbox">
+                                                    @prop.Name
                                             </label>
-                                            </div>
-                                            <div>
-                                             @if(prop.GetValue(matchSuggestions[chosenMatch], null) != null) {
-                                                    @if(prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                        </div>
+                                        <div>
+                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
+                                                {
+                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                    }
+                                                    else if (prop.Name == "Target")
+                                                    {
+                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        {
+                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                        }
                                                     }
                                                     else
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
                                                     }
                                                 }
-                                            </div>
-                                        </li>
-                                    </div>
+                                                else if (matchSuggestions[chosenMatch].TitleGWS == "new")
+                                                {
+                                                    if (prop.Name == "Target")
+                                                    {
+                                                    <input type="text" placeholder="SPECIFY TARGET"/>
+                                                    }
+                                                }
+                                        </div>
+                                    </li>
+                            </div>
                                 }
                             }
                     </ul>
@@ -280,8 +303,8 @@
 *@
 <div class="w-100" style="display: flex; justify-content: center; align-items: center;">
     <div class="w-25" style="display: flex; justify-content: space-between;">
-        <button class="btn btn-danger btn-lg">IGNORE PRODUCT</button>
-        <button class="btn btn-primary btn-lg">ACCEPT</button>
+        <button class="btn btn-danger btn-lg">CANCEL</button>
+        <button class="btn btn-primary btn-lg" disabled="@disabled" @onclick="@nextPage">CONTINUE</button>
     </div>
 </div>
 
@@ -292,24 +315,29 @@
 
 
 @code {
-        bool checkboxclearer = false;
-        int counter = 0;
-        string matchTitle = "";
-        string titleOfEdit = "";
-        bool matchprodCheckStatus = false;
-        private async void GetValue(string item)
-        {
-            matchTitle = item;
+    bool checkboxclearer = false;
+    int counter = 0;
+    string matchTitle = "";
+    string titleOfEdit = "";
+    bool matchprodCheckStatus = false;
+    private async void nextPage()
+    {
+        navManager.NavigateTo("/Overview", true);
+    }
 
-            IgnoreChanges();
-            UpdateMatch(matchTitle);
-            checkboxclearer = true;
-            await Task.Delay(1);
-            StateHasChanged();
-            checkboxclearer = false;
+    private async void GetValue(string item)
+    {
+        matchTitle = item;
+
+        IgnoreChanges();
+        UpdateMatch(matchTitle);
+        checkboxclearer = true;
         await Task.Delay(1);
-            StateHasChanged();
-        }
+        StateHasChanged();
+        checkboxclearer = false;
+        await Task.Delay(1);
+        StateHasChanged();
+    }
 
     int chosenProduct = 0;
     int chosenMatch = 0;
@@ -340,13 +368,15 @@
     List<Product> tempProperties = new();
     private void AddProperties(Product product)
     {
+        disabled = allUnknownMapped();
         Product? tempProd = null;
-        foreach(PropertyInfo prop in checkedProperties)
+        foreach (PropertyInfo prop in checkedProperties)
         {
             try
             {
                 tempProd = (Product)tempProperties.Where(tempprop => tempprop.TitleGWS == product.TitleGWS).First();
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e);
             }
@@ -361,6 +391,16 @@
             products[chosenProduct] = product;
         }
         StateHasChanged();
+        AcceptMatch();
+        if (IsMapped(product.TitleGWS))
+        {
+            Console.WriteLine("It's already mapped!");
+        }
+        else
+        {
+            MappedTitles.Add(product.TitleGWS);
+            Console.WriteLine("Mapping accepted and saved!");
+        }
     }
 
     int val = 0;
@@ -375,7 +415,7 @@
 
     List<PropertyInfo> checkedProperties = new();
     List<bool> checkboxValues = new();
-    private void CheckboxClicked(PropertyInfo prop, object checkedValue) 
+    private void CheckboxClicked(PropertyInfo prop, object checkedValue)
     {
         if ((bool)checkedValue)
         {
@@ -448,6 +488,11 @@
                 chosenMatch = t;
                 break;
             }
+            else
+            {
+
+            }
+
         }
     }
 
@@ -457,7 +502,7 @@
     {
         dropDownList = e.Value.ToString();
 
-        if (dropDownList != "" && dropDownList != null && dropDownList != "Select a match")
+        if (dropDownList != "" && dropDownList != null)
         {
             getChosenMatchIndex(dropDownList);
         }
@@ -491,7 +536,8 @@
     private List<string> MappedTitles = new List<string>();
 
     /*Function for accepting mapping proposal*/
-    private async void AcceptMatch(){
+    private async void AcceptMatch()
+    {
 
         string title = products[chosenProduct].TitleGWS;
         /*To create or update the new product, in the product database*/
@@ -511,17 +557,19 @@
             await _db.CreateOrUpdateProduct(products[chosenProduct]);
             await _db.CreateOrUpdateMapping(productToMapping(products[chosenProduct]));
         }
+    }
+    public bool disabled = true;
 
-        if (IsMapped(title))
+    private bool allUnknownMapped()
+    {
+        foreach (Product product in products)
         {
-            Console.WriteLine("It's already mapped!");
+            if (!MappedTitles.Contains(product.TitleGWS))
+            {
+                return true;
+            }
         }
-        else
-        {
-            MappedTitles.Add(title);
-            Console.WriteLine("Mapping accepted and saved!");
-        }
-
+        return false;
     }
 
     /*Check if title is in MappedTitles list*/
@@ -544,21 +592,33 @@
         }
     }
 
-    private Mapping productToMapping(Product product){
+    private Mapping productToMapping(Product product)
+    {
         Mapping mapping = new Mapping();
         foreach (PropertyInfo prop in product.GetType().GetProperties())
         {
-            if(prop.Name == "ProductId"){
+            if (prop.Name == "ProductId")
+            {
                 mapping.ProductIdMapping = prop.GetValue(product, null).ToString();
-            }else if(prop.Name == "Barcode"){
+            }
+            else if (prop.Name == "Barcode")
+            {
                 mapping.Barcode = prop.GetValue(product, null).ToString();
-            }else if(prop.Name == "TitleGWS"){
+            }
+            else if (prop.Name == "TitleGWS")
+            {
                 mapping.TitleGWS = prop.GetValue(product, null).ToString();
-            }else if(prop.Name=="MinOrder"){
-                mapping.MinOrder= Convert.ToInt32(prop.GetValue(product, null));
-            }else if(prop.Name=="Packsize"){
+            }
+            else if (prop.Name == "MinOrder")
+            {
+                mapping.MinOrder = Convert.ToInt32(prop.GetValue(product, null));
+            }
+            else if (prop.Name == "Packsize")
+            {
                 mapping.PackSize = Convert.ToInt32(prop.GetValue(product, null));
-            }else if(prop.Name == "Target"){
+            }
+            else if (prop.Name == "Target")
+            {
                 mapping.Target = Convert.ToInt32(prop.GetValue(product, null));
             }
         }

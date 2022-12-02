@@ -273,6 +273,8 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prodScore.Add(prod);
             }
 
+            ProductScore newProduct = new();
+            newProduct._product.TitleGWS = "new";
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
 
             MatchSuggestions.Add(sortedProdScore[0]._product);
@@ -280,6 +282,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             MatchSuggestions.Add(sortedProdScore[2]._product);
             MatchSuggestions.Add(sortedProdScore[3]._product);
             MatchSuggestions.Add(sortedProdScore[4]._product);
+            MatchSuggestions.Add(newProduct._product);
 
 
             return MatchSuggestions;
