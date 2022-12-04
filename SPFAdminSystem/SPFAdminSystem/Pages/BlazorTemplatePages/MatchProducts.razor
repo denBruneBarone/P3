@@ -84,7 +84,12 @@
                                     {
                                         foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
                                         {
-                                            if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
+                                            if (sameTitle == true && prop.Name.ToLower() == "titlegws")
+                                            {
+                                                <li style="color: red; font-weight: 700;" id="itemLiTitles">@prop.Name</li>
+                                                sameTitle = false;
+                                            }
+                                            else if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
                                             prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != "" && InHouseTitleCpy != products[chosenProduct].InHouseTitle ||
                                             prop.Name.ToLower() == "productid" && ProductIdCpy != "" && ProductIdCpy != products[chosenProduct].ProductId ||
                                             prop.Name.ToLower() == "orderprice" && OrderPriceCpy != -1 && OrderPriceCpy != products[chosenProduct].OrderPrice ||
@@ -287,6 +292,7 @@
 @*----------------------------------------------------------------------------------------------------------------------*@
 
 @code {
+    bool sameTitle = false;
     int? StockAmountCpy = -1;
     int? OrderAmountCpy = -1;
     int? AvailableAmountCpy = -1;
@@ -369,74 +375,101 @@
     List<Product> tempProperties = new();
     private void AddProperties(Product product)
     {
-        if (InHouseTitleCpy != null && InHouseTitleCpy != products[chosenProduct].InHouseTitle && InHouseTitleCpy != "")
-        {
-            products[chosenProduct].InHouseTitle = InHouseTitleCpy;
-        }
+        int inc = 0;
+        bool accepted = false;
+
         if (TitleGWSCpy != null && TitleGWSCpy != products[chosenProduct].TitleGWS && TitleGWSCpy != "")
         {
-            products[chosenProduct].TitleGWS = TitleGWSCpy;
+            for (int i = 0; i < products.Count(); i++)
+            {
+                if (products[i].TitleGWS != TitleGWSCpy)
+                {
+                    inc++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (inc == products.Count())
+            {
+                products[chosenProduct].TitleGWS = TitleGWSCpy;
+                accepted = true;
+            }
+            else
+            {
+                Console.WriteLine("Unknown product with same Title exists");
+            }
         }
-        if (TargetCpy != null && TargetCpy != products[chosenProduct].Target && TargetCpy != -1)
+        if (accepted == true)
         {
-            products[chosenProduct].Target = TargetCpy;
-        }
-        if (OrderAmountCpy != null && OrderAmountCpy != products[chosenProduct].OrderAmount && OrderAmountCpy != -1)
-        {
-            products[chosenProduct].OrderAmount = OrderAmountCpy;
-        }
-        if (AvailableAmountCpy != null && AvailableAmountCpy != products[chosenProduct].AvailableAmount && AvailableAmountCpy != -1)
-        {
-            products[chosenProduct].AvailableAmount = AvailableAmountCpy;
-        }
-        if (OrderPriceCpy != null && OrderPriceCpy != products[chosenProduct].OrderPrice && OrderPriceCpy != -1)
-        {
-            products[chosenProduct].OrderPrice = OrderPriceCpy;
-        }
-        if (OrderedCpy != null && OrderedCpy != products[chosenProduct].Ordered && OrderedCpy != -1)
-        {
-            products[chosenProduct].Ordered = OrderedCpy;
-        }
-        if (StockAmountCpy != null && StockAmountCpy != products[chosenProduct].StockAmount && StockAmountCpy != -1)
-        {
-            products[chosenProduct].StockAmount = StockAmountCpy;
-        }
-        if (PacksizeCpy != null && PacksizeCpy != products[chosenProduct].Packsize && PacksizeCpy != -1)
-        {
-            products[chosenProduct].Packsize = PacksizeCpy;
-        }
-        if (MinOrderCpy != null && MinOrderCpy != products[chosenProduct].MinOrder && MinOrderCpy != -1)
-        {
-            products[chosenProduct].MinOrder = MinOrderCpy;
-        }
-        if (IsCheckedCpy != null && IsCheckedCpy != products[chosenProduct].IsChecked)
-        {
-            products[chosenProduct].IsChecked = IsCheckedCpy;
-        }
-        if (OrderQuantityCpy != null && OrderQuantityCpy != products[chosenProduct].OrderQuantity && OrderQuantityCpy != -1)
-        {
-            products[chosenProduct].OrderQuantity = OrderQuantityCpy;
-        }
-        if (ProductIdCpy != null && ProductIdCpy != products[chosenProduct].ProductId && ProductIdCpy != "")
-        {
-            products[chosenProduct].ProductId = ProductIdCpy;
-        }
-        if (BarcodeCpy != null && BarcodeCpy != products[chosenProduct].Barcode && BarcodeCpy != "")
-        {
-            products[chosenProduct].Barcode = BarcodeCpy;
-        }
+            if (InHouseTitleCpy != null && InHouseTitleCpy != products[chosenProduct].InHouseTitle && InHouseTitleCpy != "")
+            {
+                products[chosenProduct].InHouseTitle = InHouseTitleCpy;
+            }
+            if (TargetCpy != null && TargetCpy != products[chosenProduct].Target && TargetCpy != -1)
+            {
+                products[chosenProduct].Target = TargetCpy;
+            }
+            if (OrderAmountCpy != null && OrderAmountCpy != products[chosenProduct].OrderAmount && OrderAmountCpy != -1)
+            {
+                products[chosenProduct].OrderAmount = OrderAmountCpy;
+            }
+            if (AvailableAmountCpy != null && AvailableAmountCpy != products[chosenProduct].AvailableAmount && AvailableAmountCpy != -1)
+            {
+                products[chosenProduct].AvailableAmount = AvailableAmountCpy;
+            }
+            if (OrderPriceCpy != null && OrderPriceCpy != products[chosenProduct].OrderPrice && OrderPriceCpy != -1)
+            {
+                products[chosenProduct].OrderPrice = OrderPriceCpy;
+            }
+            if (OrderedCpy != null && OrderedCpy != products[chosenProduct].Ordered && OrderedCpy != -1)
+            {
+                products[chosenProduct].Ordered = OrderedCpy;
+            }
+            if (StockAmountCpy != null && StockAmountCpy != products[chosenProduct].StockAmount && StockAmountCpy != -1)
+            {
+                products[chosenProduct].StockAmount = StockAmountCpy;
+            }
+            if (PacksizeCpy != null && PacksizeCpy != products[chosenProduct].Packsize && PacksizeCpy != -1)
+            {
+                products[chosenProduct].Packsize = PacksizeCpy;
+            }
+            if (MinOrderCpy != null && MinOrderCpy != products[chosenProduct].MinOrder && MinOrderCpy != -1)
+            {
+                products[chosenProduct].MinOrder = MinOrderCpy;
+            }
+            if (IsCheckedCpy != null && IsCheckedCpy != products[chosenProduct].IsChecked)
+            {
+                products[chosenProduct].IsChecked = IsCheckedCpy;
+            }
+            if (OrderQuantityCpy != null && OrderQuantityCpy != products[chosenProduct].OrderQuantity && OrderQuantityCpy != -1)
+            {
+                products[chosenProduct].OrderQuantity = OrderQuantityCpy;
+            }
+            if (ProductIdCpy != null && ProductIdCpy != products[chosenProduct].ProductId && ProductIdCpy != "")
+            {
+                products[chosenProduct].ProductId = ProductIdCpy;
+            }
+            if (BarcodeCpy != null && BarcodeCpy != products[chosenProduct].Barcode && BarcodeCpy != "")
+            {
+                products[chosenProduct].Barcode = BarcodeCpy;
+            }
 
-        matchTitle = TitleGWSCpy;
-        if (chosenProduct + 1 < products.Count())
-        {
-            Console.WriteLine(products.Count() + " AND " + chosenProduct);
-            matchTitle = products[chosenProduct + 1].TitleGWS;
+            EmptyCheckedProduct();
+
+            matchTitle = TitleGWSCpy;
+            if (chosenProduct + 1 < products.Count())
+            {
+                matchTitle = products[chosenProduct + 1].TitleGWS;
+            }
+            else
+            {
+                matchTitle = products[0].TitleGWS;
+            }
+            GetValue(matchTitle);
+            suggestedMapping();
         }
-        else
-        {
-            matchTitle = products[0].TitleGWS;
-        }
-        GetValue(matchTitle);
     }
 
     List<PropertyInfo> checkedProperties = new();
@@ -451,6 +484,17 @@
             }
         }
         else
+        {
+            if (checkedProperties.Contains(prop))
+            {
+                checkedProperties.Remove(prop);
+            }
+        }
+    }
+
+    private void EmptyCheckedProduct()
+    {
+        foreach (PropertyInfo prop in checkedProperties.ToList())
         {
             if (checkedProperties.Contains(prop))
             {
@@ -505,8 +549,31 @@
             {
                 if (prop.Name.ToLower() == "titlegws" && prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                 {
-                    TitleGWSCpy = prop.GetValue(matchSuggestions[chosenMatch], null).ToString();
-                    titlegwsTicked = true;
+                    int inc = 0;
+
+                    if (prop.GetValue(matchSuggestions[chosenMatch], null) != products[chosenProduct].TitleGWS && prop.GetValue(matchSuggestions[chosenMatch], null) != "")
+                    {
+                        for (int i = 0; i < products.Count(); i++)
+                        {
+                            if (products[i].TitleGWS != prop.GetValue(matchSuggestions[chosenMatch], null))
+                            {
+                                inc++;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        if (inc == products.Count())
+                        {
+                            TitleGWSCpy = prop.GetValue(matchSuggestions[chosenMatch], null).ToString();
+                            titlegwsTicked = true;
+                        }
+                        else
+                        {
+                            sameTitle = true;
+                        }
+                    }
                 }
                 else if (prop.Name.ToLower() == "inhousetitle" && prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                 {
@@ -573,8 +640,9 @@
                 }
             }
         }
-        else if(reset == true)
+        else if (reset == true)
         {
+            EmptyCheckedProduct();
             GetValue(matchTitle);
         }
         if (titlegwsTicked == false) { TitleGWSCpy = products[chosenProduct].TitleGWS; }
