@@ -40,7 +40,7 @@ public class Product
     public bool? IsChecked { get; set; }
 }
 
-public class Mapping
+public class MappingMatch
 {
     [Required]
     [Key]
