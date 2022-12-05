@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using Microsoft.Office.Interop.Excel;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -30,7 +29,6 @@ namespace SPFAdminSystem.Database.ProductFiles
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
         public List<Product> MatchSuggestions { get; set; } = new List<Product>();
 
-
         public async Task LoadProducts()
         {
             Products = await _context.Products.ToListAsync();
@@ -52,8 +50,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             return product;
         }
 
-
-
         public async Task CreateOrUpdateProduct(Product product)
         {
             var dbProduct = await _context.Products.FindAsync(product.ProductId);
@@ -69,8 +65,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             await _context.SaveChangesAsync();
         }
-
-
 
         public async Task InsertExcelProducts(string fileName)
         {
@@ -119,7 +113,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             {
                 // update /TOTEST
                 dbMapping.ProductIdMapping = mapping.ProductIdMapping;
-                
             }
             await _context.SaveChangesAsync();
         }
@@ -197,6 +190,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 await AddToProduct(map);
             }
         }
+
         public async Task<Product> GetProductById(string prodId)
         {
             var prod = await _context.Products.FindAsync(prodId);
@@ -214,10 +208,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             return UnknownProducts;
         }
 
-
         public async Task LoadUnknownProducts(string fileName)
         {
-
             /*EPPLUS - Excel functionality*/
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
@@ -239,7 +231,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                             isFound++;
                             break;
                         }
-
                     }
                     if (isFound == 0)
                     {
@@ -250,12 +241,11 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
                         UnknownProducts.Add(prod);
                     }
-
                 }
                 Console.WriteLine("Unknown Products added");
             }
-
         }
+
         public async Task<List<Product>> GetMatchSuggestions(Product product)
         {
             List<ProductScore> prodScore = new List<ProductScore>();
@@ -269,24 +259,31 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prod._product.TitleGWS = map.TitleGWS;
                 prod._product.Barcode = map.Barcode;
                 prod._product.Packsize = map.PackSize;
+                prod._product.ProductId = map.ProductIdMapping;
+                prod._product.OrderPrice = map.OrderPrice;
+                prod._product.AvailableAmount = map.AvailableAmount;
+                prod._product.OrderAmount = map.OrderAmount;
+                prod._product.ArriveDate = map.ArriveDate;
                 prod._product.MinOrder = map.MinOrder;
+                prod._product.Ordered = map.Ordered;
+                prod._product.RemovedFromStockDate = map.RemovedFromStockDate;
+                prod._product.InHouseTitle = map.InHouseTitle;
+                prod._product.StockAmount = map.StockAmount;
+                prod._product.UserActions = map.UserActions;
+                prod._product.OrderQuantity = map.OrderQuantity;
+
                 prodScore.Add(prod);
             }
 
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
 
-            MatchSuggestions.Add(sortedProdScore[0]._product);
-            MatchSuggestions.Add(sortedProdScore[1]._product);
-            MatchSuggestions.Add(sortedProdScore[2]._product);
-            MatchSuggestions.Add(sortedProdScore[3]._product);
-            MatchSuggestions.Add(sortedProdScore[4]._product);
-
+            for(int i = 0; i < 5; i++)
+            {
+                MatchSuggestions.Add(sortedProdScore[i]._product);
+            }
 
             return MatchSuggestions;
-
         }
-
-
 
         static double NameMatch(string a, string b)
         {
@@ -368,8 +365,5 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             return score;
         }
-
-
-
     }
 }
