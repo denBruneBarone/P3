@@ -93,6 +93,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                     prod.Ordered = Convert.ToInt32(worksheet.Cells[row, 8].Value);
                     products.Add(prod);
                 }
+                package.Dispose();
             }
             foreach (Product product in products)
             {
@@ -147,7 +148,9 @@ namespace SPFAdminSystem.Database.ProductFiles
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
                     mappings.Add(Map);
                     Console.WriteLine(Map.ProductIdMapping);
+                    
                 }
+                package.Dispose();
             }
             foreach (Mapping map in mappings)
             {

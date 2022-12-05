@@ -4,6 +4,7 @@
 @inject NavigationManager NavManager
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
+@using OfficeOpenXml;
 @inject IProductService _productDb
 
 <PageTitle>Upload</PageTitle>
@@ -77,19 +78,37 @@ else if (isMapping == false)
         {
             foreach (var file in selectedFiles)
             {
+                string filename = file.Name.ToString();
                 /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
-                Stream stream = file.OpenReadStream(1000000);
+                Stream stream = file.OpenReadStream(int.MaxValue);
                 /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
                 var path = $"{env.WebRootPath}\\{file.Name}";
+
                 FileStream fs = File.Create(path);
+                Console.WriteLine(path);
                 /*The file content is copied to the path*/
                 await stream.CopyToAsync(fs);
                 /*The two streams are closed again*/
                 stream.Close();
                 fs.Close();
-                string filename = file.Name.ToString();
 
                 if (filename.Contains("Pricelist")) { 
+                    Aspose.Cells.Workbook xlsBook = new Aspose.Cells.Workbook(path);
+                    xlsBook.Save(path+"x");
+                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                    FileInfo fileInfo = new FileInfo(path+"x");
+                    if (fileInfo.Exists)
+                    {
+                        Console.WriteLine("SUCESS");
+                    }
+                    using (ExcelPackage package = new ExcelPackage(fileInfo))
+                    {
+                        ExcelWorksheet evalSheet = package.Workbook.Worksheets["Evaluation Warning"];
+                        package.Workbook.Worksheets.Delete(evalSheet);
+                        package.SaveAsAsync(fileInfo);
+                        package.Dispose();
+                    }
+                    File.Delete(path);
                     pricelistState = "ready";
                     pricelistText = filename + " was last modified on " + file.LastModified.DateTime;
                 } 

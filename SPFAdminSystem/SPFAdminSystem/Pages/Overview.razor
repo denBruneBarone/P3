@@ -21,6 +21,7 @@
             <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="false" Filterable="false" Width="20%">
             </Column>
             <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="false" Filterable="false" Width="20%" />
+            <Column TableItem="Product" Title="In Order" Field="@(x => x.Ordered)" Sortable="false" Filterable="false" Width="20%" />
             <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="20%">
             </Column>
             <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
@@ -55,20 +56,33 @@
             {
                 product.Ordered = 0;
             }
-            if (product.OrderQuantity < 0 || product.OrderQuantity == null)
-            {
-                product.OrderQuantity = 0;
-            }
             if(product.Target < 0 || product.Target == null)
             {
                 product.Target = 0;
+            }
+            product.OrderQuantity = product.Target - product.StockAmount - product.Ordered;
+            if(product.OrderQuantity < 0 || product.OrderQuantity == null)
+            {
+                product.OrderQuantity = 0;
+            }
+            else
+            {
+                product.OrderQuantity = product.OrderQuantity > product.MinOrder ? product.OrderQuantity : product.MinOrder;
             }
         }
     }
 
     private void updatequantity(Product product)
     {
-        product.OrderQuantity = product.Target - (product.StockAmount + product.Ordered);
+        product.OrderQuantity = product.Target - product.StockAmount - product.Ordered;
+        if (product.OrderQuantity < 0 || product.OrderQuantity == null)
+        {
+            product.OrderQuantity = 0;
+        }
+        else
+        {
+            product.OrderQuantity = product.OrderQuantity > product.MinOrder ? product.OrderQuantity : product.MinOrder;
+        }
     }
 
     protected override void OnAfterRender(bool firstRender)
@@ -86,10 +100,14 @@
     private async Task<Stream> GenerateFileStream()
     {
         var fileStream = new MemoryStream();
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         byte[] bytes;
-        var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "Pricelist.xlsx";
+        var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "Pricelist Europe__3.xlsx";
         FileInfo fileInfo = new FileInfo(FilePath);
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        if(fileInfo.Exists)
+        {
+            Console.WriteLine("SUCESS");
+        }
         using (ExcelPackage package = new ExcelPackage(fileInfo))
         {
             ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
@@ -106,6 +124,7 @@
                 }
             }
             package.SaveAsAsync(fileStream);
+            package.Dispose();
         }
         fileStream.Position = 0;
         return fileStream;
@@ -115,7 +134,7 @@
     {
         Stream fileStream = await GenerateFileStream();        
         using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
-        await JS.InvokeVoidAsync("DownloadExcel", "PriceList__3.xlsx", streamReference);
+        await JS.InvokeVoidAsync("DownloadExcel", "Pricelist Europe__3.xlsx", streamReference);
     }
 
 }
