@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using OfficeOpenXml;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using Microsoft.Office.Interop.Excel;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {

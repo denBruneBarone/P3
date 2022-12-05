@@ -2,8 +2,17 @@
 @using BlazorTable
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles;
+@using System.Collections.Generic;
+@using System.IO;
 @using System.Reflection;
+@using OfficeOpenXml;
+@using Microsoft.AspNetCore.Http;
+
+@using Microsoft.AspNetCore.Mvc;
 @inject IProductService database
+@inject IJSRuntime JS
+
+
 <h3>Order Overview</h3>
 <div class="w-100" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div id="table-div">
@@ -25,7 +34,7 @@
         </Table>
     </div>
     <div>
-        <input type="submit" class="btn btn-success" value="SAVE ORDER">
+        <button class="btn btn-success" @onclick=SaveOrder>SAVE EXCEL ORDER</button>
     </div>
 </div>
 
@@ -50,6 +59,10 @@
             {
                 product.OrderQuantity = 0;
             }
+            if(product.Target < 0 || product.Target == null)
+            {
+                product.Target = 0;
+            }
         }
     }
 
@@ -66,8 +79,43 @@
         }
         foreach(Product product in productlist)
         {
-            
+
         }
+    }
+
+    private async Task<Stream> GenerateFileStream()
+    {
+        var fileStream = new MemoryStream();
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        byte[] bytes;
+        var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "Pricelist.xlsx";
+        FileInfo fileInfo = new FileInfo(FilePath);
+        using (ExcelPackage package = new ExcelPackage(fileInfo))
+        {
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+            int colCount = worksheet.Dimension.End.Column;
+            int rowCount = worksheet.Dimension.End.Row;
+            for (int row = 3; row <= rowCount; row++)
+            {
+                foreach (Product product in productlist)
+                {
+                    if ((string)worksheet.Cells[row, 6].Value == product.Barcode)
+                    {
+                        worksheet.Cells[row, 3].Value = product.OrderQuantity;
+                    }
+                }
+            }
+            package.SaveAsAsync(fileStream);
+        }
+        fileStream.Position = 0;
+        return fileStream;
+    }
+
+    private async Task SaveOrder()
+    {
+        Stream fileStream = await GenerateFileStream();        
+        using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
+        await JS.InvokeVoidAsync("DownloadExcel", "PriceList__3.xlsx", streamReference);
     }
 
 }

@@ -22,7 +22,7 @@
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
-    width: 100vw;
+    width: 100%;
 }
 
     .nav-item:first-of-type {
