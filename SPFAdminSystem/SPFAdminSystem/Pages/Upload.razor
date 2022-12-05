@@ -7,9 +7,9 @@
 @using OfficeOpenXml;
 @inject IProductService _productDb
 
-@if(isMapping == true)
+@if(isMapping == true || isUploading == true)
 {
-    <Loading />
+    <Loading Text="@LoadingText"/>
 }
 
 <PageTitle>Upload</PageTitle>
@@ -58,9 +58,11 @@ else if (isMapping == false)
     bool? isPricelistLoading = null;
     string? produkterText;
     string? mappingText;
+    string? LoadingText;
     string? pricelistText;
     bool mappingAvailability = true;
     public bool? isMapping;
+    public bool isUploading = false;
     string[] fileNames =
         {
             "Pricelist Europe__3.xlsx",
@@ -72,6 +74,7 @@ else if (isMapping == false)
 
     protected override void OnInitialized()
     {
+
         string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
         foreach(string filename in fileNames)
         {
@@ -103,6 +106,10 @@ else if (isMapping == false)
     //"selectedFiles gets
     private async void HandleSelectedFile(InputFileChangeEventArgs e)
     {
+        LoadingText = "UPLOADING FILES...";
+        isUploading = true;
+        await Task.Delay(1);
+        StateHasChanged();
         addedString = "";
         selectedFiles = e.GetMultipleFiles();
         Message = "files chosen:";
@@ -112,8 +119,10 @@ else if (isMapping == false)
             if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length - 5).Replace("_", "") + "' ";
 
         }
-        this.StateHasChanged();
         await ContinueClicked();
+        isUploading = false;
+        await Task.Delay(1);
+        this.StateHasChanged();
     }
     private async Task ContinueClicked()
     {
@@ -212,6 +221,7 @@ else if (isMapping == false)
     {
 
         isMapping = true;
+        LoadingText = "MAPPING IN PROGESS...";
         await Task.Delay(1);
         StateHasChanged();
         await _productDb.JoinMappingToProducts();
