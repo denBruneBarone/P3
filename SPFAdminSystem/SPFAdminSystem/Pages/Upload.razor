@@ -18,21 +18,16 @@
                     Upload price list file
                     <InputFile OnChange="HandleSelectedFile" multiple id="fileinput" style="width:0; height:0; overflow: hidden;" />
                 </label>
-            </div>  
+            </div>
         </div>
-            <small>@Message</small>
-            <p>@addedString</p>
-
-        
-        <div class="nav-buttons">
-            <button @onclick="ContinueClicked" type="button" class="btn btn-primary">Continue</button>
-        </div>
+        <small>@Message</small>
+        <p>@addedString</p>
     </div>
 </center>
 
 <FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb isLoading="@isProdukterLoading"></FileCard>
-<FileCard Title="Mapping"   State=@mappingState   Text=@mappingText   ButtonText="Upload Mapping.xlsx to DB"   _callback=insertMappingInDb   isLoading="@isMappingLoading"></FileCard>
-<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist"                                          isLoading="@isPricelistLoading"></FileCard>
+<FileCard Title="Mapping" State=@mappingState Text=@mappingText ButtonText="Upload Mapping.xlsx to DB" _callback=insertMappingInDb isLoading="@isMappingLoading"></FileCard>
+<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
 
 @if (isMapping == true)
 {
@@ -43,7 +38,7 @@ else if (isMapping == false)
     <p>Mapping merged into Products!</p>
 }
 
-<button onclick="@mapMappingsToDb" class="btn btn-primary">Merge Mappings into Products' DB'</button>
+<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingAvailability >Merge Mappings into Products' DB'</button>
 @code {
     string Message = "No files are selected";
     string? addedString;
@@ -56,27 +51,69 @@ else if (isMapping == false)
     string? produkterText;
     string? mappingText;
     string? pricelistText;
+    bool mappingAvailability = true;
     public bool? isMapping;
+    string[] fileNames =
+        {
+            "Pricelist Europe__3.xlsx",
+            "Mapping.xlsx",
+            "Produkter.xlsx"
+    };
 
     IReadOnlyList<IBrowserFile> selectedFiles;
-    //"selectedFiles gets 
-    private void HandleSelectedFile(InputFileChangeEventArgs e){
+
+    protected override void OnInitialized()
+    {
+        string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
+        foreach(string filename in fileNames)
+        {
+            FileInfo file = new FileInfo(filesPath+filename);
+            if(file.Exists)
+            {
+                switch(filename)
+                {
+                    case "Pricelist Europe__3.xlsx":
+                        {
+                            pricelistText = filename + " was last modified on " + file.LastWriteTime;
+                            break;
+                        }
+                    case "Mapping.xlsx":
+                        {
+                            mappingText = filename + " was last modified on " + file.LastWriteTime;
+                            break;
+                        }
+                    case "Produkter.xlsx":
+                        {
+                            produkterText = filename + " was last modified on " + file.LastWriteTime;
+                            break;
+                        }
+                }
+            }
+        }
+    }
+
+    //"selectedFiles gets
+    private async void HandleSelectedFile(InputFileChangeEventArgs e)
+    {
         addedString = "";
         selectedFiles = e.GetMultipleFiles();
         Message = "files chosen:";
-        foreach (var file in selectedFiles) {
+        foreach (var file in selectedFiles)
+        {
             string filename = file.Name.ToString();
-            if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length-5).Replace("_","") + "' ";
+            if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length - 5).Replace("_", "") + "' ";
 
         }
         this.StateHasChanged();
+        await ContinueClicked();
     }
-    private async void ContinueClicked() {
+    private async Task ContinueClicked()
+    {
         /*As there is only one file, a list may be redundant*/
         /*Der skal implementeres errorhandling :) */
-        try
+        foreach (var file in selectedFiles)
         {
-            foreach (var file in selectedFiles)
+            try
             {
                 string filename = file.Name.ToString();
                 /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
@@ -92,11 +129,12 @@ else if (isMapping == false)
                 stream.Close();
                 fs.Close();
 
-                if (filename.Contains("Pricelist")) { 
+                if (filename.Contains("Pricelist"))
+                {
                     Aspose.Cells.Workbook xlsBook = new Aspose.Cells.Workbook(path);
-                    xlsBook.Save(path+"x");
+                    xlsBook.Save(path + "x");
                     ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    FileInfo fileInfo = new FileInfo(path+"x");
+                    FileInfo fileInfo = new FileInfo(path + "x");
                     if (fileInfo.Exists)
                     {
                         Console.WriteLine("SUCESS");
@@ -111,7 +149,7 @@ else if (isMapping == false)
                     File.Delete(path);
                     pricelistState = "ready";
                     pricelistText = filename + " was last modified on " + file.LastModified.DateTime;
-                } 
+                }
                 if (filename.Contains("Mapping"))
                 {
                     mappingState = "ready";
@@ -123,10 +161,31 @@ else if (isMapping == false)
                     produkterText = filename + " was last modified on " + file.LastModified.DateTime;
                 }
             }
-            this.StateHasChanged();
-        }catch(NullReferenceException e){
-            Message = "You have to add a price list file before continuing!";
+            catch (NullReferenceException e)
+            {
+                Message = "You have to add a price list file before continuing!";
+            }
         }
+        if(HasAllFiles())
+        {
+            mappingAvailability = false;
+        }
+        await Task.Delay(1);
+        StateHasChanged();
+    }
+
+    private bool HasAllFiles()
+    {
+        string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
+        foreach (string filename in fileNames)
+        {
+            FileInfo file = new FileInfo(filesPath + filename);
+            if (!file.Exists)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private async void insertProdukterInDb()

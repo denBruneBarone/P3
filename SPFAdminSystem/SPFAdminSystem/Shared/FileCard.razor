@@ -5,7 +5,14 @@
 <div id="outerDiv">
         <span class="oi oi-file"></span>
         <h3>@Title</h3>
-        <p>@Text</p>
+    @if(Text == "" || Text == null)
+    {
+      <p><span class="oi oi-warning" style="color: red;"></span> FILE MISSING! <span class="oi oi-warning" style="color: red;"></span> </p>  
+    } else
+    {
+    <p>@Text</p>
+        
+    }
     @if (isLoading != null)
     {
         @if (isLoading == true)
@@ -24,10 +31,6 @@
           <button class="btn btn-primary" onclick="@_callback">@ButtonText</button>
            <span style="color:green" class="oi oi-check"></span>
         </div>
-    }
-    else
-    {
-        <p>@Title has not been added yet.</p>
     }
     
 </div>
