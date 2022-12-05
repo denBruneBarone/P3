@@ -7,6 +7,11 @@
 @using OfficeOpenXml;
 @inject IProductService _productDb
 
+@if(isMapping == true)
+{
+    <Loading />
+}
+
 <PageTitle>Upload</PageTitle>
 
 <center>
@@ -24,11 +29,16 @@
         <p>@addedString</p>
     </div>
 </center>
+<center>
+    <FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" isLoading="@isProdukterLoading"></FileCard>
+    <FileCard Title="Mapping" State=@mappingState Text=@mappingText ButtonText="Upload Mapping.xlsx to DB" isLoading="@isMappingLoading"></FileCard>
+    <FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
 
-<FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb isLoading="@isProdukterLoading"></FileCard>
-<FileCard Title="Mapping" State=@mappingState Text=@mappingText ButtonText="Upload Mapping.xlsx to DB" _callback=insertMappingInDb isLoading="@isMappingLoading"></FileCard>
-<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
+</center>
 
+
+
+<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingAvailability >Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
     <p>Loading....</p>
@@ -37,8 +47,6 @@ else if (isMapping == false)
 {
     <p>Mapping merged into Products!</p>
 }
-
-<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingAvailability >Merge Mappings into Products' DB'</button>
 @code {
     string Message = "No files are selected";
     string? addedString;
@@ -204,8 +212,11 @@ else if (isMapping == false)
     {
 
         isMapping = true;
+        await Task.Delay(1);
         StateHasChanged();
         await _productDb.JoinMappingToProducts();
         isMapping = false;
+        await Task.Delay(1);
+        StateHasChanged();
     }
 }

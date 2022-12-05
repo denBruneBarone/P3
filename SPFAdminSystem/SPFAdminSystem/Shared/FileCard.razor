@@ -2,12 +2,12 @@
 @using SPFAdminSystem.Database.ProductFiles
 @inject IProductService _productDb
 
-<div id="outerDiv">
+<div id="outerDiv" class="w-50">
         <span class="oi oi-file"></span>
         <h3>@Title</h3>
     @if(Text == "" || Text == null)
     {
-      <p><span class="oi oi-warning" style="color: red;"></span> FILE MISSING! <span class="oi oi-warning" style="color: red;"></span> </p>  
+        <p><span class="oi oi-warning" style="color: red;"></span> FILE MISSING! <span class="oi oi-warning" style="color: red;"></span> </p>
     } else
     {
     <p>@Text</p>
@@ -28,7 +28,6 @@
 
     @if (State == "ready") {
         <div id="buttonDiv">
-          <button class="btn btn-primary" onclick="@_callback">@ButtonText</button>
            <span style="color:green" class="oi oi-check"></span>
         </div>
     }
@@ -36,7 +35,6 @@
 </div>
 
 @code {
-    [Parameter] public Action? _callback { get; set; }
     [Parameter] public string? Title { get; set; }
     [Parameter] public string? Text { get; set; }
     [Parameter] public string? State { get; set; }
