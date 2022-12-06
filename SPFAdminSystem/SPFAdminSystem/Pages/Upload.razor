@@ -36,8 +36,6 @@
 
 </center>
 
-
-
 <button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
@@ -47,19 +45,18 @@ else if (isMapping == false)
 {
     <p>Mapping merged into Products!</p>
 }
+
 @code {
     string Message = "No files are selected";
     string? addedString;
     string produkterState = "not ready";
     string mappingState = "not ready";
     string pricelistState = "not ready";
-    bool? isProdukterLoading = null;
-    bool? isMappingLoading = null;
-    bool? isPricelistLoading = null;
     string? produkterText;
     string? mappingText;
     string? LoadingText;
     string? pricelistText;
+
     bool mappingUnavailable = true;
     public bool? isMapping;
     public bool isUploading = false;
@@ -211,19 +208,14 @@ else if (isMapping == false)
 
     private async Task insertProdukterInDb()
     {
-        isProdukterLoading = true;
         await _productDb.InsertExcelProducts("Produkter.xlsx");
-        isProdukterLoading = false;
     }
     private async Task insertMappingInDb()
     {
-        isMappingLoading = false;
         await _productDb.InsertExcelMapping("Mapping.xlsx");
-        isMappingLoading = true;
     }
     private async void mapMappingsToDb()
     {
-
         isMapping = true;
         LoadingText = "MAPPING IN PROGESS...";
         await Task.Delay(1);
