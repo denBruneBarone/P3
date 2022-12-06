@@ -209,13 +209,13 @@ else if (isMapping == false)
         return true;
     }
 
-    private async void insertProdukterInDb()
+    private async Task insertProdukterInDb()
     {
         isProdukterLoading = true;
         await _productDb.InsertExcelProducts("Produkter.xlsx");
         isProdukterLoading = false;
     }
-    private async void insertMappingInDb()
+    private async Task insertMappingInDb()
     {
         isMappingLoading = false;
         await _productDb.InsertExcelMapping("Mapping.xlsx");
@@ -228,6 +228,8 @@ else if (isMapping == false)
         LoadingText = "MAPPING IN PROGESS...";
         await Task.Delay(1);
         StateHasChanged();
+        await insertProdukterInDb();
+        await insertMappingInDb();
         await _productDb.JoinMappingToProducts();
         LoadingText = "COMPLETE!";
         await Task.Delay(1);
