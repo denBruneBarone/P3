@@ -277,7 +277,7 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
 
-            for(int i = 0; i < 5; i++)
+            for(int i = 0; i < sortedProdScore.Count(); i++)
             {
                 MatchSuggestions.Add(sortedProdScore[i]._product);
             }
