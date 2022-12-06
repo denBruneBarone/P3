@@ -1,0 +1,31 @@
+﻿@using System;
+@using System.IO;
+@inject NavigationManager navManager
+<div style="height: 0; width: 0;"></div>
+@code {
+    DirectoryInfo filesDir = new($"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\");
+    int neededFiles = 3;
+    private async Task<int> CheckForFiles()
+    {
+        int fileCount = 0;
+        if (filesDir.GetFiles().Length > 0)
+        {
+            foreach (FileInfo file in filesDir.GetFiles())
+            {
+                if (file.Extension == ".xlsx")
+                {
+                    fileCount++;
+                }
+            }
+        }
+        return fileCount;
+    }
+    protected override async void OnAfterRender(bool firstRender)
+    {
+
+        if(await CheckForFiles() != neededFiles)
+        {
+            navManager.NavigateTo("/upload", true);
+        }
+    }
+}

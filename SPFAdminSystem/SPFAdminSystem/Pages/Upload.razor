@@ -38,7 +38,7 @@
 
 
 
-<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingAvailability >Merge Mappings into Products' DB'</button>
+<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
     <p>Loading....</p>
@@ -60,7 +60,7 @@ else if (isMapping == false)
     string? mappingText;
     string? LoadingText;
     string? pricelistText;
-    bool mappingAvailability = true;
+    bool mappingUnavailable = true;
     public bool? isMapping;
     public bool isUploading = false;
     string[] fileNames =
@@ -120,6 +120,10 @@ else if (isMapping == false)
 
         }
         await ContinueClicked();
+        LoadingText = "COMPLETE!";
+        await Task.Delay(1);
+        StateHasChanged();
+        await Task.Delay(500);
         isUploading = false;
         await Task.Delay(1);
         this.StateHasChanged();
@@ -185,7 +189,7 @@ else if (isMapping == false)
         }
         if(HasAllFiles())
         {
-            mappingAvailability = false;
+            mappingUnavailable = false;
         }
         await Task.Delay(1);
         StateHasChanged();
@@ -225,6 +229,11 @@ else if (isMapping == false)
         await Task.Delay(1);
         StateHasChanged();
         await _productDb.JoinMappingToProducts();
+        LoadingText = "COMPLETE!";
+        await Task.Delay(1);
+        StateHasChanged();
+        await Task.Delay(500);
+        mappingUnavailable = true;
         isMapping = false;
         await Task.Delay(1);
         StateHasChanged();

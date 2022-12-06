@@ -12,12 +12,13 @@
 @inject IProductService database
 @inject IJSRuntime JS
 
+<HasAllFiles/>
 
 <h3>Order Overview</h3>
 <div class="w-100" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div id="table-div">
         <Table TableItem="Product" Items="productlist" IsEditMode="true" PageSize="25" @ref="Table" ColumnReorder="false">
-            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="false" Filterable="true" Width="30%" />
+            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="false" Filterable="true" Width="50%"/>
             <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="false" Filterable="false" Width="10%">
             </Column>
             <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="false" Filterable="false" Width="10%" />
@@ -25,7 +26,7 @@
             <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="8%">
             </Column>
             <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
-            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right">
+            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right" DefaultSortColumn="true" DefaultSortDescending="true">
                 <EditTemplate>
                     <input type="number" @bind-value="context.Target" @onfocusout="() => updatequantity(context)" class="form-control form-control-sm" required />
                 </EditTemplate>
@@ -90,6 +91,7 @@
         if (!Table.IsEditMode)
         {
             Table.ToggleEditMode();
+            Table.UpdateAsync();
         }
         foreach(Product product in productlist)
         {
