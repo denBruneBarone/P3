@@ -9,8 +9,12 @@ public class DataContext : DbContext
     public DbSet<UserAction> UserActions => Set<UserAction>();
     public DbSet<Mapping> Mappings => Set<Mapping>();
 
+
+
     public DataContext(DbContextOptions<DataContext> options) : base(options)
     {
 
     }
 }
+
+  

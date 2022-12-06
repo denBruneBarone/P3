@@ -29,6 +29,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
         public List<Product> MatchSuggestions { get; set; } = new List<Product>();
 
+
         public async Task LoadProducts()
         {
             Products = await _context.Products.ToListAsync();
@@ -50,15 +51,11 @@ namespace SPFAdminSystem.Database.ProductFiles
             return product;
         }
 
+
+
         public async Task CreateOrUpdateProduct(Product product)
         {
-
             var dbProduct = await _context.Products.FindAsync(product.ProductId);
-            if(dbProduct == null)
-            {
-                dbProduct = await _context.Products.FindAsync(product.Barcode);
-            }
-            
             if (dbProduct == null)
             {
                 //create
@@ -67,10 +64,12 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbProduct = product;
+                dbProduct.ProductId = product.ProductId;
             }
             await _context.SaveChangesAsync();
         }
+
+
 
         public async Task InsertExcelProducts(string fileName)
         {
@@ -94,6 +93,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                     prod.Ordered = Convert.ToInt32(worksheet.Cells[row, 8].Value);
                     products.Add(prod);
                 }
+                package.Dispose();
             }
             foreach (Product product in products)
             {
@@ -105,10 +105,6 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task CreateOrUpdateMapping(Mapping mapping)
         {
             var dbMapping = await _context.Mappings.FindAsync(mapping.ProductIdMapping);
-            if(dbMapping == null)
-            {
-                dbMapping = await _context.Mappings.FindAsync(mapping.Barcode);
-            }
             if (dbMapping == null)
             {
                 //create
@@ -122,7 +118,8 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbMapping = mapping;
+                dbMapping.ProductIdMapping = mapping.ProductIdMapping;
+                
             }
             await _context.SaveChangesAsync();
         }
@@ -151,7 +148,9 @@ namespace SPFAdminSystem.Database.ProductFiles
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
                     mappings.Add(Map);
                     Console.WriteLine(Map.ProductIdMapping);
+                    
                 }
+                package.Dispose();
             }
             foreach (Mapping map in mappings)
             {
@@ -200,7 +199,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                 await AddToProduct(map);
             }
         }
-
         public async Task<Product> GetProductById(string prodId)
         {
             var prod = await _context.Products.FindAsync(prodId);
@@ -218,8 +216,10 @@ namespace SPFAdminSystem.Database.ProductFiles
             return UnknownProducts;
         }
 
+
         public async Task LoadUnknownProducts(string fileName)
         {
+
             /*EPPLUS - Excel functionality*/
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
@@ -241,6 +241,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                             isFound++;
                             break;
                         }
+
                     }
                     if (isFound == 0)
                     {
@@ -251,11 +252,12 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
                         UnknownProducts.Add(prod);
                     }
+
                 }
                 Console.WriteLine("Unknown Products added");
             }
-        }
 
+        }
         public async Task<List<Product>> GetMatchSuggestions(Product product)
         {
             List<ProductScore> prodScore = new List<ProductScore>();
@@ -269,31 +271,27 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prod._product.TitleGWS = map.TitleGWS;
                 prod._product.Barcode = map.Barcode;
                 prod._product.Packsize = map.PackSize;
-                prod._product.ProductId = map.ProductIdMapping;
-                prod._product.OrderPrice = map.OrderPrice;
-                prod._product.AvailableAmount = map.AvailableAmount;
-                prod._product.OrderAmount = map.OrderAmount;
-                prod._product.ArriveDate = map.ArriveDate;
                 prod._product.MinOrder = map.MinOrder;
-                prod._product.Ordered = map.Ordered;
-                prod._product.RemovedFromStockDate = map.RemovedFromStockDate;
-                prod._product.InHouseTitle = map.InHouseTitle;
-                prod._product.StockAmount = map.StockAmount;
-                prod._product.UserActions = map.UserActions;
-                prod._product.OrderQuantity = map.OrderQuantity;
-
                 prodScore.Add(prod);
             }
 
+            ProductScore newProduct = new();
+            newProduct._product.TitleGWS = "new";
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
 
-            for(int i = 0; i < sortedProdScore.Count(); i++)
-            {
-                MatchSuggestions.Add(sortedProdScore[i]._product);
-            }
+            MatchSuggestions.Add(sortedProdScore[0]._product);
+            MatchSuggestions.Add(sortedProdScore[1]._product);
+            MatchSuggestions.Add(sortedProdScore[2]._product);
+            MatchSuggestions.Add(sortedProdScore[3]._product);
+            MatchSuggestions.Add(sortedProdScore[4]._product);
+            MatchSuggestions.Add(newProduct._product);
+
 
             return MatchSuggestions;
+
         }
+
+
 
         static double NameMatch(string a, string b)
         {
@@ -375,5 +373,8 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             return score;
         }
+
+
+
     }
 }

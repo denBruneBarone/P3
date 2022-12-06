@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221205105204_Match0512")]
-    partial class Match0512
+    [Migration("20221206121613_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,9 +61,6 @@ namespace SPFAdminSystem.Migrations
                     b.Property<string>("InHouseTitle")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool?>("IsChecked")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("MinOrder")
                         .HasColumnType("INTEGER");

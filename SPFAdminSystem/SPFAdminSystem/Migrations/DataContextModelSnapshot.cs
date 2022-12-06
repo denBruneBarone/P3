@@ -21,47 +21,20 @@ namespace SPFAdminSystem.Migrations
                     b.Property<string>("ProductIdMapping")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("ArriveDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("AvailableAmount")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("Barcode")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("InHouseTitle")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("MinOrder")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OrderAmount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("OrderPrice")
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("OrderQuantity")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Ordered")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("PackSize")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("RemovedFromStockDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("StockAmount")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("Target")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TitleGWS")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("ProductIdMapping");
@@ -171,9 +144,6 @@ namespace SPFAdminSystem.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MappingProductIdMapping")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("ProductId")
                         .HasColumnType("TEXT");
 
@@ -186,8 +156,6 @@ namespace SPFAdminSystem.Migrations
 
                     b.HasKey("UserActionId");
 
-                    b.HasIndex("MappingProductIdMapping");
-
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
@@ -197,10 +165,6 @@ namespace SPFAdminSystem.Migrations
 
             modelBuilder.Entity("UserAction", b =>
                 {
-                    b.HasOne("Mapping", null)
-                        .WithMany("UserActions")
-                        .HasForeignKey("MappingProductIdMapping");
-
                     b.HasOne("Product", "Product")
                         .WithMany("UserActions")
                         .HasForeignKey("ProductId");
@@ -214,11 +178,6 @@ namespace SPFAdminSystem.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Mapping", b =>
-                {
-                    b.Navigation("UserActions");
                 });
 
             modelBuilder.Entity("Product", b =>
