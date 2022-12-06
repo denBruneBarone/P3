@@ -14,6 +14,11 @@
     <div id="productList">
         @{
             counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
+            if(counter<=0){
+                counter = 0;
+                disableContinue = false;
+            }
+
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -287,6 +292,10 @@
     </div>
 </div>
 
+<div id="continueBtnContainer">
+    <button class="btn btn-primary btn-lg" disabled="@disableContinue">CONTINUE</button>
+</div>
+
 @*----------------------------------------------------------------------------------------------------------------------*@
 
 @code {
@@ -315,6 +324,7 @@
     bool accepted = false;
     bool reverseAccepted = true;
     bool ignore = false;
+    bool disableContinue = true;
 
     //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
@@ -606,10 +616,24 @@
 
         if (accepted == false)
         {
-            IgnoredTitles.Add(products[chosenProduct].Barcode);
+            if(IgnoredTitles.Contains(products[chosenProduct].Barcode)){
+                IgnoredTitles.Remove(products[chosenProduct].Barcode);
+            }
+            if(MappedTitles.Contains(products[chosenProduct].Barcode)){
+                MappedTitles.Remove(products[chosenProduct].Barcode);
+            }
+                IgnoredTitles.Add(products[chosenProduct].Barcode);
         }
         else
         {
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode))
+            {
+                IgnoredTitles.Remove(products[chosenProduct].Barcode);
+            }
+            if (MappedTitles.Contains(products[chosenProduct].Barcode))
+            {
+                MappedTitles.Remove(products[chosenProduct].Barcode);
+            }
             MappedTitles.Add(products[chosenProduct].Barcode);
         }
 

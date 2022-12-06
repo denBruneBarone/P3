@@ -264,3 +264,11 @@ li {
     margin-left: 15px;
     margin-top: 50px;
 }
+
+#continueBtnContainer{
+    position:fixed;
+    z-index: 999;
+    bottom: 0;
+    right: 0;
+    padding: 4%;
+}
