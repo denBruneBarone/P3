@@ -52,7 +52,13 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         public async Task CreateOrUpdateProduct(Product product)
         {
+
             var dbProduct = await _context.Products.FindAsync(product.ProductId);
+            if(dbProduct == null)
+            {
+                dbProduct = await _context.Products.FindAsync(product.Barcode);
+            }
+            
             if (dbProduct == null)
             {
                 //create
@@ -61,7 +67,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbProduct.ProductId = product.ProductId;
+                dbProduct = product;
             }
             await _context.SaveChangesAsync();
         }
@@ -99,6 +105,10 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task CreateOrUpdateMapping(Mapping mapping)
         {
             var dbMapping = await _context.Mappings.FindAsync(mapping.ProductIdMapping);
+            if(dbMapping == null)
+            {
+                dbMapping = await _context.Mappings.FindAsync(mapping.Barcode);
+            }
             if (dbMapping == null)
             {
                 //create
@@ -112,7 +122,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbMapping.ProductIdMapping = mapping.ProductIdMapping;
+                dbMapping = mapping;
             }
             await _context.SaveChangesAsync();
         }

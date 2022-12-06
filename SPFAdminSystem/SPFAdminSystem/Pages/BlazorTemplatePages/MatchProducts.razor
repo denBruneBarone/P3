@@ -5,6 +5,7 @@
 @using SPFAdminSystem.Database.ProductFiles;
 @using Excel = Microsoft.Office.Interop.Excel;
 @inject IProductService _db;
+@inject NavigationManager navManager
 
 @page "/match"
 
@@ -293,7 +294,7 @@
 </div>
 
 <div id="continueBtnContainer">
-    <button class="btn btn-primary btn-lg" disabled="@disableContinue">CONTINUE</button>
+    <button class="btn btn-primary btn-lg" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
 </div>
 
 @*----------------------------------------------------------------------------------------------------------------------*@
@@ -341,6 +342,47 @@
         StateHasChanged();
     }
 
+    private async Task continueSequence()
+    {
+        foreach (Product product in products)
+        {
+            await _db.CreateOrUpdateProduct(product);
+            await _db.CreateOrUpdateMapping(productToMapping(product));
+        }
+        navManager.NavigateTo("/order/overview", true);
+    }
+    private Mapping productToMapping(Product product)
+    {
+        Mapping mapping = new Mapping();
+        foreach (PropertyInfo prop in product.GetType().GetProperties())
+        {
+            if (prop.Name == "ProductId")
+            {
+                mapping.ProductIdMapping = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "Barcode")
+            {
+                mapping.Barcode = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "TitleGWS")
+            {
+                mapping.TitleGWS = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "MinOrder")
+            {
+                mapping.MinOrder = Convert.ToInt32(prop.GetValue(product, null));
+            }
+            else if (prop.Name == "Packsize")
+            {
+                mapping.PackSize = Convert.ToInt32(prop.GetValue(product, null));
+            }
+            else if (prop.Name == "Target")
+            {
+                mapping.Target = Convert.ToInt32(prop.GetValue(product, null));
+            }
+        }
+        return mapping;
+    }
     //Method to Apply a match if "Apply"-button pressed or
     //reset values in left box when "reset"-button is pressed, if "Apply" has already been pressed
     private void ApplyReset(bool reset)
