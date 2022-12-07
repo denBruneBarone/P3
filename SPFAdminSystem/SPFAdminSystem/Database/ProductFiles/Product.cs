@@ -35,4 +35,5 @@ public class Product
     public int? MinOrder { get; set; }
 
     public int? Target { get; set; }
+
 }

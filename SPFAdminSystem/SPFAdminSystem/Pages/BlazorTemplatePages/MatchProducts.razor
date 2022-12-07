@@ -600,7 +600,7 @@
             ApplyReset(true);
             resetRun = true;
         }
-        if (ignore != resetRun)
+        if (ignore != true)
         {
             if (TitleGWSCpy != null && TitleGWSCpy != products[chosenProduct].TitleGWS && TitleGWSCpy != "")
             {
@@ -664,7 +664,7 @@
             if(MappedTitles.Contains(products[chosenProduct].Barcode)){
                 MappedTitles.Remove(products[chosenProduct].Barcode);
             }
-                IgnoredTitles.Add(products[chosenProduct].Barcode);
+            IgnoredTitles.Add(products[chosenProduct].Barcode);
         }
         else
         {
@@ -688,7 +688,7 @@
         {
             matchTitle = products[0].Barcode;
         }
-
+;
         GetValue(matchTitle);
         suggestedMapping();
     }
@@ -738,6 +738,7 @@
 
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
+    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
 
@@ -751,6 +752,39 @@
     {
         //await _db.LoadProducts();
         products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        productsBackup = new List<Product>(products.Select(x => new Product() {
+                ArriveDate = x.ArriveDate,
+                RemovedFromStockDate = x.RemovedFromStockDate,
+                ProductId = x.ProductId,
+                UserActions = x.UserActions,
+                InHouseTitle = x.InHouseTitle,
+                OrderPrice = x.OrderPrice,
+                StockAmount = x.StockAmount,
+                OrderAmount = x.OrderAmount,
+                AvailableAmount = x.AvailableAmount,
+                Ordered = x.Ordered,
+                OrderQuantity = x.OrderQuantity,
+                TitleGWS = x.TitleGWS,
+                Barcode = x.Barcode,
+                Packsize = x.Packsize,
+                MinOrder = x.MinOrder,
+                Target = x.Target
+
+    }));
+        /*foreach(Product prod in products){
+            foreach (PropertyInfo prop in prod.GetType().GetProperties())
+            {
+                Product product = new Product();
+                if (prop.Name == "ArriveDate"){
+                    product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
+                }else if(prop.Name == "RemovedFromStockDate"){
+                    product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
+                }
+                prop.
+        }
+        }
+    }*/
+
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
