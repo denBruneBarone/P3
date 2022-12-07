@@ -9,6 +9,9 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task<Product> GetProductById(string prodId);
         List<Product> GetProducts();
         Task LoadProducts();
+        Task<List<Product>> GetUnknownProducts(string fileName);
+        Task LoadUnknownProducts(string fileName);
+        Task<List<Product>> GetMatchSuggestions(Product product);
         Task<Product> GetSingleProduct(string productId);
 
         Task CreateOrUpdateProduct(Product product);

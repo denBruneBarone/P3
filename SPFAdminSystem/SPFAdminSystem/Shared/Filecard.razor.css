@@ -3,20 +3,19 @@
     align-items: center;
     justify-content:left;
     padding: 1%;
-    gap: 1%;
+    gap: 0.5%;
     margin:1% 0 0 0;
     border-style: solid;
-    width: auto;
 }
+
 
 span {
     width: auto;
     height: auto;
 }
 
-p, h, button {
+p, h3 {
     margin: 0 0 0 0;
-    min-width: auto;
 }
 
 #buttonDiv {
@@ -25,5 +24,4 @@ p, h, button {
     align-items: center;
     align-self: flex-end;
     margin: 0 0 0 auto;
-    width:auto;
 }

@@ -13,8 +13,6 @@
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7027;http://localhost:5163",
-      "devTunnelAccess": "public",
-      "devTunnelEnabled": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
