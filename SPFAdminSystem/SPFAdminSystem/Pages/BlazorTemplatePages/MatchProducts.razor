@@ -330,6 +330,10 @@
     //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
     {
+
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+
         accepted = false;
 
         matchTitle = item;
@@ -593,6 +597,12 @@
     //"Accept"-button confirms the choice to map an unknown product to a found match
     private void AcceptMatch(Product product, bool ignore)
     {
+        Console.WriteLine("");
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+        Console.WriteLine("");
+
+
         bool resetRun = false;
 
         if (ignore == true)
@@ -688,7 +698,7 @@
         {
             matchTitle = products[0].Barcode;
         }
-;
+
         GetValue(matchTitle);
         suggestedMapping();
     }
