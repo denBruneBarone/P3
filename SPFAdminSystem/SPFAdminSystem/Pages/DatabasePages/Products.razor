@@ -1,0 +1,88 @@
+﻿@page "/products"
+@attribute [Authorize(Roles = "Admin, Employee")];
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles
+@inject IProductService _productDb
+
+<h5>All Products</h5>
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ProductId</th>
+                <th>Inhouse Title</th>
+                <th>GWS title</th>
+                <th>GWS Barcode</th>
+                <th>Stock Amount</th>
+                <th>Order Amount</th>
+                <th>AvailableAmount</th>
+                <th>Order Quantity</th>
+                <th>PackSize</th>
+                <th>MinOrder</th>
+                <th>Target</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.InHouseTitle</td>
+                    <td>@product.TitleGWS</td>
+                    <td>@product.Barcode</td>
+                    <td>@product.StockAmount</td>
+                    <td>@product.OrderAmount</td>
+                    <td>@product.AvailableAmount</td>
+                    <td>@product.OrderQuantity</td>
+                    <td>@product.Packsize</td>
+                    <td>@product.MinOrder</td>
+                    <td>@product.Target</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+
+
+
+    <h3>AddProduct</h3>
+    <input @bind=Id type="text" placeholder="Id" required />
+    <input @bind=Title type="text" placeholder="Title" required />
+    <button onclick="@InsertProduct">add new product</button>
+}
+
+
+
+
+@code {
+    public string Id { get; private set; }
+    public string Title { get; private set; }
+    private List<Product> products = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _productDb.LoadProducts();
+        products = _productDb.GetProducts();
+    }
+
+    public async Task InsertProduct() {
+
+        Product p = new Product();
+        p.ProductId = Id;
+        p.InHouseTitle = Title;
+
+        await _productDb.CreateOrUpdateProduct(p);
+
+        // Bad pratice
+        products.Add(p);
+        Console.WriteLine("Product Added");
+    }
+}
+

@@ -1,0 +1,661 @@
+﻿@using System.Reflection;
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles;
+@using System.Collections.Generic;
+@using System.Runtime.InteropServices;
+@using Excel = Microsoft.Office.Interop.Excel;
+@inject IProductService _db;
+@inject NavigationManager navManager;
+
+@page "/match"
+@*/mapping*@
+
+<div id="topSpacer"></div>
+
+<div>
+</div>
+@*<div class="tempButtons">
+    <button @onclick="InsertProduct">Add products</button>
+    <button @onclick="GetUnknownProducts">Add unknown prods</button>
+</div>*@
+<div class="container" style="display:flex; flex-direction: row;">
+    <div id="productList">
+        @{
+            counter = products.Count() - MappedTitles.Count();
+        }
+        <li id="listTitle">@counter Unknown Products</li>
+        <ul id="productListItems">
+            @{
+                int endLoop = 0;
+                counter = 0;
+            }
+            @foreach (var item in products)
+            {
+                if (products.Contains(item))
+                {
+                    if (matchTitle == "" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
+                    {
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
+                    }
+                    else if (matchTitle == item.TitleGWS)
+                    {
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
+                        counter++;
+                    }
+                    else
+                    {
+                        if (!IsMapped(item.TitleGWS))
+                        {
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
+                            counter++;
+                        }
+                        else
+                        {
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                        }
+                    }
+                }
+                endLoop = 1;
+            }
+        </ul>
+        <button class="btn btn-primary">Browse all products</button>
+    </div>
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+    @{
+        <div id="matchProduct">
+            @*----------------------------------------------------------------------------------------------------------------------*@
+            <div id="leftItem">
+                <div id="itemTitle">
+                    @{
+                        if (matchTitle == "" && products.Count > 0)
+                        {
+                            matchTitle = products[0].TitleGWS;
+                        }
+                    }
+                    <h1 style="font-weight: 700; font-size: 24px;">@matchTitle</h1> @*dynamisk item title*@
+                </div>
+                <div id="currentInfoTitle">
+                    <h3 style="text-align: center;">Current match information:</h3>
+                </div>
+                <div id="leftMatchItemsFlex">
+                    <div id="currentInfo">
+                        <ul id="matchListLeft">
+                            @{
+                                if (InHouseTitleString == InHouseCommit && InHouseCommit != "")
+                                {
+                                    inHouseTitleUpdated = true;
+                                }
+                                else
+                                {
+                                    inHouseTitleUpdated = false;
+                                }
+
+                                if (targetString == targetBuffer && targetBuffer != "")
+                                {
+                                    targetUpdated = true;
+                                }
+                                else
+                                {
+                                    targetUpdated = false;
+                                }
+
+                                if (products.Count() > 0)
+                                {
+                                    if (matchTitle != "")
+                                    {
+                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                        {
+                                            if (prop.Name.ToLower() == "target" && targetUpdated == true || prop.Name.ToLower() == "inhousetitle" && inHouseTitleUpdated == true)
+                                            {
+                                                <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
+                                            }
+                                            else
+                                            {
+                                                <li id="itemLiTitles">@prop.Name</li>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                    <div id="currentInfoValues">
+                        <ul style="list-style: none;" id="matchListLeft">
+                            @{
+                                if (products.Count() > 0)
+                                {
+                                    if (matchTitle != "")
+                                    {
+                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                        {
+                                            if (prop.GetValue(products[chosenProduct], null) != null)
+                                            {
+                                                if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
+                                                {
+                                                    <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
+                                                }
+                                                else
+                                                {
+                                                    if (prop.Name == "Target")
+                                                    {
+                                                        <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                                        @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+
+                                                        <input type="submit" hidden />
+                                                    }
+                                                    else if (prop.Name == "InHouseTitle")
+                                                    {
+                                                        <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
+                                                        @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
+
+                                                        <input type="submit" hidden />
+                                                    }
+                                                    else
+                                                    {
+                                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <li id="itemLi"></li>
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div id="ignoreApplyButtons">
+                    <button class="btn btn-danger">IGNORE PRODUCT</button>
+                    <button class="btn btn-warning" @onclick="@IgnoreChanges">Undo Changes</button>
+                </div>
+            </div>
+
+            @*----------------------------------------------------------------------------------------------------------------------*@
+
+            <div id="rightItem">
+                @code {
+                    int justBooted = 0;
+
+                    private void updateJustBooted()
+                    {
+                        justBooted = 1;
+                    }
+                }
+                <div id="itemTitle">
+                    <div id="rightAuxItems">
+                        <div id="dropdownId">
+                            <select name="matches" id="matches" @onchange="checkIfMatchChosen">
+                                @foreach (Product item in matchSuggestions)
+                                {
+                                    if (item == matchSuggestions[5])
+                                    {
+                                        <option value="new">-- ADD AS NEW PRODUCT --</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.TitleGWS">@item.TitleGWS</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="currentInfoTitle">
+                    <h3 style="text-align: center;">Selected match information:</h3>
+                </div>
+                <div id="leftMatchItemsFlex" class="w-100">
+                    <div id="currentInfo" class="w-100">
+                        <ul id="matchListLeft" class="w-100">
+                            @{
+                                foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
+                                {
+                                    <div class="w-100" style="padding: 0; margin: 0;">
+                                    <li style="display: flex; justify-content: space-between; padding-left: 0; margin-left: 0;">
+                                        <div>
+                                                @if (!checkboxclearer)
+                                                {
+                                                <input class="form-check-input" type="checkbox" id="@prop.Name-checkbox" @onchange="eventArgs => { CheckboxClicked(prop, eventArgs.Value); }">
+                                                }
+                                            <label class="form-check-label" for="@prop.Name-checkbox">
+                                                    @prop.Name
+                                            </label>
+                                        </div>
+                                        <div>
+                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
+                                                {
+                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                                    {
+                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                    }
+                                                    else if (prop.Name == "Target")
+                                                    {
+                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        {
+                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
+                                                    }
+                                                }
+                                                else if (matchSuggestions[chosenMatch].TitleGWS == "new")
+                                                {
+                                                    if (prop.Name == "Target")
+                                                    {
+                                                    <input type="text" placeholder="SPECIFY TARGET"/>
+                                                    }
+                                                }
+                                        </div>
+                                    </li>
+                            </div>
+                                }
+                            }
+                    </ul>
+                </div>
+            </div>
+            <div id="ignoreApplyButtons">
+                <button onclick=@(()=>AddProperties(products[chosenProduct])) class="btn btn-success">Apply</button>
+            </div>
+        </div>
+    </div>
+    }
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+    @*<div id="browseBtn">
+    <button id="browseBtnBlue">Browse all products</button>
+    </div>*@
+
+    @*----------------------------------------------------------------------------------------------------------------------*@
+
+
+</div>
+
+<div id="changeOverview">
+    @{
+        if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "" || targetCommit != products[chosenProduct].Target && InHouseCommit != "" && targetCommit != -1)
+        {
+            <h3>Changes Overview:</h3>
+            <p></p>
+        }
+        if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "")
+        {
+            <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
+        }
+        if (targetCommit != products[chosenProduct].Target && targetCommit != -1)
+        {
+            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@targetCommit"</p>
+        }
+    }
+</div>
+
+@*----------------------------------------------------------------------------------------------------------------------*@
+
+@*----------------------------------------------------------------------------------------------------------------------*@
+@*
+    Accept button for after applying changes
+*@
+<div class="w-100" style="display: flex; justify-content: center; align-items: center;">
+    <div class="w-25" style="display: flex; justify-content: space-between;">
+        <button class="btn btn-danger btn-lg">CANCEL</button>
+        <button class="btn btn-primary btn-lg" disabled="@disabled" @onclick="@nextPage">CONTINUE</button>
+    </div>
+</div>
+
+
+@*----------------------------------------------------------------------------------------------------------------------*@
+
+
+
+
+@code {
+    bool checkboxclearer = false;
+    int counter = 0;
+    string matchTitle = "";
+    string titleOfEdit = "";
+    bool matchprodCheckStatus = false;
+    private async void nextPage()
+    {
+        navManager.NavigateTo("/Overview", true);
+    }
+
+    private async void GetValue(string item)
+    {
+        matchTitle = item;
+
+        IgnoreChanges();
+        UpdateMatch(matchTitle);
+        checkboxclearer = true;
+        await Task.Delay(1);
+        StateHasChanged();
+        checkboxclearer = false;
+        await Task.Delay(1);
+        StateHasChanged();
+    }
+
+    int chosenProduct = 0;
+    int chosenMatch = 0;
+
+    private void UpdateMatch(string currentProduct)
+    {
+        for (int i = 0; i < products.Count(); i++)
+        {
+            foreach (PropertyInfo prop in products[i].GetType().GetProperties())
+            {
+                if (prop.GetValue(products[i], null) != null)
+                {
+                    if (products[i].TitleGWS == matchTitle && chosenProduct != i)
+                    {
+                        chosenProduct = i;
+                    }
+                }
+            }
+        }
+        matchprodCheckStatus = false;
+    }
+
+    private void UpdateMatchTitle(string updatedTitle)
+    {
+        matchTitle = updatedTitle;
+    }
+
+    List<Product> tempProperties = new();
+    private void AddProperties(Product product)
+    {
+        disabled = allUnknownMapped();
+        Product? tempProd = null;
+        foreach (PropertyInfo prop in checkedProperties)
+        {
+            try
+            {
+                tempProd = (Product)tempProperties.Where(tempprop => tempprop.TitleGWS == product.TitleGWS).First();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            if (tempProd == null)
+                tempProperties.Add(product);
+            else
+            {
+                tempProperties.Remove(product);
+                tempProperties.Add(product);
+            }
+            prop.SetValue(product, prop.GetValue(matchSuggestions[chosenMatch], null), null);
+            products[chosenProduct] = product;
+        }
+        StateHasChanged();
+        AcceptMatch();
+        if (IsMapped(product.TitleGWS))
+        {
+            Console.WriteLine("It's already mapped!");
+        }
+        else
+        {
+            MappedTitles.Add(product.TitleGWS);
+            Console.WriteLine("Mapping accepted and saved!");
+        }
+    }
+
+    int val = 0;
+    int? targetCommit = -1;
+    bool targetUpdated = false;
+    bool inHouseTitleUpdated = false;
+    string targetString = "";
+    string commitedChange = "";
+    string targetBuffer = "";
+    string InHouseTitleString = "";
+    string InHouseCommit = "";
+
+    List<PropertyInfo> checkedProperties = new();
+    List<bool> checkboxValues = new();
+    private void CheckboxClicked(PropertyInfo prop, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if (!checkedProperties.Contains(prop))
+            {
+                checkedProperties.Add(prop);
+            }
+        }
+        else
+        {
+            if (checkedProperties.Contains(prop))
+            {
+                checkedProperties.Remove(prop);
+            }
+        }
+
+    }
+
+    private void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            if (titleOfEdit.ToLower() == "target")
+            {
+                if (targetString == "")
+                {
+                    targetUpdated = false;
+                    targetCommit = products[chosenProduct].Target;
+                }
+                else
+                {
+                    targetBuffer = targetString;
+                    Int32.TryParse(targetString, out val);
+                    if (val > 0)
+                    {
+                        targetCommit = Convert.ToInt32(targetString);
+                    }
+                    if (targetCommit != products[chosenProduct].Target && targetCommit >= 0)
+                    {
+                        targetUpdated = true;
+                    }
+                    else
+                    {
+                        targetUpdated = false;
+                        targetCommit = products[chosenProduct].Target;
+                    }
+                }
+            }
+            else if (titleOfEdit.ToLower() == "inhousetitle")
+            {
+                if (InHouseTitleString == null || InHouseTitleString == "" || InHouseTitleString == products[chosenProduct].InHouseTitle)
+                {
+                    inHouseTitleUpdated = false;
+                }
+                else
+                {
+                    InHouseCommit = InHouseTitleString;
+                    inHouseTitleUpdated = true;
+                }
+            }
+        }
+    }
+
+    private void getChosenMatchIndex(string dropDownList)
+    {
+        for (int t = 0; t < matchSuggestions.Count(); t++)
+        {
+            if (dropDownList == matchSuggestions[t].TitleGWS)
+            {
+                chosenMatch = t;
+                break;
+            }
+            else
+            {
+
+            }
+
+        }
+    }
+
+    string dropDownList = "";
+
+    private void checkIfMatchChosen(ChangeEventArgs e)
+    {
+        dropDownList = e.Value.ToString();
+
+        if (dropDownList != "" && dropDownList != null)
+        {
+            getChosenMatchIndex(dropDownList);
+        }
+        updateJustBooted();
+    }
+
+    private void ApplyChanges()
+    {
+        if (targetCommit >= 0)
+        {
+            products[chosenProduct].Target = targetCommit;
+        }
+        if (InHouseCommit != "" && InHouseCommit != products[chosenProduct].InHouseTitle)
+        {
+            products[chosenProduct].InHouseTitle = InHouseCommit;
+            UpdateMatchTitle(InHouseCommit);
+        }
+
+        IgnoreChanges();
+    }
+
+    private void IgnoreChanges()
+    {
+        targetString = "";
+        targetUpdated = false;
+        InHouseTitleString = "";
+        inHouseTitleUpdated = false;
+    }
+
+    /*List of strings, is used to check if product is mapped*/
+    private List<string> MappedTitles = new List<string>();
+
+    /*Function for accepting mapping proposal*/
+    private async void AcceptMatch()
+    {
+
+        string title = products[chosenProduct].TitleGWS;
+        /*To create or update the new product, in the product database*/
+        if (products[chosenProduct].ProductId != null && products[chosenProduct].ProductId != string.Empty)
+        {
+
+            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+            {
+
+                if (prop.Name.ToString() == "TitleGWS" && prop.GetValue(products[chosenProduct], null) != null)
+                {
+                    products[chosenProduct].InHouseTitle = prop.GetValue(products[chosenProduct], null).ToString();
+                }
+
+            }
+
+            await _db.CreateOrUpdateProduct(products[chosenProduct]);
+            await _db.CreateOrUpdateMapping(productToMapping(products[chosenProduct]));
+        }
+    }
+    public bool disabled = true;
+
+    private bool allUnknownMapped()
+    {
+        foreach (Product product in products)
+        {
+            if (!MappedTitles.Contains(product.TitleGWS))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*Check if title is in MappedTitles list*/
+    private bool IsMapped(string title)
+    {
+        if (MappedTitles.Count() > 0)
+        {
+            foreach (string prodTitle in MappedTitles)
+            {
+                if (title == prodTitle)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private Mapping productToMapping(Product product)
+    {
+        Mapping mapping = new Mapping();
+        foreach (PropertyInfo prop in product.GetType().GetProperties())
+        {
+            if (prop.Name == "ProductId")
+            {
+                mapping.ProductIdMapping = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "Barcode")
+            {
+                mapping.Barcode = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "TitleGWS")
+            {
+                mapping.TitleGWS = prop.GetValue(product, null).ToString();
+            }
+            else if (prop.Name == "MinOrder")
+            {
+                mapping.MinOrder = Convert.ToInt32(prop.GetValue(product, null));
+            }
+            else if (prop.Name == "Packsize")
+            {
+                mapping.PackSize = Convert.ToInt32(prop.GetValue(product, null));
+            }
+            else if (prop.Name == "Target")
+            {
+                mapping.Target = Convert.ToInt32(prop.GetValue(product, null));
+            }
+        }
+        return mapping;
+    }
+
+
+    /*Get products from database and insert products into database*/
+
+    private List<Product> products = new();
+
+
+    private List<Product> UnknownProducts = new();
+    private List<Product> matchSuggestions = new();
+
+    private List<Product> productsTemp = new();
+
+    private async void suggestedMapping()
+    {
+        matchSuggestions.Clear();
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await _db.LoadProducts();
+        products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+    }
+
+
+
+}
+@*
+#b2dab6 - grøn
+#e6bdbc - m.rød
+#f3cac9 - l.rød
+#0288d1 - blå
+*@

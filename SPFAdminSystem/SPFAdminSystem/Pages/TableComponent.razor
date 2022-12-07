@@ -1,0 +1,136 @@
+﻿@inject IJSRuntime js;
+
+<table>
+    <tr>
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[dateIdentifier]].changeDirection(dateIdentifier))">
+            <th>Date<icon 
+                    hidden=@Toggles[ToggleArrowIdentifier[dateIdentifier]].hidden 
+                    class="oi oi-caret-@Toggles[ToggleArrowIdentifier[dateIdentifier]].directionEnding">
+            </icon></th>
+        </button>
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[userIdentifier]].changeDirection(userIdentifier))">
+            <th>User<icon 
+                    hidden=@Toggles[ToggleArrowIdentifier[userIdentifier]].hidden 
+                    class="oi oi-caret-@Toggles[ToggleArrowIdentifier[userIdentifier]].directionEnding">
+            </icon></th>
+        </button>
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[typeIdentifier]].changeDirection(typeIdentifier))">
+            <th>Type<icon 
+                hidden=@Toggles[ToggleArrowIdentifier[typeIdentifier]].hidden 
+                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[typeIdentifier]].directionEnding">
+            </icon></th>
+        </button>
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[valueIdentifier]].changeDirection(valueIdentifier))">
+            <th>Value<icon 
+                hidden=@Toggles[ToggleArrowIdentifier[valueIdentifier]].hidden 
+                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[valueIdentifier]].directionEnding">
+            </icon></th>
+        </button>
+        <button onclick="@(()=>Toggles[ToggleArrowIdentifier[productIdentifier]].changeDirection(productIdentifier))">
+            <th>Product<icon 
+                hidden=@Toggles[ToggleArrowIdentifier[productIdentifier]].hidden 
+                class="oi oi-caret-@Toggles[ToggleArrowIdentifier[productIdentifier]].directionEnding">
+            </icon></th>
+        </button>
+    </tr>
+    @foreach (var action in actionsPreviewer)
+    {
+    <tr>
+        <td>
+            @action.Date
+        </td>
+        <td>@action.User.FullName</td>
+        <td>@action.ActionType</td>
+        <td>@action.Value</td>
+        <td>@action.Product.InHouseTitle</td>
+    </tr>
+    }
+</table>
+
+@code{
+    [Parameter]
+    public List<UserAction> Actions{ get; set; }
+    static List<UserAction> actionsPreviewer { get; set; }
+
+    const string dateIdentifier = "date";
+    const string userIdentifier = "user";
+    const string typeIdentifier = "type";
+    const string valueIdentifier = "value";
+    const string productIdentifier = "product";
+
+    static public List<ToggleArrowIcon> Toggles = new List<ToggleArrowIcon> { 
+        new ToggleArrowIcon(), new ToggleArrowIcon(), new ToggleArrowIcon(), new ToggleArrowIcon(), new ToggleArrowIcon() };
+
+    public Dictionary<string, int> ToggleArrowIdentifier = new Dictionary<string, int>(){
+        {dateIdentifier,0},
+        {userIdentifier,1},
+        {typeIdentifier,2},
+        {valueIdentifier,3},
+        {productIdentifier,4}
+    };
+
+    protected override async Task OnInitializedAsync(){
+        hideToggles();
+        Toggles[ToggleArrowIdentifier[dateIdentifier]].hidden = false;
+        actionsPreviewer = Actions;
+    }
+
+    public class ToggleArrowIcon
+    {
+        public string directionEnding = "top";
+        public bool hidden = true;
+        bool sortDescending = false;
+        public void changeDirection(string sortingAttribute){
+            directionEnding = directionEnding == "bottom" ? "top" : "bottom";
+            sortDescending = !sortDescending;
+            hideToggles();
+            hidden = false;
+            actionsPreviewer=SortActionsBy(sortingAttribute, sortDescending);
+        }
+    }
+
+    // switches the hidden attribute of each Toggle to true, making all toggles invisible on the html
+    static void hideToggles(){
+        foreach (var t in Toggles)
+            t.hidden = true;
+    }
+
+    static public List<UserAction> SortActionsBy(string sortBy,bool desc)
+    {
+        List<UserAction> actions = new();
+        switch (sortBy)
+        {
+            case dateIdentifier:
+                if (desc)
+                    actions = actionsPreviewer.OrderByDescending(a => a.Date).ToList();
+                else
+                    actions = actionsPreviewer.OrderBy(a => a.Date).ToList();
+                break;
+            case userIdentifier:
+                if (desc)
+                    actions = actionsPreviewer.OrderByDescending(a => a.User).ToList();
+                else
+                    actions = actionsPreviewer.OrderBy(a => a.User).ToList();
+                break;
+            case typeIdentifier:
+                if (desc)
+                    actions = actionsPreviewer.OrderByDescending(a => a.ActionType).ToList();
+                else
+                    actions = actionsPreviewer.OrderBy(a => a.ActionType).ToList();
+                break;
+            case valueIdentifier:
+                if (desc)
+                    actions = actionsPreviewer.OrderByDescending(a => a.Value).ToList();
+                else
+                    actions = actionsPreviewer.OrderBy(a => a.Value).ToList();
+                break;
+            case productIdentifier:
+                if (desc)
+                    actions = actionsPreviewer.OrderByDescending(a => a.Product).ToList();
+                else
+                    actions = actionsPreviewer.OrderBy(a => a.Product).ToList();
+                break;
+        }
+        return actions;
+    }
+}

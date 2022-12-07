@@ -1,0 +1,98 @@
+﻿@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@using System.Security.Claims
+@using SPFAdminSystem.Authentication
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">SPFAdminSystem</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column h-100">
+        <AuthorizeView Roles="Admin, Employee">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="products" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Product Administration
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="actions" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> User Actions
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="mappings">
+                    <span class="oi oi-home" aria-hidden="true"></span> Mapping Administration
+                </NavLink>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="users" Match="NavLinkMatch.All">
+                    <span class="oi oi-people" aria-hidden="true"></span> User Management
+                </NavLink>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView Roles="Admin, Employee">
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="upload">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Upload Files
+                </NavLink>
+            </div>
+
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="placeholder">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Future Feature
+                </NavLink>
+            </div>
+
+            @*LOGIN / ACCOUNT TO AT THE BOTTOM*@
+            <div class="w-100 bottom-login">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="me">
+                        <span class="oi oi-person" aria-hidden="true"></span> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName).Value
+                    </NavLink>
+                </div>
+
+                
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="logout">
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Logout
+                    </NavLink>
+                </div>
+            </div>
+        </AuthorizeView>
+        <AuthorizeView>
+            <NotAuthorized>
+            <div class="w-100 bottom-login">
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="oi oi-person" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="loginasadmin">
+                        <span style="color:red;" class="oi oi-key" aria-hidden="true"></span> AdminLogin (Dev)
+                    </NavLink>
+                </div>
+            </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

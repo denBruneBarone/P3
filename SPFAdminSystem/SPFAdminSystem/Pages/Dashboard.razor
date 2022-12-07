@@ -1,0 +1,33 @@
+﻿@page "/dashboard"
+<h1>Dashboard</h1>
+<div class="d-flex" style="height: 90%; width: 100%;">
+    <div id="nav"class="d-flex justify-content-center" style="height: 75%;width: 100%;">
+        <div class="container h-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex w-100 justify-content-evenly">
+                <DashboardCard Title="Product Administration" href="productadministration" State="@currentFileState"/>
+                <DashboardCard Title="User Management" href="usermanagement"/>
+                <DashboardCard Title="Future Feature" href="futurefeature" />
+            </div>
+        </div>
+        
+    </div>
+    <div class="d-flex" style="height: 100%; width: 2%">
+        <div class="vr"></div>
+    </div>
+    <div id="activity" class="d-flex flex-column align-items-center justify-content-start" style="height: 100%; width: 33%;">
+        <div style="height: 10%;">
+            <h3>Activity</h3>
+        </div>
+        <div id="act-container" class="d-flex flex-column w-100 px-4 pt-4 border border-2 border-secondary" style="height:100%">
+            <p>
+                <span class="oi oi-media-record" style="color: lawngreen;"></span> Users Online: ONLINE USERS TAG
+            </p>
+            <p>
+                Last action: LAST ACTION PERFORMED BY PERSON
+            </p>
+        </div>
+    </div>
+</div>
+@code {
+    private string? currentFileState { get; set; } = "Waiting";
+}

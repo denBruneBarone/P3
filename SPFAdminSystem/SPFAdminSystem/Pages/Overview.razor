@@ -1,0 +1,142 @@
+﻿@page "/order/overview"
+@using BlazorTable
+@using SPFAdminSystem.Database;
+@using SPFAdminSystem.Database.ProductFiles;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Reflection;
+@using OfficeOpenXml;
+@using Microsoft.AspNetCore.Http;
+
+@using Microsoft.AspNetCore.Mvc;
+@inject IProductService database
+@inject IJSRuntime JS
+
+<HasAllFiles/>
+
+<h3>Order Overview</h3>
+<div class="w-100" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    <div id="table-div">
+        <Table TableItem="Product" Items="productlist" IsEditMode="true" PageSize="25" @ref="Table" ColumnReorder="false">
+            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="false" Filterable="true" Width="50%"/>
+            <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="false" Filterable="false" Width="10%">
+            </Column>
+            <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="false" Filterable="false" Width="10%" />
+            <Column TableItem="Product" Title="In Order" Field="@(x => x.Ordered)" Sortable="false" Filterable="false" Width="8%" />
+            <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="8%">
+            </Column>
+            <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
+            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right" DefaultSortColumn="true" DefaultSortDescending="true">
+                <EditTemplate>
+                    <input type="number" @bind-value="context.Target" @onfocusout="() => updatequantity(context)" class="form-control form-control-sm" required />
+                </EditTemplate>
+            </Column>
+            <Column TableItem="Product" Title="Order Quantity" Field="@(x => x.OrderQuantity)" Sortable="false" Width="10%" />
+            <Pager ShowPageNumber="true" ShowTotalCount="true" />
+        </Table>
+    </div>
+    <div>
+        <button class="btn btn-success" @onclick=SaveOrder>SAVE EXCEL ORDER</button>
+    </div>
+</div>
+
+@code {
+    private ITable<Product>? Table;
+    List<Product> productlist = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await database.LoadProducts();
+        productlist = database.GetProducts();
+        foreach(Product product in productlist)
+        {
+            if(product.StockAmount < 0 || product.StockAmount == null)
+            {
+                product.StockAmount = 0;
+            }
+            if (product.Ordered < 0 || product.Ordered == null)
+            {
+                product.Ordered = 0;
+            }
+            if(product.Target < 0 || product.Target == null)
+            {
+                product.Target = 0;
+            }
+            product.OrderQuantity = product.Target - product.StockAmount - product.Ordered;
+            if(product.OrderQuantity < 0 || product.OrderQuantity == null)
+            {
+                product.OrderQuantity = 0;
+            }
+            else
+            {
+                product.OrderQuantity = product.OrderQuantity > product.MinOrder ? product.OrderQuantity : product.MinOrder;
+            }
+        }
+    }
+
+    private void updatequantity(Product product)
+    {
+        product.OrderQuantity = product.Target - product.StockAmount - product.Ordered;
+        if (product.OrderQuantity < 0 || product.OrderQuantity == null)
+        {
+            product.OrderQuantity = 0;
+        }
+        else
+        {
+            product.OrderQuantity = product.OrderQuantity > product.MinOrder ? product.OrderQuantity : product.MinOrder;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!Table.IsEditMode)
+        {
+            Table.ToggleEditMode();
+            Table.UpdateAsync();
+        }
+        foreach(Product product in productlist)
+        {
+
+        }
+    }
+
+    private async Task<Stream> GenerateFileStream()
+    {
+        var fileStream = new MemoryStream();
+        byte[] bytes;
+        var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "Pricelist Europe__3.xlsx";
+        FileInfo fileInfo = new FileInfo(FilePath);
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        if(fileInfo.Exists)
+        {
+            Console.WriteLine("SUCESS");
+        }
+        using (ExcelPackage package = new ExcelPackage(fileInfo))
+        {
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
+            int colCount = worksheet.Dimension.End.Column;
+            int rowCount = worksheet.Dimension.End.Row;
+            for (int row = 3; row <= rowCount; row++)
+            {
+                foreach (Product product in productlist)
+                {
+                    if ((string)worksheet.Cells[row, 6].Value == product.Barcode)
+                    {
+                        worksheet.Cells[row, 3].Value = product.OrderQuantity;
+                    }
+                }
+            }
+            package.SaveAsAsync(fileStream);
+            package.Dispose();
+        }
+        fileStream.Position = 0;
+        return fileStream;
+    }
+
+    private async Task SaveOrder()
+    {
+        Stream fileStream = await GenerateFileStream();        
+        using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
+        await JS.InvokeVoidAsync("DownloadExcel", "Pricelist Europe__3.xlsx", streamReference);
+    }
+
+}
