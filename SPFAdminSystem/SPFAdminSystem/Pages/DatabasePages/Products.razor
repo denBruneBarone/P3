@@ -66,13 +66,11 @@ else
     public string Title { get; private set; }
     private List<Product> products = new();
 
-
     protected override async Task OnInitializedAsync()
     {
         await _productDb.LoadProducts();
         products = _productDb.GetProducts();
     }
-    
 
     public async Task InsertProduct() {
 
@@ -86,9 +84,5 @@ else
         products.Add(p);
         Console.WriteLine("Product Added");
     }
-
-    
-
-
 }
 
