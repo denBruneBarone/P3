@@ -151,7 +151,6 @@ namespace SPFAdminSystem.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("UserActionId");
