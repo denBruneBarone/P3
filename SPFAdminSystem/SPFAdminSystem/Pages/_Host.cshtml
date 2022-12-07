@@ -8,20 +8,6 @@
 <component type="typeof(App)" render-mode="ServerPrerendered" />
 @*<script src="_content/BlazorTable/BlazorTable.min.js"></script>*@
 @*<script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>*@
-<script src="_content/BlazorTable/BlazorTable.min.js"></script>
-@*<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>*@
-<script>
-    window.DownloadExcel = async (fileName, contentStreamReference) => {
-        const arrayBuffer = await contentStreamReference.arrayBuffer();
-        const blob = new Blob([arrayBuffer]);
-        const url = URL.createObjectURL(blob);
-        const anchorElement = document.createElement("a");
 
-        anchorElement.href = url;
-        anchorElement.download = fileName ?? "";
-        anchorElement.click();
-        anchorElement.remove();
-        URL.revokeObjectURL(url);
-    }
-</script>
+@*<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>*@
 

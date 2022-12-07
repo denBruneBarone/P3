@@ -4,13 +4,7 @@
 @inject NavigationManager NavManager
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
-@using OfficeOpenXml;
 @inject IProductService _productDb
-
-@if(isMapping == true || isUploading == true)
-{
-    <Loading Text="@LoadingText"/>
-}
 
 <PageTitle>Upload</PageTitle>
 
@@ -23,29 +17,28 @@
                     Upload price list file
                     <InputFile OnChange="HandleSelectedFile" multiple id="fileinput" style="width:0; height:0; overflow: hidden;" />
                 </label>
-            </div>
+            </div>  
         </div>
-        <small>@Message</small>
-        <p>@addedString</p>
+            <small>@Message</small>
+            <p>@addedString</p>
+
+        
+        <div class="nav-buttons">
+            <button @onclick="ContinueClicked" type="button" class="btn btn-primary">Continue</button>
+        </div>
     </div>
 </center>
-<center>
-    <FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" isLoading="@isProdukterLoading"></FileCard>
-    <FileCard Title="Mapping" State=@mappingState Text=@mappingText ButtonText="Upload Mapping.xlsx to DB" isLoading="@isMappingLoading"></FileCard>
-    <FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
 
-</center>
+<FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" _callback=insertProdukterInDb        ></FileCard>
+<FileCard Title="Mapping"   State=@mappingState   Text=@mappingText   ButtonText="Upload Mapping.xlsx to DB"   _callback=insertMappingInDb          ></FileCard>
+<FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist"            _callback="doSomethingWithPricelist" ></FileCard>
 
-<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
-@if (isMapping == true)
-{
-    <p>Loading....</p>
-}
-else if (isMapping == false)
-{
-    <p>Mapping merged into Products!</p>
-}
-
+@* Det her skal laves finere. Ved bare ikke hvor knappen skal være henne :)*@
+<button onclick="@mapMappingsToDb" class="btn btn-primary">Merge Mappings into Products' DB'</button><br />
+<div class="container-fluid">
+    <RadzenProgressBar ProgressBarStyle="ProgressBarStyle.Primary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" style="width:auto" hidden=@isProgressHidden />
+</div>
+<p>@mergedString</p>
 @code {
     string Message = "No files are selected";
     string? addedString;
@@ -54,120 +47,46 @@ else if (isMapping == false)
     string pricelistState = "not ready";
     string? produkterText;
     string? mappingText;
-    string? LoadingText;
     string? pricelistText;
-
-    bool mappingUnavailable = true;
-    public bool? isMapping;
-    public bool isUploading = false;
-    string[] fileNames =
-        {
-            "Pricelist Europe__3.xlsx",
-            "Mapping.xlsx",
-            "Produkter.xlsx"
-    };
+    private bool isProgressHidden = true;
+    private string mergedString = "";
 
     IReadOnlyList<IBrowserFile> selectedFiles;
-
-    protected override void OnInitialized()
-    {
-
-        string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
-        foreach(string filename in fileNames)
-        {
-            FileInfo file = new FileInfo(filesPath+filename);
-            if(file.Exists)
-            {
-                switch(filename)
-                {
-                    case "Pricelist Europe__3.xlsx":
-                        {
-                            pricelistText = filename + " was last modified on " + file.LastWriteTime;
-                            break;
-                        }
-                    case "Mapping.xlsx":
-                        {
-                            mappingText = filename + " was last modified on " + file.LastWriteTime;
-                            break;
-                        }
-                    case "Produkter.xlsx":
-                        {
-                            produkterText = filename + " was last modified on " + file.LastWriteTime;
-                            break;
-                        }
-                }
-            }
-        }
-    }
-
-    //"selectedFiles gets
-    private async void HandleSelectedFile(InputFileChangeEventArgs e)
-    {
-        LoadingText = "UPLOADING FILES...";
-        isUploading = true;
-        await Task.Delay(1);
-        StateHasChanged();
+    //"selectedFiles gets 
+    private void HandleSelectedFile(InputFileChangeEventArgs e){
         addedString = "";
         selectedFiles = e.GetMultipleFiles();
         Message = "files chosen:";
-        foreach (var file in selectedFiles)
-        {
+        foreach (var file in selectedFiles) {
             string filename = file.Name.ToString();
-            if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length - 5).Replace("_", "") + "' ";
+            if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length-5).Replace("_","") + "' ";
 
         }
-        await ContinueClicked();
-        LoadingText = "COMPLETE!";
-        await Task.Delay(1);
-        StateHasChanged();
-        await Task.Delay(500);
-        isUploading = false;
-        await Task.Delay(1);
         this.StateHasChanged();
     }
-    private async Task ContinueClicked()
-    {
+    private async void ContinueClicked() {
         /*As there is only one file, a list may be redundant*/
         /*Der skal implementeres errorhandling :) */
-        foreach (var file in selectedFiles)
+        try
         {
-            try
+            foreach (var file in selectedFiles)
             {
-                string filename = file.Name.ToString();
                 /*The input parameter in OpenReadStream is the max file size in bytes (normally at 500kb/512.000 bytes*/
-                Stream stream = file.OpenReadStream(int.MaxValue);
+                Stream stream = file.OpenReadStream(1000000);
                 /*"var path" Is the path where the files are uploaded to. When we have gotten the DB down, we should send the right things to the database here instead*/
                 var path = $"{env.WebRootPath}\\{file.Name}";
-
                 FileStream fs = File.Create(path);
-                Console.WriteLine(path);
                 /*The file content is copied to the path*/
                 await stream.CopyToAsync(fs);
                 /*The two streams are closed again*/
                 stream.Close();
                 fs.Close();
+                string filename = file.Name.ToString();
 
-                if (filename.Contains("Pricelist"))
-                {
-                    Aspose.Cells.Workbook xlsBook = new Aspose.Cells.Workbook(path);
-                    xlsBook.Save(path + "x");
-                    ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                    FileInfo fileInfo = new FileInfo(path + "x");
-                    if (fileInfo.Exists)
-                    {
-                        Console.WriteLine("SUCESS");
-                    }
-                    using (ExcelPackage package = new ExcelPackage(fileInfo))
-                    {
-                        ExcelWorksheet evalSheet = package.Workbook.Worksheets["Evaluation Warning"];
-                        package.Workbook.Worksheets.Delete(evalSheet);
-                        package.SaveAsAsync(fileInfo);
-                        package.Dispose();
-                    }
-                    File.Delete(path);
+                if (filename.Contains("Pricelist")) { 
                     pricelistState = "ready";
                     pricelistText = filename + " was last modified on " + file.LastModified.DateTime;
-                }
+                } 
                 if (filename.Contains("Mapping"))
                 {
                     mappingState = "ready";
@@ -179,57 +98,31 @@ else if (isMapping == false)
                     produkterText = filename + " was last modified on " + file.LastModified.DateTime;
                 }
             }
-            catch (NullReferenceException e)
-            {
-                Message = "You have to add a price list file before continuing!";
-            }
+            this.StateHasChanged();
+        }catch(NullReferenceException e){
+            Message = "You have to add a price list file before continuing!";
         }
-        if(HasAllFiles())
-        {
-            mappingUnavailable = false;
-        }
-        await Task.Delay(1);
-        StateHasChanged();
     }
 
-    private bool HasAllFiles()
-    {
-        string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
-        foreach (string filename in fileNames)
-        {
-            FileInfo file = new FileInfo(filesPath + filename);
-            if (!file.Exists)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private async Task insertProdukterInDb()
+    private async void insertProdukterInDb()
     {
         await _productDb.InsertExcelProducts("Produkter.xlsx");
     }
-    private async Task insertMappingInDb()
+    private async void insertMappingInDb()
     {
         await _productDb.InsertExcelMapping("Mapping.xlsx");
     }
     private async void mapMappingsToDb()
     {
-        isMapping = true;
-        LoadingText = "MAPPING IN PROGESS...";
+        isProgressHidden = false;
         await Task.Delay(1);
-        StateHasChanged();
-        await insertProdukterInDb();
-        await insertMappingInDb();
         await _productDb.JoinMappingToProducts();
-        LoadingText = "COMPLETE!";
-        await Task.Delay(1);
+        isProgressHidden = true;
+        mergedString = "Mappings merged into products!";
         StateHasChanged();
-        await Task.Delay(500);
-        mappingUnavailable = true;
-        isMapping = false;
-        await Task.Delay(1);
-        StateHasChanged();
+    }
+    // Alijas og Ozzy's funktioner her. Alle Filecards skal have en _callback. Derfor nødvendig.
+    private void doSomethingWithPricelist()
+    {
     }
 }

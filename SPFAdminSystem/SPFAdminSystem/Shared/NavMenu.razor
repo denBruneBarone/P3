@@ -51,8 +51,8 @@
                 </NavLink>
             </div>
 
-            @*LOGIN / ACCOUNT TO AT THE BOTTOM*@
-            <div class="w-100 bottom-login">
+
+            <div class="position-absolute bottom-0 w-100">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="me">
                         <span class="oi oi-person" aria-hidden="true"></span> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName).Value
@@ -69,7 +69,7 @@
         </AuthorizeView>
         <AuthorizeView>
             <NotAuthorized>
-            <div class="w-100 bottom-login">
+            <div class="position-absolute bottom-0 w-100">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
                         <span class="oi oi-person" aria-hidden="true"></span> Login

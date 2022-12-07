@@ -4,7 +4,6 @@
 
 .top-row {
     height: 3.5rem;
-    width: 100%;
     background-color: rgba(0,0,0,0.4);
 }
 
@@ -22,7 +21,6 @@
 .nav-item {
     font-size: 0.9rem;
     padding-bottom: 0.5rem;
-    width: 100%;
 }
 
     .nav-item:first-of-type {
@@ -39,29 +37,26 @@
         height: 3rem;
         display: flex;
         align-items: center;
-        line-height: 5rem;
+        line-height: 3rem;
     }
 
-        .nav-item ::deep a.active {
-            background-color: rgba(255,255,255,0.25);
-            color: white;
-        }
+.nav-item ::deep a.active {
+    background-color: rgba(255,255,255,0.25);
+    color: white;
+}
 
-        .nav-item ::deep a:hover {
-            background-color: rgba(255,255,255,0.1);
-            color: white;
-        }
+.nav-item ::deep a:hover {
+    background-color: rgba(255,255,255,0.1);
+    color: white;
+}
 
 @media (min-width: 930px) {
-
+    .navbar-toggler {
+        display: none;
+    }
 
     .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
-    }
-
-    .bottom-login {
-        position: absolute;
-        bottom: 0;
     }
 }
