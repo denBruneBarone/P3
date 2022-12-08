@@ -36,8 +36,6 @@
 
 </center>
 
-
-
 <button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
@@ -74,7 +72,6 @@ else if (isMapping == false)
 
     protected override void OnInitialized()
     {
-
         string filesPath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\";
         foreach(string filename in fileNames)
         {
@@ -117,7 +114,6 @@ else if (isMapping == false)
         {
             string filename = file.Name.ToString();
             if (filename.Contains("Pricelist") || filename.Contains("Mapping") || filename.Contains("Produkter")) addedString += "'" + file.Name.Remove(file.Name.Length - 5).Replace("_", "") + "' ";
-
         }
         await ContinueClicked();
         LoadingText = "COMPLETE!";
@@ -223,7 +219,6 @@ else if (isMapping == false)
     }
     private async void mapMappingsToDb()
     {
-
         isMapping = true;
         LoadingText = "MAPPING IN PROGESS...";
         await Task.Delay(1);
@@ -239,5 +234,8 @@ else if (isMapping == false)
         isMapping = false;
         await Task.Delay(1);
         StateHasChanged();
+
+        await Task.Delay(2000);
+        NavManager.NavigateTo("/match");
     }
 }

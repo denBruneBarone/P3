@@ -18,7 +18,6 @@
                 counter = 0;
                 disableContinue = false;
             }
-
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -262,13 +261,6 @@
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
                                                     }
-                                                    else if (prop.Name == "Target")
-                                                    {
-                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
-                                                        {
-                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
-                                                        }
-                                                    }
                                                     else
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
@@ -294,7 +286,7 @@
 
 <div id="accIgnContainer">
     <div id="acceptIgnore">
-        <button onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn-lg">Ignore</button>
+        <button onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn-lg" disabled="@reverseIgnore">Ignore</button>
         <button onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn-lg" disabled="@reverseAccepted">Accept</button>
     </div>
 </div>
@@ -329,6 +321,7 @@
     bool suggestionsOff = true;
     bool matchprodCheckStatus = false;
     bool accepted = false;
+    bool reverseIgnore = false;
     bool reverseAccepted = true;
     bool ignore = false;
     bool disableContinue = true;
@@ -342,6 +335,9 @@
 
         ApplyReset(true);
         UpdateMatch(matchTitle);
+
+        reverseIgnore = IsMapped(products[chosenProduct].Barcode);
+
         await Task.Delay(1);
         StateHasChanged();
         await Task.Delay(1);
@@ -696,7 +692,7 @@
         GetValue(matchTitle);
         suggestedMapping();
     }
- 
+
     /*List of strings, is used to check if product is mapped*/
     private List<string> MappedTitles = new List<string>();
 

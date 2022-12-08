@@ -3,11 +3,11 @@ using System.Text;
 using OfficeOpenXml;
 using System.Threading.Tasks;
 using DataAccessLibrary.Models;
+using SPFAdminSystem.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SPFAdminSystem.Pages.DatabasePages;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using SPFAdminSystem.Data;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -16,6 +16,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public double score { get; set; }
         public Product _product = new();
     }
+
     public class ProductService : IProductService
     {
         private readonly DataContext _context;

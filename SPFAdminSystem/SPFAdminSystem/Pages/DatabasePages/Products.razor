@@ -47,19 +47,11 @@ else
         </tbody>
     </table>
 
-
-
-
-
-
     <h3>AddProduct</h3>
     <input @bind=Id type="text" placeholder="Id" required />
     <input @bind=Title type="text" placeholder="Title" required />
     <button onclick="@InsertProduct">add new product</button>
 }
-
-
-
 
 @code {
     public string Id { get; private set; }
@@ -85,4 +77,3 @@ else
         Console.WriteLine("Product Added");
     }
 }
-
