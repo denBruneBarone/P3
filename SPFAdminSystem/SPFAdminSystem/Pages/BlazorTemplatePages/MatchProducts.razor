@@ -327,6 +327,7 @@
     bool ignore = false;
     bool disableContinue = true;
 
+
     //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
     {
@@ -348,10 +349,10 @@
 
     private async Task continueSequence()
     {
-        foreach (Product product in products)
+        for(int i = 0; i < products.Count; i++)
         {
-            await _db.CreateOrUpdateProduct(product);
-            await _db.CreateOrUpdateMapping(productToMapping(product));
+            await _db.CreateOrUpdateMatchProduct(products[i], matchedProducts[i]);
+            await _db.CreateOrUpdateMapping(productToMapping(products[i]));
         }
         navManager.NavigateTo("/order/overview", true);
     }
@@ -607,6 +608,7 @@
 
         if (ignore == true)
         {
+            matchedProducts.Add("SPFADMINPRODUCTIGNORED");
             ApplyReset(true);
             resetRun = true;
         }
@@ -664,6 +666,7 @@
             // {
             //         products[chosenProduct].Barcode = BarcodeCpy;
             // }
+            matchedProducts.Add(matchSuggestions[chosenMatch].TitleGWS);
         }
 
         if (accepted == false)
@@ -751,6 +754,7 @@
     private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
+    private List<String> matchedProducts = new();
 
     private async void suggestedMapping()
     {
@@ -766,7 +770,6 @@
                 ArriveDate = x.ArriveDate,
                 RemovedFromStockDate = x.RemovedFromStockDate,
                 ProductId = x.ProductId,
-                UserActions = x.UserActions,
                 InHouseTitle = x.InHouseTitle,
                 OrderPrice = x.OrderPrice,
                 StockAmount = x.StockAmount,

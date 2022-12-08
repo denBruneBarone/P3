@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221208085926_productidnullable")]
+    partial class productidnullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -165,7 +167,7 @@ namespace SPFAdminSystem.Migrations
             modelBuilder.Entity("UserAction", b =>
                 {
                     b.HasOne("Product", "Product")
-                        .WithMany()
+                        .WithMany("UserActions")
                         .HasForeignKey("ProductId");
 
                     b.HasOne("User", "User")
@@ -177,6 +179,11 @@ namespace SPFAdminSystem.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.Navigation("UserActions");
                 });
 
             modelBuilder.Entity("User", b =>

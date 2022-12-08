@@ -69,6 +69,22 @@ namespace SPFAdminSystem.Database.ProductFiles
             await _context.SaveChangesAsync();
         }
 
+        public async Task CreateOrUpdateMatchProduct(Product product, string matchproduct)
+        {
+            var dbProduct = await _context.Products.FindAsync(matchproduct);
+            if (dbProduct == null)
+            {
+                //create
+                _context.Products.Add(product);
+            }
+            else
+            {
+                // update /TOTEST
+                dbProduct = product;
+            }
+            await _context.SaveChangesAsync();
+        }
+
 
 
         public async Task InsertExcelProducts(string fileName)
@@ -120,6 +136,24 @@ namespace SPFAdminSystem.Database.ProductFiles
                 // update /TOTEST
                 dbMapping.ProductIdMapping = mapping.ProductIdMapping;
                 
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateOrUpdateMatchMapping(Mapping mapping, string matchmapping)
+        {
+            var dbMapping = await _context.Mappings.FindAsync(matchmapping);
+            if (dbMapping == null)
+            {
+                //create
+
+                _context.Mappings.Add(mapping);
+            }
+            else
+            {
+                // update /TOTEST
+                dbMapping = mapping;
+
             }
             await _context.SaveChangesAsync();
         }
@@ -245,7 +279,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                     }
                     if (isFound == 0)
                     {
-                        prod.ProductId = worksheet.Cells[row, 5].Value.ToString();
                         prod.Barcode = worksheet.Cells[row, 6].Value.ToString();
                         prod.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
                         prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
