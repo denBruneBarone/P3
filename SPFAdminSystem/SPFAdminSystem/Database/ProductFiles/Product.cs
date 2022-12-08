@@ -6,7 +6,11 @@ public class Product
 
     public DateTime? RemovedFromStockDate { get; set; }
 
-    public string? ProductId { get; set; }
+    [Required]
+    [Key]
+    public string ProductId { get; set; }
+
+    public List<UserAction> UserActions { get; set; }
 
     public string? InHouseTitle { get; set; }
 
@@ -22,9 +26,7 @@ public class Product
 
     public int? OrderQuantity { get; set; }
 
-    [Required]
-    [Key]
-    public string TitleGWS { get; set; }
+    public string? TitleGWS { get; set; }
 
     public string? Barcode { get; set; }
 

@@ -24,8 +24,5 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task LoadMappings();
         Task JoinMappingToProducts();
         Task AddToProduct(Mapping mapping);
-        Task CreateOrUpdateMatchProduct(Product product, string matchproduct);
-        Task CreateOrUpdateMatchMapping(Mapping mapping, string matchproduct);
-
     }
 }

@@ -44,7 +44,7 @@ namespace SPFAdminSystem.Migrations
 
             modelBuilder.Entity("Product", b =>
                 {
-                    b.Property<string>("TitleGWS")
+                    b.Property<string>("ProductId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ArriveDate")
@@ -77,9 +77,6 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("Packsize")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("ProductId")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime?>("RemovedFromStockDate")
                         .HasColumnType("TEXT");
 
@@ -89,7 +86,10 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("Target")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("TitleGWS");
+                    b.Property<string>("TitleGWS")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ProductId");
 
                     b.ToTable("Products");
                 });
@@ -165,7 +165,7 @@ namespace SPFAdminSystem.Migrations
             modelBuilder.Entity("UserAction", b =>
                 {
                     b.HasOne("Product", "Product")
-                        .WithMany()
+                        .WithMany("UserActions")
                         .HasForeignKey("ProductId");
 
                     b.HasOne("User", "User")
@@ -177,6 +177,11 @@ namespace SPFAdminSystem.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Product", b =>
+                {
+                    b.Navigation("UserActions");
                 });
 
             modelBuilder.Entity("User", b =>
