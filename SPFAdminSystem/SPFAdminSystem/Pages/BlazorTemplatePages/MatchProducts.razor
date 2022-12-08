@@ -1,4 +1,4 @@
-﻿@using System.Reflection;
+@using System.Reflection;
 @using SPFAdminSystem.Database;
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
@@ -262,6 +262,13 @@
                                                     @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                    }
+                                                    else if (prop.Name == "Target")
+                                                    {
+                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        {
+                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                        }
                                                     }
                                                     else
                                                     {
@@ -560,6 +567,11 @@
                     }
                 }
             }
+            else
+            {
+
+            }
+
         }
         matchprodCheckStatus = false;
     }
@@ -688,6 +700,8 @@
             }
             MappedTitles.Add(products[chosenProduct].Barcode);
         }
+    }
+    public bool disabled = true;
 
         matchTitle = BarcodeCpy;
         if (chosenProduct + 1 < products.Count())

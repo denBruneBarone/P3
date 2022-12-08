@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 public class Product
 {
@@ -35,5 +35,4 @@ public class Product
     public int? MinOrder { get; set; }
 
     public int? Target { get; set; }
-
 }
