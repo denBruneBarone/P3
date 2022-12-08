@@ -3,8 +3,7 @@
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
 @using SPFAdminSystem.Database.ProductFiles;
-@using Excel = Microsoft.Office.Interop.Excel;
-@inject IProductService _db;
+@inject IProductService _db
 @inject NavigationManager navManager
 
 @page "/match"
@@ -362,6 +361,7 @@
         }
         navManager.NavigateTo("/order/overview", true);
     }
+
     private Mapping productToMapping(Product product)
     {
         Mapping mapping = new Mapping();
@@ -567,11 +567,6 @@
                     }
                 }
             }
-            else
-            {
-
-            }
-
         }
         matchprodCheckStatus = false;
     }
@@ -609,12 +604,6 @@
     //"Accept"-button confirms the choice to map an unknown product to a found match
     private void AcceptMatch(Product product, bool ignore)
     {
-        Console.WriteLine("");
-        Console.WriteLine(products[1].TitleGWS);
-        Console.WriteLine(products[1].Barcode);
-        Console.WriteLine("");
-
-
         bool resetRun = false;
 
         if (ignore == true)
@@ -672,18 +661,14 @@
             {
                 products[chosenProduct].ProductId = ProductIdCpy;
             }
-            // if (BarcodeCpy != null && BarcodeCpy != products[chosenProduct].Barcode && BarcodeCpy != "")
-            // {
-            //         products[chosenProduct].Barcode = BarcodeCpy;
-            // }
         }
 
         if (accepted == false)
         {
-            if(IgnoredTitles.Contains(products[chosenProduct].Barcode)){
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode)) {
                 IgnoredTitles.Remove(products[chosenProduct].Barcode);
             }
-            if(MappedTitles.Contains(products[chosenProduct].Barcode)){
+            if (MappedTitles.Contains(products[chosenProduct].Barcode)) {
                 MappedTitles.Remove(products[chosenProduct].Barcode);
             }
             IgnoredTitles.Add(products[chosenProduct].Barcode);
@@ -700,8 +685,7 @@
             }
             MappedTitles.Add(products[chosenProduct].Barcode);
         }
-    }
-    public bool disabled = true;
+        bool disabled = true;
 
         matchTitle = BarcodeCpy;
         if (chosenProduct + 1 < products.Count())
@@ -716,7 +700,7 @@
         GetValue(matchTitle);
         suggestedMapping();
     }
-
+ 
     /*List of strings, is used to check if product is mapped*/
     private List<string> MappedTitles = new List<string>();
 
@@ -795,21 +779,8 @@
                 Target = x.Target
 
     }));
-        /*foreach(Product prod in products){
-            foreach (PropertyInfo prop in prod.GetType().GetProperties())
-            {
-                Product product = new Product();
-                if (prop.Name == "ArriveDate"){
-                    product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
-                }else if(prop.Name == "RemovedFromStockDate"){
-                    product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
-                }
-                prop.
-        }
-        }
-    }*/
 
-        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+    matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
     //Parsing methods

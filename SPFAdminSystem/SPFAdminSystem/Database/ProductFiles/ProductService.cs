@@ -1,12 +1,13 @@
-﻿using DataAccessLibrary.Models;
+﻿using System;
+using System.Text;
+using OfficeOpenXml;
+using System.Threading.Tasks;
+using DataAccessLibrary.Models;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SPFAdminSystem.Pages.DatabasePages;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using OfficeOpenXml;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using SPFAdminSystem.Data;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -29,7 +30,6 @@ namespace SPFAdminSystem.Database.ProductFiles
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
         public List<Product> MatchSuggestions { get; set; } = new List<Product>();
 
-
         public async Task LoadProducts()
         {
             Products = await _context.Products.ToListAsync();
@@ -51,8 +51,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             return product;
         }
 
-
-
         public async Task CreateOrUpdateProduct(Product product)
         {
             var dbProduct = await _context.Products.FindAsync(product.ProductId);
@@ -71,11 +69,16 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbProduct.ArriveDate = product.ArriveDate;
                 dbProduct.AvailableAmount = product.AvailableAmount;
                 dbProduct.InHouseTitle = product.InHouseTitle;
+                dbProduct.OrderAmount = product.OrderAmount;
+                dbProduct.OrderQuantity = product.OrderQuantity;
+                dbProduct.Packsize = product.Packsize;
+                dbProduct.RemovedFromStockDate = product.RemovedFromStockDate;
+                dbProduct.StockAmount = product.StockAmount;
+                dbProduct.Target = product.Target;
+                dbProduct.TitleGWS = product.TitleGWS;
             }
             await _context.SaveChangesAsync();
         }
-
-
 
         public async Task InsertExcelProducts(string fileName)
         {
@@ -114,18 +117,19 @@ namespace SPFAdminSystem.Database.ProductFiles
             if (dbMapping == null)
             {
                 //create
-
                 _context.Mappings.Add(mapping);
             }
-/*            else if (dbMapping.ProductIdMapping.ToString() == "N/A")
+            /* else if (dbMapping.ProductIdMapping.ToString() == "N/A")
             {
-
             }*/
             else
             {
                 // update /TOTEST
-                dbMapping.ProductIdMapping = mapping.ProductIdMapping;
-                
+                dbMapping.Barcode = mapping.Barcode;
+                dbMapping.MinOrder = mapping.MinOrder;
+                dbMapping.PackSize = mapping.PackSize;
+                dbMapping.Target = mapping.Target;
+                dbMapping.TitleGWS = mapping.TitleGWS;
             }
             await _context.SaveChangesAsync();
         }
@@ -215,17 +219,14 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
-
             /*Calls function to assure products from database is in List<Product> Products*/
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
         }
 
-
         public async Task LoadUnknownProducts(string fileName)
         {
-
             /*EPPLUS - Excel functionality*/
             var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
@@ -293,12 +294,9 @@ namespace SPFAdminSystem.Database.ProductFiles
             MatchSuggestions.Add(sortedProdScore[4]._product);
             MatchSuggestions.Add(newProduct._product);
 
-
             return MatchSuggestions;
 
         }
-
-
 
         static double NameMatch(string a, string b)
         {
@@ -380,8 +378,5 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             return score;
         }
-
-
-
     }
 }
