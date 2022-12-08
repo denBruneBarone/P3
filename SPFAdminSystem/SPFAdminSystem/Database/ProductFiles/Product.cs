@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 public class Product
 {
@@ -12,8 +12,7 @@ public class Product
 
     public List<UserAction> UserActions { get; set; }
 
-    [Required]
-    public string InHouseTitle { get; set; }
+    public string? InHouseTitle { get; set; }
 
     public double? OrderPrice { get; set; }
 

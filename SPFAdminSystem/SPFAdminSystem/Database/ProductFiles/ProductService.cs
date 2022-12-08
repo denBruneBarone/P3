@@ -64,7 +64,13 @@ namespace SPFAdminSystem.Database.ProductFiles
             else
             {
                 // update /TOTEST
-                dbProduct.ProductId = product.ProductId;
+                dbProduct.Barcode = product.Barcode;
+                dbProduct.OrderPrice = product.OrderPrice;
+                dbProduct.MinOrder = product.MinOrder;
+                dbProduct.Ordered = product.Ordered;
+                dbProduct.ArriveDate = product.ArriveDate;
+                dbProduct.AvailableAmount = product.AvailableAmount;
+                dbProduct.InHouseTitle = product.InHouseTitle;
             }
             await _context.SaveChangesAsync();
         }
@@ -272,6 +278,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prod._product.Barcode = map.Barcode;
                 prod._product.Packsize = map.PackSize;
                 prod._product.MinOrder = map.MinOrder;
+                prod._product.ProductId = map.ProductIdMapping;
                 prodScore.Add(prod);
             }
 

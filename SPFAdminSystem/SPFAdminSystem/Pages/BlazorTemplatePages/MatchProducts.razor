@@ -1,27 +1,25 @@
-﻿@using System.Reflection;
+@using System.Reflection;
 @using SPFAdminSystem.Database;
-@using SPFAdminSystem.Database.ProductFiles;
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
+@using SPFAdminSystem.Database.ProductFiles;
 @using Excel = Microsoft.Office.Interop.Excel;
 @inject IProductService _db;
-@inject NavigationManager navManager;
+@inject NavigationManager navManager
 
 @page "/match"
-@*/mapping*@
 
 <div id="topSpacer"></div>
 
-<div>
-</div>
-@*<div class="tempButtons">
-    <button @onclick="InsertProduct">Add products</button>
-    <button @onclick="GetUnknownProducts">Add unknown prods</button>
-</div>*@
-<div class="container" style="display:flex; flex-direction: row;">
+<div class="container">
     <div id="productList">
         @{
-            counter = products.Count() - MappedTitles.Count();
+            counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
+            if(counter<=0){
+                counter = 0;
+                disableContinue = false;
+            }
+
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -35,23 +33,27 @@
                 {
                     if (matchTitle == "" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
                     {
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                     }
-                    else if (matchTitle == item.TitleGWS)
+                    else if (matchTitle == item.Barcode)
                     {
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.TitleGWS)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
+                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                         counter++;
                     }
                     else
                     {
-                        if (!IsMapped(item.TitleGWS))
+                        if (IsMapped(item.Barcode))
                         {
-                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
-                            counter++;
+                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                        }
+                        else if (IsIgnored(item.Barcode))
+                        {
+                            <li style="background-color: yellow;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: yellow;" id="listButtons">@item.TitleGWS</button></li>
                         }
                         else
                         {
-                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.TitleGWS); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
+                            counter++;
                         }
                     }
                 }
@@ -65,16 +67,16 @@
 
     @{
         <div id="matchProduct">
-            @*----------------------------------------------------------------------------------------------------------------------*@
             <div id="leftItem">
                 <div id="itemTitle">
                     @{
                         if (matchTitle == "" && products.Count > 0)
                         {
-                            matchTitle = products[0].TitleGWS;
+                            matchTitle = products[0].Barcode;
+                            UpdateMatch(matchTitle);
                         }
                     }
-                    <h1 style="font-weight: 700; font-size: 24px;">@matchTitle</h1> @*dynamisk item title*@
+                    <h1 style="font-weight: 700; font-size: 24px;">@products[chosenProduct].TitleGWS</h1>
                 </div>
                 <div id="currentInfoTitle">
                     <h3 style="text-align: center;">Current match information:</h3>
@@ -83,31 +85,30 @@
                     <div id="currentInfo">
                         <ul id="matchListLeft">
                             @{
-                                if (InHouseTitleString == InHouseCommit && InHouseCommit != "")
-                                {
-                                    inHouseTitleUpdated = true;
-                                }
-                                else
-                                {
-                                    inHouseTitleUpdated = false;
-                                }
-
-                                if (targetString == targetBuffer && targetBuffer != "")
-                                {
-                                    targetUpdated = true;
-                                }
-                                else
-                                {
-                                    targetUpdated = false;
-                                }
-
                                 if (products.Count() > 0)
                                 {
                                     if (matchTitle != "")
                                     {
                                         foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
                                         {
-                                            if (prop.Name.ToLower() == "target" && targetUpdated == true || prop.Name.ToLower() == "inhousetitle" && inHouseTitleUpdated == true)
+                                            if (sameTitle == true && prop.Name.ToLower() == "titlegws")
+                                            {
+                                                <li style="color: red; font-weight: 700;" id="itemLiTitles">@prop.Name</li>
+                                                sameTitle = false;
+                                            }
+                                            else if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
+                                            prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != "" && InHouseTitleCpy != products[chosenProduct].InHouseTitle ||
+                                            prop.Name.ToLower() == "productid" && ProductIdCpy != "" && ProductIdCpy != products[chosenProduct].ProductId ||
+                                            prop.Name.ToLower() == "orderprice" && OrderPriceCpy != -1 && OrderPriceCpy != products[chosenProduct].OrderPrice ||
+                                            prop.Name.ToLower() == "stockamount" && StockAmountCpy != -1 && StockAmountCpy != products[chosenProduct].StockAmount ||
+                                            prop.Name.ToLower() == "orderamount" && OrderAmountCpy != -1 && OrderAmountCpy != products[chosenProduct].OrderAmount ||
+                                            prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != -1 && AvailableAmountCpy != products[chosenProduct].AvailableAmount ||
+                                            prop.Name.ToLower() == "ordered" && OrderedCpy != -1 && OrderedCpy != products[chosenProduct].Ordered ||
+                                            prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != -1 && OrderQuantityCpy != products[chosenProduct].OrderQuantity ||
+                                            prop.Name.ToLower() == "titlegws" && TitleGWSCpy != "" && TitleGWSCpy != products[chosenProduct].TitleGWS ||
+                                            prop.Name.ToLower() == "barcode" && BarcodeCpy != "" && BarcodeCpy != products[chosenProduct].Barcode ||
+                                            prop.Name.ToLower() == "packsize" && PacksizeCpy != -1 && PacksizeCpy != products[chosenProduct].Packsize ||
+                                            prop.Name.ToLower() == "minorder" && MinOrderCpy != -1 && MinOrderCpy != products[chosenProduct].MinOrder)
                                             {
                                                 <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
                                             }
@@ -130,33 +131,65 @@
                                     {
                                         foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
                                         {
-                                            if (prop.GetValue(products[chosenProduct], null) != null)
+                                            if (prop.Name == "ArriveDate" && ArriveDateCpy != null)
                                             {
-                                                if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStockDate" || prop.Name == "UserActions")
-                                                {
-                                                    <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString().Substring(0,10)</li>
-                                                }
-                                                else
-                                                {
-                                                    if (prop.Name == "Target")
-                                                    {
-                                                        <input type="text" inputmode="numeric" id="inputEditsTarget" autocomplete="off" @bind="@targetString" @oninput="@((e) => {targetString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                                        @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
-
-                                                        <input type="submit" hidden />
-                                                    }
-                                                    else if (prop.Name == "InHouseTitle")
-                                                    {
-                                                        <input type="text" id="inputEditsInHouseTitle" autocomplete="off" @bind="@InHouseTitleString" @oninput="@((e) => {InHouseTitleString=(string)e.Value; titleOfEdit = prop.Name;})"
-                                                        @onkeydown="@Enter" placeholder="@prop.GetValue(products[chosenProduct], null).ToString()" />
-
-                                                        <input type="submit" hidden />
-                                                    }
-                                                    else
-                                                    {
-                                                        <li id="itemLi">@prop.GetValue(products[chosenProduct], null).ToString()</li>
-                                                    }
-                                                }
+                                                <li id="itemLi">@ArriveDateCpy.ToString().Substring(0,10)</li>
+                                            }
+                                            else if (prop.Name == "RemovedFromStockDate" && RemovedFromStockDateCpy != null)
+                                            {
+                                                <li id="itemLi">@RemovedFromStockDateCpy.ToString().Substring(0,10)</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != null)
+                                            {
+                                                <li id="itemLi">@InHouseTitleCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "productid" && ProductIdCpy != null)
+                                            {
+                                                <li id="itemLi">@ProductIdCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "orderprice" && OrderPriceCpy != null)
+                                            {
+                                                <li id="itemLi">@OrderPriceCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "stockamount" && StockAmountCpy != null)
+                                            {
+                                                <li id="itemLi">@StockAmountCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "orderamount" && OrderAmountCpy != null)
+                                            {
+                                                <li id="itemLi">@OrderAmountCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != null)
+                                            {
+                                                <li id="itemLi">@AvailableAmountCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "ordered" && OrderedCpy != null)
+                                            {
+                                                <li id="itemLi">@OrderedCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != null)
+                                            {
+                                                <li id="itemLi">@OrderQuantityCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "titlegws" && TitleGWSCpy != null)
+                                            {
+                                                <li id="itemLi">@TitleGWSCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "barcode" && BarcodeCpy != null)
+                                            {
+                                                <li id="itemLi">@BarcodeCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "packsize" && PacksizeCpy != null)
+                                            {
+                                                <li id="itemLi">@PacksizeCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "minorder" && MinOrderCpy != null)
+                                            {
+                                                <li id="itemLi">@MinOrderCpy.ToString()</li>
+                                            }
+                                            else if (prop.Name.ToLower() == "target" && TargetCpy != null)
+                                            {
+                                                <li id="itemLi">@TargetCpy.ToString()</li>
                                             }
                                             else
                                             {
@@ -170,8 +203,7 @@
                     </div>
                 </div>
                 <div id="ignoreApplyButtons">
-                    <button class="btn btn-danger">IGNORE PRODUCT</button>
-                    <button class="btn btn-warning" @onclick="@IgnoreChanges">Undo Changes</button>
+                    <button onclick=@(()=>ApplyReset(true)) class="btn btn-warning">Reset</button>
                 </div>
             </div>
 
@@ -190,15 +222,18 @@
                     <div id="rightAuxItems">
                         <div id="dropdownId">
                             <select name="matches" id="matches" @onchange="checkIfMatchChosen">
-                                @foreach (Product item in matchSuggestions)
-                                {
-                                    if (item == matchSuggestions[5])
+                                @{
+                                    int i = 0;
+
+                                    foreach (Product item in matchSuggestions)
                                     {
-                                        <option value="new">-- ADD AS NEW PRODUCT --</option>
-                                    }
-                                    else
-                                    {
+                                        i++;
                                         <option value="@item.TitleGWS">@item.TitleGWS</option>
+
+                                        if (i == 20)
+                                        {
+                                            <option></option>
+                                        }
                                     }
                                 }
                             </select>
@@ -214,14 +249,10 @@
                             @{
                                 foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                 {
-                                    <div class="w-100" style="padding: 0; margin: 0;">
-                                    <li style="display: flex; justify-content: space-between; padding-left: 0; margin-left: 0;">
+                                    <div class="w-100">
+                                    <li style="display: flex; justify-content: space-between;">
                                         <div>
-                                                @if (!checkboxclearer)
-                                                {
-                                                <input class="form-check-input" type="checkbox" id="@prop.Name-checkbox" @onchange="eventArgs => { CheckboxClicked(prop, eventArgs.Value); }">
-                                                }
-                                            <label class="form-check-label" for="@prop.Name-checkbox">
+                                            <label class="form-check-label" for="@prop.Name">
                                                     @prop.Name
                                             </label>
                                         </div>
@@ -244,13 +275,6 @@
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
                                                     }
                                                 }
-                                                else if (matchSuggestions[chosenMatch].TitleGWS == "new")
-                                                {
-                                                    if (prop.Name == "Target")
-                                                    {
-                                                    <input type="text" placeholder="SPECIFY TARGET"/>
-                                                    }
-                                                }
                                         </div>
                                     </li>
                             </div>
@@ -260,338 +284,84 @@
                 </div>
             </div>
             <div id="ignoreApplyButtons">
-                <button onclick=@(()=>AddProperties(products[chosenProduct])) class="btn btn-success">Apply</button>
+                <button onclick=@(()=>ApplyReset(false)) class="btn btn-success">Apply</button>
             </div>
         </div>
     </div>
     }
-
-    @*----------------------------------------------------------------------------------------------------------------------*@
-
-    @*<div id="browseBtn">
-    <button id="browseBtnBlue">Browse all products</button>
-    </div>*@
-
-    @*----------------------------------------------------------------------------------------------------------------------*@
-
-
-</div>
-
-<div id="changeOverview">
-    @{
-        if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "" || targetCommit != products[chosenProduct].Target && InHouseCommit != "" && targetCommit != -1)
-        {
-            <h3>Changes Overview:</h3>
-            <p></p>
-        }
-        if (InHouseCommit != products[chosenProduct].InHouseTitle && InHouseCommit != "")
-        {
-            <p style="font-weight: 700">InHouseTitle: "@products[chosenProduct].InHouseTitle" → "@InHouseCommit"</p>
-        }
-        if (targetCommit != products[chosenProduct].Target && targetCommit != -1)
-        {
-            <p style="font-weight: 700">Target: "@products[chosenProduct].Target" → "@targetCommit"</p>
-        }
-    }
 </div>
 
 @*----------------------------------------------------------------------------------------------------------------------*@
 
-@*----------------------------------------------------------------------------------------------------------------------*@
-@*
-    Accept button for after applying changes
-*@
-<div class="w-100" style="display: flex; justify-content: center; align-items: center;">
-    <div class="w-25" style="display: flex; justify-content: space-between;">
-        <button class="btn btn-danger btn-lg">CANCEL</button>
-        <button class="btn btn-primary btn-lg" disabled="@disabled" @onclick="@nextPage">CONTINUE</button>
+<div id="accIgnContainer">
+    <div id="acceptIgnore">
+        <button onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn-lg">Ignore</button>
+        <button onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn-lg" disabled="@reverseAccepted">Accept</button>
     </div>
 </div>
 
+<div id="continueBtnContainer">
+    <button class="btn btn-primary btn-lg" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
+</div>
 
 @*----------------------------------------------------------------------------------------------------------------------*@
 
-
-
-
 @code {
-    bool checkboxclearer = false;
+    //Variables that are used as the buffer between applied match and accepted match
+    bool sameTitle = false;
+    int? StockAmountCpy = -1;
+    int? OrderAmountCpy = -1;
+    int? AvailableAmountCpy = -1;
+    int? OrderedCpy = -1;
+    int? OrderQuantityCpy = -1;
+    int? PacksizeCpy = -1;
+    int? MinOrderCpy = -1;
+    int? TargetCpy = -1;
+    double? OrderPriceCpy = -1;
+    string TitleGWSCpy = "";
+    string InHouseTitleCpy = "";
+    string ProductIdCpy = "";
+    string BarcodeCpy = "";
+    DateTime? ArriveDateCpy;
+    DateTime? RemovedFromStockDateCpy;
+
     int counter = 0;
     string matchTitle = "";
-    string titleOfEdit = "";
+    bool suggestionsOff = true;
     bool matchprodCheckStatus = false;
-    private async void nextPage()
-    {
-        navManager.NavigateTo("/Overview", true);
-    }
+    bool accepted = false;
+    bool reverseAccepted = true;
+    bool ignore = false;
+    bool disableContinue = true;
 
+    //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
     {
+
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+
+        accepted = false;
+
         matchTitle = item;
 
-        IgnoreChanges();
+        ApplyReset(true);
         UpdateMatch(matchTitle);
-        checkboxclearer = true;
         await Task.Delay(1);
         StateHasChanged();
-        checkboxclearer = false;
         await Task.Delay(1);
         StateHasChanged();
     }
 
-    int chosenProduct = 0;
-    int chosenMatch = 0;
-
-    private void UpdateMatch(string currentProduct)
-    {
-        for (int i = 0; i < products.Count(); i++)
-        {
-            foreach (PropertyInfo prop in products[i].GetType().GetProperties())
-            {
-                if (prop.GetValue(products[i], null) != null)
-                {
-                    if (products[i].TitleGWS == matchTitle && chosenProduct != i)
-                    {
-                        chosenProduct = i;
-                    }
-                }
-            }
-        }
-        matchprodCheckStatus = false;
-    }
-
-    private void UpdateMatchTitle(string updatedTitle)
-    {
-        matchTitle = updatedTitle;
-    }
-
-    List<Product> tempProperties = new();
-    private void AddProperties(Product product)
-    {
-        disabled = allUnknownMapped();
-        Product? tempProd = null;
-        foreach (PropertyInfo prop in checkedProperties)
-        {
-            try
-            {
-                tempProd = (Product)tempProperties.Where(tempprop => tempprop.TitleGWS == product.TitleGWS).First();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            if (tempProd == null)
-                tempProperties.Add(product);
-            else
-            {
-                tempProperties.Remove(product);
-                tempProperties.Add(product);
-            }
-            prop.SetValue(product, prop.GetValue(matchSuggestions[chosenMatch], null), null);
-            products[chosenProduct] = product;
-        }
-        StateHasChanged();
-        AcceptMatch();
-        if (IsMapped(product.TitleGWS))
-        {
-            Console.WriteLine("It's already mapped!");
-        }
-        else
-        {
-            MappedTitles.Add(product.TitleGWS);
-            Console.WriteLine("Mapping accepted and saved!");
-        }
-    }
-
-    int val = 0;
-    int? targetCommit = -1;
-    bool targetUpdated = false;
-    bool inHouseTitleUpdated = false;
-    string targetString = "";
-    string commitedChange = "";
-    string targetBuffer = "";
-    string InHouseTitleString = "";
-    string InHouseCommit = "";
-
-    List<PropertyInfo> checkedProperties = new();
-    List<bool> checkboxValues = new();
-    private void CheckboxClicked(PropertyInfo prop, object checkedValue)
-    {
-        if ((bool)checkedValue)
-        {
-            if (!checkedProperties.Contains(prop))
-            {
-                checkedProperties.Add(prop);
-            }
-        }
-        else
-        {
-            if (checkedProperties.Contains(prop))
-            {
-                checkedProperties.Remove(prop);
-            }
-        }
-
-    }
-
-    private void Enter(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            if (titleOfEdit.ToLower() == "target")
-            {
-                if (targetString == "")
-                {
-                    targetUpdated = false;
-                    targetCommit = products[chosenProduct].Target;
-                }
-                else
-                {
-                    targetBuffer = targetString;
-                    Int32.TryParse(targetString, out val);
-                    if (val > 0)
-                    {
-                        targetCommit = Convert.ToInt32(targetString);
-                    }
-                    if (targetCommit != products[chosenProduct].Target && targetCommit >= 0)
-                    {
-                        targetUpdated = true;
-                    }
-                    else
-                    {
-                        targetUpdated = false;
-                        targetCommit = products[chosenProduct].Target;
-                    }
-                }
-            }
-            else if (titleOfEdit.ToLower() == "inhousetitle")
-            {
-                if (InHouseTitleString == null || InHouseTitleString == "" || InHouseTitleString == products[chosenProduct].InHouseTitle)
-                {
-                    inHouseTitleUpdated = false;
-                }
-                else
-                {
-                    InHouseCommit = InHouseTitleString;
-                    inHouseTitleUpdated = true;
-                }
-            }
-        }
-    }
-
-    private void getChosenMatchIndex(string dropDownList)
-    {
-        for (int t = 0; t < matchSuggestions.Count(); t++)
-        {
-            if (dropDownList == matchSuggestions[t].TitleGWS)
-            {
-                chosenMatch = t;
-                break;
-            }
-            else
-            {
-
-            }
-
-        }
-    }
-
-    string dropDownList = "";
-
-    private void checkIfMatchChosen(ChangeEventArgs e)
-    {
-        dropDownList = e.Value.ToString();
-
-        if (dropDownList != "" && dropDownList != null)
-        {
-            getChosenMatchIndex(dropDownList);
-        }
-        updateJustBooted();
-    }
-
-    private void ApplyChanges()
-    {
-        if (targetCommit >= 0)
-        {
-            products[chosenProduct].Target = targetCommit;
-        }
-        if (InHouseCommit != "" && InHouseCommit != products[chosenProduct].InHouseTitle)
-        {
-            products[chosenProduct].InHouseTitle = InHouseCommit;
-            UpdateMatchTitle(InHouseCommit);
-        }
-
-        IgnoreChanges();
-    }
-
-    private void IgnoreChanges()
-    {
-        targetString = "";
-        targetUpdated = false;
-        InHouseTitleString = "";
-        inHouseTitleUpdated = false;
-    }
-
-    /*List of strings, is used to check if product is mapped*/
-    private List<string> MappedTitles = new List<string>();
-
-    /*Function for accepting mapping proposal*/
-    private async void AcceptMatch()
-    {
-
-        string title = products[chosenProduct].TitleGWS;
-        /*To create or update the new product, in the product database*/
-        if (products[chosenProduct].ProductId != null && products[chosenProduct].ProductId != string.Empty)
-        {
-
-            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
-            {
-
-                if (prop.Name.ToString() == "TitleGWS" && prop.GetValue(products[chosenProduct], null) != null)
-                {
-                    products[chosenProduct].InHouseTitle = prop.GetValue(products[chosenProduct], null).ToString();
-                }
-
-            }
-
-            await _db.CreateOrUpdateProduct(products[chosenProduct]);
-            await _db.CreateOrUpdateMapping(productToMapping(products[chosenProduct]));
-        }
-    }
-    public bool disabled = true;
-
-    private bool allUnknownMapped()
+    private async Task continueSequence()
     {
         foreach (Product product in products)
         {
-            if (!MappedTitles.Contains(product.TitleGWS))
-            {
-                return true;
-            }
+            await _db.CreateOrUpdateProduct(product);
+            await _db.CreateOrUpdateMapping(productToMapping(product));
         }
-        return false;
+        navManager.NavigateTo("/order/overview", true);
     }
-
-    /*Check if title is in MappedTitles list*/
-    private bool IsMapped(string title)
-    {
-        if (MappedTitles.Count() > 0)
-        {
-            foreach (string prodTitle in MappedTitles)
-            {
-                if (title == prodTitle)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     private Mapping productToMapping(Product product)
     {
         Mapping mapping = new Mapping();
@@ -624,38 +394,445 @@
         }
         return mapping;
     }
+    //Method to Apply a match if "Apply"-button pressed or
+    //reset values in left box when "reset"-button is pressed, if "Apply" has already been pressed
+    private void ApplyReset(bool reset)
+    {
+        int index = 0;
 
+        if (reset == true)
+        {
+            resetOrApply = products;
+            index = chosenProduct;
+            accepted = false;
+            reverseAccepted = true;
+        }
+        else
+        {
+            resetOrApply = matchSuggestions;
+            index = chosenMatch;
+            accepted = true;
+            reverseAccepted = false;
+        }
+
+        foreach (PropertyInfo prop in resetOrApply[index].GetType().GetProperties())
+        {
+            if (prop.Name.ToLower() == "titlegws" && prop.GetValue(resetOrApply[index], null) != null)
+            {
+                TitleGWSCpy = prop.GetValue(resetOrApply[index], null).ToString();
+            }
+            else if (prop.Name.ToLower() == "inhousetitle" && prop.GetValue(resetOrApply[index], null) != null)
+            {
+                InHouseTitleCpy = prop.GetValue(resetOrApply[index], null).ToString();
+            }
+            else if (prop.Name.ToLower() == "productid" && prop.GetValue(resetOrApply[index], null) != null)
+            {
+                ProductIdCpy = prop.GetValue(resetOrApply[index], null).ToString();
+            }
+            // else if (prop.Name.ToLower() == "barcode" && prop.GetValue(resetOrApply[index], null) != null)
+            // {
+            //     BarcodeCpy = prop.GetValue(resetOrApply[index], null).ToString();
+            // }
+            else if (prop.Name.ToLower() == "target")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    TargetCpy = temp;
+                }
+                else
+                {
+                    TargetCpy = products[chosenProduct].Target;
+                }
+            }
+            else if (prop.Name.ToLower() == "orderprice")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    OrderPriceCpy = temp;
+                }
+                else
+                {
+                    OrderPriceCpy = products[chosenProduct].OrderPrice;
+                }
+            }
+            else if (prop.Name.ToLower() == "stockamount")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    StockAmountCpy = temp;
+                }
+                else
+                {
+                    StockAmountCpy = products[chosenProduct].StockAmount;
+                }
+            }
+            else if (prop.Name.ToLower() == "availableamount")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    AvailableAmountCpy = temp;
+                }
+                else
+                {
+                    AvailableAmountCpy = products[chosenProduct].AvailableAmount;
+                }
+            }
+            else if (prop.Name.ToLower() == "ordered")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    OrderedCpy = temp;
+                }
+                else
+                {
+                    OrderedCpy = products[chosenProduct].Ordered;
+                }
+            }
+            else if (prop.Name.ToLower() == "orderquantity")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    OrderQuantityCpy = temp;
+                }
+                else
+                {
+                    OrderQuantityCpy = products[chosenProduct].OrderQuantity;
+                }
+            }
+            else if (prop.Name.ToLower() == "packsize")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    PacksizeCpy = temp;
+                }
+                else
+                {
+                    PacksizeCpy = products[chosenProduct].Packsize;
+                }
+            }
+            else if (prop.Name.ToLower() == "minorder")
+            {
+                if (prop.GetValue(resetOrApply[index], null) != null)
+                {
+                    int? temp = StringToInt(prop.GetValue(resetOrApply[index], null).ToString());
+                    MinOrderCpy = temp;
+                }
+                else
+                {
+                    MinOrderCpy = products[chosenProduct].MinOrder;
+                }
+            }
+        }
+    }
+
+    int chosenProduct = 0;
+    int chosenMatch = 0;
+
+    //This updates the index that is used when deciding which product has been chosen
+    private void UpdateMatch(string currentProduct)
+    {
+        for (int i = 0; i < products.Count(); i++)
+        {
+            foreach (PropertyInfo prop in products[i].GetType().GetProperties())
+            {
+                if (prop.GetValue(products[i], null) != null)
+                {
+                    if (products[i].Barcode == matchTitle)
+                    {
+                        chosenProduct = i;
+
+                        //Copy of all product variables - buffer before accepting match changes
+                        StockAmountCpy = products[chosenProduct].StockAmount;
+                        OrderPriceCpy = products[chosenProduct].OrderPrice;
+                        OrderAmountCpy = products[chosenProduct].OrderAmount;
+                        AvailableAmountCpy = products[chosenProduct].AvailableAmount;
+                        OrderedCpy = products[chosenProduct].Ordered;
+                        OrderQuantityCpy = products[chosenProduct].OrderQuantity;
+                        PacksizeCpy = products[chosenProduct].Packsize;
+                        MinOrderCpy = products[chosenProduct].MinOrder;
+                        TargetCpy = products[chosenProduct].Target;
+                        TitleGWSCpy = products[chosenProduct].TitleGWS;
+                        InHouseTitleCpy = products[chosenProduct].InHouseTitle;
+                        ProductIdCpy = products[chosenProduct].ProductId;
+                        BarcodeCpy = products[chosenProduct].Barcode;
+                        ArriveDateCpy = products[chosenProduct].ArriveDate;
+                        RemovedFromStockDateCpy = products[chosenProduct].RemovedFromStockDate;
+                    }
+                }
+            }
+            else
+            {
+
+            }
+
+        }
+        matchprodCheckStatus = false;
+    }
+
+    string dropDownList = "";
+
+    //This creates the index for when a match has been chosen (used with matchSuggestions[])
+    private void checkIfMatchChosen(ChangeEventArgs e)
+    {
+        bool valid = false;
+
+        dropDownList = e.Value.ToString();
+
+        if (dropDownList != "" && dropDownList != null && dropDownList.ToLower() != "new product")
+        {
+            valid = true;
+        }
+
+        if (valid == true)
+        {
+            for (int t = 0; t < matchSuggestions.Count(); t++)
+            {
+                if (dropDownList == matchSuggestions[t].TitleGWS)
+                {
+                    chosenMatch = t;
+                    break;
+                }
+            }
+        }
+
+        valid = false;
+        updateJustBooted();
+    }
+
+    //"Accept"-button confirms the choice to map an unknown product to a found match
+    private void AcceptMatch(Product product, bool ignore)
+    {
+        Console.WriteLine("");
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+        Console.WriteLine("");
+
+
+        bool resetRun = false;
+
+        if (ignore == true)
+        {
+            ApplyReset(true);
+            resetRun = true;
+        }
+        if (ignore != true)
+        {
+            if (TitleGWSCpy != null && TitleGWSCpy != products[chosenProduct].TitleGWS && TitleGWSCpy != "")
+            {
+                products[chosenProduct].TitleGWS = TitleGWSCpy;
+            }
+            if (InHouseTitleCpy != null && InHouseTitleCpy != products[chosenProduct].InHouseTitle && InHouseTitleCpy != "")
+            {
+                products[chosenProduct].InHouseTitle = InHouseTitleCpy;
+            }
+            if (TargetCpy != null && TargetCpy != products[chosenProduct].Target && TargetCpy != -1)
+            {
+                products[chosenProduct].Target = TargetCpy;
+            }
+            if (OrderAmountCpy != null && OrderAmountCpy != products[chosenProduct].OrderAmount && OrderAmountCpy != -1)
+            {
+                products[chosenProduct].OrderAmount = OrderAmountCpy;
+            }
+            if (AvailableAmountCpy != null && AvailableAmountCpy != products[chosenProduct].AvailableAmount && AvailableAmountCpy != -1)
+            {
+                products[chosenProduct].AvailableAmount = AvailableAmountCpy;
+            }
+            if (OrderPriceCpy != null && OrderPriceCpy != products[chosenProduct].OrderPrice && OrderPriceCpy != -1)
+            {
+                products[chosenProduct].OrderPrice = OrderPriceCpy;
+            }
+            if (OrderedCpy != null && OrderedCpy != products[chosenProduct].Ordered && OrderedCpy != -1)
+            {
+                products[chosenProduct].Ordered = OrderedCpy;
+            }
+            if (StockAmountCpy != null && StockAmountCpy != products[chosenProduct].StockAmount && StockAmountCpy != -1)
+            {
+                products[chosenProduct].StockAmount = StockAmountCpy;
+            }
+            if (PacksizeCpy != null && PacksizeCpy != products[chosenProduct].Packsize && PacksizeCpy != -1)
+            {
+                products[chosenProduct].Packsize = PacksizeCpy;
+            }
+            if (MinOrderCpy != null && MinOrderCpy != products[chosenProduct].MinOrder && MinOrderCpy != -1)
+            {
+                products[chosenProduct].MinOrder = MinOrderCpy;
+            }
+            if (OrderQuantityCpy != null && OrderQuantityCpy != products[chosenProduct].OrderQuantity && OrderQuantityCpy != -1)
+            {
+                products[chosenProduct].OrderQuantity = OrderQuantityCpy;
+            }
+            if (ProductIdCpy != null && ProductIdCpy != products[chosenProduct].ProductId && ProductIdCpy != "")
+            {
+                products[chosenProduct].ProductId = ProductIdCpy;
+            }
+            // if (BarcodeCpy != null && BarcodeCpy != products[chosenProduct].Barcode && BarcodeCpy != "")
+            // {
+            //         products[chosenProduct].Barcode = BarcodeCpy;
+            // }
+        }
+
+        if (accepted == false)
+        {
+            if(IgnoredTitles.Contains(products[chosenProduct].Barcode)){
+                IgnoredTitles.Remove(products[chosenProduct].Barcode);
+            }
+            if(MappedTitles.Contains(products[chosenProduct].Barcode)){
+                MappedTitles.Remove(products[chosenProduct].Barcode);
+            }
+            IgnoredTitles.Add(products[chosenProduct].Barcode);
+        }
+        else
+        {
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode))
+            {
+                IgnoredTitles.Remove(products[chosenProduct].Barcode);
+            }
+            if (MappedTitles.Contains(products[chosenProduct].Barcode))
+            {
+                MappedTitles.Remove(products[chosenProduct].Barcode);
+            }
+            MappedTitles.Add(products[chosenProduct].Barcode);
+        }
+    }
+    public bool disabled = true;
+
+        matchTitle = BarcodeCpy;
+        if (chosenProduct + 1 < products.Count())
+        {
+            matchTitle = products[chosenProduct + 1].Barcode;
+        }
+        else
+        {
+            matchTitle = products[0].Barcode;
+        }
+
+        GetValue(matchTitle);
+        suggestedMapping();
+    }
+
+    /*List of strings, is used to check if product is mapped*/
+    private List<string> MappedTitles = new List<string>();
+
+    /*Check if title is in MappedTitles list*/
+    private bool IsMapped(string barcode)
+    {
+        if (MappedTitles.Count() > 0)
+        {
+            foreach (string prodBarcode in MappedTitles)
+            {
+                if (barcode == prodBarcode)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    private List<string> IgnoredTitles = new List<string>();
+    private bool IsIgnored(string barcode)
+    {
+        if (IgnoredTitles.Count() > 0)
+        {
+            foreach (string prodBarcode in IgnoredTitles)
+            {
+                if (barcode == prodBarcode)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
     /*Get products from database and insert products into database*/
-
     private List<Product> products = new();
-
-
-    private List<Product> UnknownProducts = new();
+    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
-
-    private List<Product> productsTemp = new();
+    private List<Product> resetOrApply = new();
 
     private async void suggestedMapping()
     {
         matchSuggestions.Clear();
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
-
     }
 
     protected override async Task OnInitializedAsync()
     {
         //await _db.LoadProducts();
         products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        productsBackup = new List<Product>(products.Select(x => new Product() {
+                ArriveDate = x.ArriveDate,
+                RemovedFromStockDate = x.RemovedFromStockDate,
+                ProductId = x.ProductId,
+                UserActions = x.UserActions,
+                InHouseTitle = x.InHouseTitle,
+                OrderPrice = x.OrderPrice,
+                StockAmount = x.StockAmount,
+                OrderAmount = x.OrderAmount,
+                AvailableAmount = x.AvailableAmount,
+                Ordered = x.Ordered,
+                OrderQuantity = x.OrderQuantity,
+                TitleGWS = x.TitleGWS,
+                Barcode = x.Barcode,
+                Packsize = x.Packsize,
+                MinOrder = x.MinOrder,
+                Target = x.Target
+
+    }));
+        /*foreach(Product prod in products){
+            foreach (PropertyInfo prop in prod.GetType().GetProperties())
+            {
+                Product product = new Product();
+                if (prop.Name == "ArriveDate"){
+                    product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
+                }else if(prop.Name == "RemovedFromStockDate"){
+                    product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
+                }
+                prop.
+        }
+        }
+    }*/
+
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
+    //Parsing methods
+    private DateTime? stringToDateTime(string dateTime)
+    {
+        DateTime dt = DateTime.ParseExact(dateTime, "dd-MM-yyyy", null);
 
+        return dt;
+    }
 
+    private int? StringToInt(string str)
+    {
+        int? parsedInt = 0;
+        Int32.TryParse(str, out int x);    // or, use `int.TryParse()`
+
+        if (x > 0)
+        {
+            parsedInt = int.Parse(str);
+            return parsedInt;
+        }
+        else
+        {
+            return parsedInt;
+        }
+    }
 }
-@*
-#b2dab6 - grøn
-#e6bdbc - m.rød
-#f3cac9 - l.rød
-#0288d1 - blå
-*@
