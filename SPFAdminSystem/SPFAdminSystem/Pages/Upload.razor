@@ -1,5 +1,6 @@
 ﻿@page "/upload"
 @using System.IO
+@attribute [Authorize(Roles = "Admin, Employee")];
 @inject IWebHostEnvironment env
 @inject NavigationManager NavManager
 @using SPFAdminSystem.Database;
@@ -20,7 +21,7 @@
             <div class="upload-button">
                 <label for="fileinput" class="label-wrapper">
                     <span class="oi oi-paperclip"></span>
-                    Upload price list file
+                    Upload mapping, price list, and produkter
                     <InputFile OnChange="HandleSelectedFile" multiple id="fileinput" style="width:0; height:0; overflow: hidden;" />
                 </label>
             </div>

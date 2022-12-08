@@ -7,6 +7,7 @@
 @using System.Reflection;
 @using OfficeOpenXml;
 @using Microsoft.AspNetCore.Http;
+@attribute [Authorize(Roles = "Admin, Employee")];
 
 @using Microsoft.AspNetCore.Mvc;
 @inject IProductService database

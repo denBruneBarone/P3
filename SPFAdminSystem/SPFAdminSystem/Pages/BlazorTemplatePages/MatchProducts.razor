@@ -3,6 +3,7 @@
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
 @using SPFAdminSystem.Database.ProductFiles;
+@attribute [Authorize(Roles = "Admin, Employee")];
 @inject IProductService _db
 @inject NavigationManager navManager
 
