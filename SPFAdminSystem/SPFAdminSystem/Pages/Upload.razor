@@ -35,10 +35,11 @@
     <FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
 
 </center>
+<p id="productcounter">@productscount</p>
+<p id="mergingstate">@mergestate</p>
+<p id="mappingcounter">@mappingcount</p>
 
-
-
-<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
+<button onclick="@mapMappingsToDb" class="btn btn-primary" id="MERGEBUTTON">Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
     <p>Loading....</p>
@@ -63,6 +64,9 @@ else if (isMapping == false)
     bool mappingUnavailable = true;
     public bool? isMapping;
     public bool isUploading = false;
+    int productscount;
+    int mappingcount;
+    string mergestate = "merging";
     string[] fileNames =
         {
             "Pricelist Europe__3.xlsx",
@@ -127,6 +131,12 @@ else if (isMapping == false)
         isUploading = false;
         await Task.Delay(1);
         this.StateHasChanged();
+        await _productDb.LoadProducts();
+        List<Product> productlist = _productDb.GetProducts();
+        productscount = productlist.Count;
+        await _productDb.LoadMappings();
+        List<Mapping> mappinglist = _productDb.GetMappings();
+        mappingcount = mappinglist.Count;
     }
     private async Task ContinueClicked()
     {
@@ -232,6 +242,13 @@ else if (isMapping == false)
         await insertMappingInDb();
         await _productDb.JoinMappingToProducts();
         LoadingText = "COMPLETE!";
+        mergestate = "done";
+        await _productDb.LoadProducts();
+        List<Product> productlist = _productDb.GetProducts();
+        productscount = productlist.Count;
+        await _productDb.LoadMappings();
+        List<Mapping> mappinglist = _productDb.GetMappings();
+        mappingcount = mappinglist.Count;
         await Task.Delay(1);
         StateHasChanged();
         await Task.Delay(500);

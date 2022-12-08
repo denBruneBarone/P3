@@ -80,7 +80,8 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task InsertExcelProducts(string fileName)
         {
             List<Product> products = new();
-            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + fileName;
+            var FilePath = $"C:\\Users\\peter\\source\\repos\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\" + fileName;
+            Console.WriteLine(FilePath);
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo))
@@ -133,7 +134,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task InsertExcelMapping(string fileName)
         {
             List<Mapping> mappings = new();
-            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + fileName;
+            var FilePath = $"C:\\Users\\peter\\source\\repos\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\" + fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo))
@@ -227,7 +228,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         {
 
             /*EPPLUS - Excel functionality*/
-            var FilePath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + @fileName;
+            var FilePath = $"C:\\Users\\peter\\source\\repos\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\" + @fileName;
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo))
