@@ -1,5 +1,6 @@
 ﻿@inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navManager
+@using System.Security.Claims
 @using SPFAdminSystem.Authentication
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -18,6 +19,16 @@
                     <span class="oi oi-home" aria-hidden="true"></span> Product Administration
                 </NavLink>
             </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="actions" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> User Actions
+                </NavLink>
+            </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link d-flex flex-row" href="mappings">
+                    <span class="oi oi-home" aria-hidden="true"></span> Mapping Administration
+                </NavLink>
+            </div>
         </AuthorizeView>
         <AuthorizeView Roles="Admin">
             <div class="nav-item px-3">
@@ -28,11 +39,20 @@
         </AuthorizeView>
         <AuthorizeView Roles="Admin, Employee">
             <div class="nav-item px-3">
+                <NavLink class="nav-link" href="upload">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Upload Files
+                </NavLink>
+            </div>
+
+
+            <div class="nav-item px-3">
                 <NavLink class="nav-link" href="placeholder">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> Future Feature
                 </NavLink>
             </div>
-            <div class="position-absolute bottom-0 w-100">
+
+            @*LOGIN / ACCOUNT TO AT THE BOTTOM*@
+            <div class="w-100 bottom-login">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="me">
                         <span class="oi oi-person" aria-hidden="true"></span> @context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName).Value
@@ -49,7 +69,7 @@
         </AuthorizeView>
         <AuthorizeView>
             <NotAuthorized>
-            <div class="position-absolute bottom-0 w-100">
+            <div class="w-100 bottom-login">
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
                         <span class="oi oi-person" aria-hidden="true"></span> Login

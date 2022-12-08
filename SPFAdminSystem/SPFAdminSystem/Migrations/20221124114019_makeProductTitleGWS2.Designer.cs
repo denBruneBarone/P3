@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace SPFAdminSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221124114019_makeProductTitleGWS2")]
+    partial class makeProductTitleGWS2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.9");
@@ -53,14 +55,9 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("AvailableAmount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Barcode")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("InHouseTitle")
+                        .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int?>("MinOrder")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("OrderAmount")
                         .HasColumnType("INTEGER");
@@ -74,16 +71,10 @@ namespace SPFAdminSystem.Migrations
                     b.Property<int?>("Ordered")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("Packsize")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("RemovedFromStockDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("StockAmount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("Target")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("TitleGWS")

@@ -16,18 +16,15 @@ else
             <tr>
                 <th>ProductId</th>
                 <th>Inhouse Title</th>
-                <th>GWS Title</th>
-                <th>Order Price</th>
+                <th>GWS title</th>
+                <th>GWS Barcode</th>
                 <th>Stock Amount</th>
                 <th>Order Amount</th>
                 <th>AvailableAmount</th>
-                <th>Ordered</th>
-                <th>Barcode</th>
-                <th>Pack Size</th>
-                <th>Target</th>
-                <th>MinOrder</th>
                 <th>Order Quantity</th>
-                
+                <th>PackSize</th>
+                <th>MinOrder</th>
+                <th>Target</th>
             </tr>
         </thead>
         <tbody>
@@ -37,20 +34,23 @@ else
                     <td>@product.ProductId</td>
                     <td>@product.InHouseTitle</td>
                     <td>@product.TitleGWS</td>
-                    <td>@product.OrderPrice</td>
+                    <td>@product.Barcode</td>
                     <td>@product.StockAmount</td>
                     <td>@product.OrderAmount</td>
                     <td>@product.AvailableAmount</td>
-                    <td>@product.Ordered</td>
-                    <td>@product.Barcode</td>
-                    <td>@product.PackSize</td>
-                    <td>@product.Target</td>
-                    <td>@product.MinOrder</td>
                     <td>@product.OrderQuantity</td>
+                    <td>@product.Packsize</td>
+                    <td>@product.MinOrder</td>
+                    <td>@product.Target</td>
                 </tr>
             }
         </tbody>
     </table>
+
+
+
+
+
 
     <h3>AddProduct</h3>
     <input @bind=Id type="text" placeholder="Id" required />
@@ -66,13 +66,11 @@ else
     public string Title { get; private set; }
     private List<Product> products = new();
 
-
     protected override async Task OnInitializedAsync()
     {
         await _productDb.LoadProducts();
         products = _productDb.GetProducts();
     }
-    
 
     public async Task InsertProduct() {
 
@@ -86,9 +84,5 @@ else
         products.Add(p);
         Console.WriteLine("Product Added");
     }
-
-    
-
-
 }
 
