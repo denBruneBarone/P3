@@ -197,7 +197,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                     Map.MinOrder = Convert.ToInt32(worksheet.Cells[row, 7].Value);
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
                     mappings.Add(Map);
-                    Console.WriteLine(Map.ProductIdMapping);
+
                 }
                 package.Dispose();
             }
@@ -225,7 +225,7 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             if (dbProduct == null)
             {
-                Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
+                //Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
             }
             else
             {
@@ -257,7 +257,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             if (forceUpdate)
             {
                 _context.Entry<Product>(prod).Reload();
-                //Console.WriteLine("Updating...");
+                ////Console.WriteLine("Updating...");
             }
 
             return prod;
@@ -266,6 +266,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
             /*Calls function to assure products from database is in List<Product> Products*/
+            UnknownProducts.Clear();
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
@@ -306,12 +307,13 @@ namespace SPFAdminSystem.Database.ProductFiles
                         UnknownProducts.Add(prod);
                     }
                 }
-                Console.WriteLine("Unknown Products added");
+                //Console.WriteLine("Unknown Products added");
             }
         }
 
         public async Task<List<Product>> GetMatchSuggestions(Product product)
         {
+            MatchSuggestions.Clear();
             List<ProductScore> prodScore = new List<ProductScore>();
             List<ProductScore> sortedProdScore = new();
 
@@ -328,16 +330,12 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prodScore.Add(prod);
             }
 
-            ProductScore newProduct = new();
-            newProduct._product.TitleGWS = "new";
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
-
             MatchSuggestions.Add(sortedProdScore[0]._product);
             MatchSuggestions.Add(sortedProdScore[1]._product);
             MatchSuggestions.Add(sortedProdScore[2]._product);
             MatchSuggestions.Add(sortedProdScore[3]._product);
             MatchSuggestions.Add(sortedProdScore[4]._product);
-            MatchSuggestions.Add(newProduct._product);
 
             return MatchSuggestions;
         }

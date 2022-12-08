@@ -752,7 +752,12 @@
     protected override async Task OnInitializedAsync()
     {
         //await _db.LoadProducts();
-        products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        if (products.Count() == 0 || products == null)
+        {
+            products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        }
+        //Console.WriteLine(products.Count());
+
         productsBackup = new List<Product>(products.Select(x => new Product() {
                 ArriveDate = x.ArriveDate,
                 RemovedFromStockDate = x.RemovedFromStockDate,
