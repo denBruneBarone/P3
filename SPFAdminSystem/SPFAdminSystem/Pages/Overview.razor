@@ -95,7 +95,6 @@
         }
         foreach(Product product in productlist)
         {
-
         }
     }
 
@@ -138,5 +137,4 @@
         using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
         await JS.InvokeVoidAsync("DownloadExcel", "Pricelist Europe__3.xlsx", streamReference);
     }
-
 }

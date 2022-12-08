@@ -1,7 +1,9 @@
 ﻿@using System;
 @using System.IO;
 @inject NavigationManager navManager
+
 <div style="height: 0; width: 0;"></div>
+
 @code {
     DirectoryInfo filesDir = new($"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\");
     int neededFiles = 3;
@@ -20,10 +22,10 @@
         }
         return fileCount;
     }
+
     protected override async void OnAfterRender(bool firstRender)
     {
-
-        if(await CheckForFiles() != neededFiles)
+        if(!(await CheckForFiles() >= neededFiles))
         {
             navManager.NavigateTo("/upload", true);
         }
