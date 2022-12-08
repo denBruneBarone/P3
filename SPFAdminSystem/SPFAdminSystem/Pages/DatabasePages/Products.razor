@@ -2,9 +2,7 @@
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
-@attribute [Authorize(Roles = "Admin, Employee")];
 @inject IProductService _productDb
-
 
 <h5>All Products</h5>
 @if (products is null)
@@ -29,7 +27,6 @@ else
                 <th scope="col">Target</th>
                 <th scope="col">MinOrder</th>
                 <th scope="col">Order Quantity</th>
-                
             </tr>
         </thead>
         <tbody>
@@ -86,7 +83,6 @@ else
     <input @bind=Id type="text" placeholder="Id" required />
     <input @bind=Title type="text" placeholder="Title" required />
     <button onclick="@InsertProduct">add new product</button>
-
 }
 
 @code {
@@ -103,19 +99,22 @@ else
     public async void ValidateTitle(int i){
         // Inplemet generic validation
 
-        if (products[i].InHouseTitle.Length != 0)
-        {
-            await _productDb.CreateOrUpdateProduct(products[i]);
-        } else {
-            // Reset
-            products[i].InHouseTitle = _productDb.GetProductById(products[i].ProductId, true).Result.InHouseTitle;
+        try{
+            if (products[i].InHouseTitle != null && products[i].InHouseTitle.Length != 0)
+            {
+                await _productDb.CreateOrUpdateProduct(products[i]);
+            }
+            else
+            {
+                // Reset
+                products[i].InHouseTitle = _productDb.GetProductById(products[i].ProductId, true).Result.InHouseTitle;
+            }
         }
-
+        catch (NullReferenceException e)
+        {
+            Console.WriteLine("RIGHT HERE BIG BOIIIIII --> " + e.Message);
+        }
     }
-
-    
-
-
 
     public async Task InsertProduct() {
 

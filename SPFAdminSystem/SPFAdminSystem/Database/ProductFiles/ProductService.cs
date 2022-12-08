@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Text;
 using OfficeOpenXml;
+using SPFAdminSystem.Data;
 using System.Threading.Tasks;
 using DataAccessLibrary.Models;
-using SPFAdminSystem.Data;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SPFAdminSystem.Pages.DatabasePages;
@@ -61,9 +61,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
-
-
-            
         }
         public async Task UpdateProduct(Product product)
         {
@@ -71,7 +68,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             if (dbProduct == null)
             {
                 throw new KeyNotFoundException("product not found");
-
             }
             else
             {
@@ -93,7 +89,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
 
             await _context.SaveChangesAsync();
-
         }
 
         public async Task CreateOrUpdateProduct(Product product)
@@ -122,7 +117,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbProduct.Target = product.Target;
                 dbProduct.TitleGWS = product.TitleGWS;
             }
-               
+            await _context.SaveChangesAsync();
         }
 
         public async Task InsertExcelProducts(string fileName)
@@ -203,7 +198,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
                     mappings.Add(Map);
                     Console.WriteLine(Map.ProductIdMapping);
-                    
                 }
                 package.Dispose();
             }
@@ -311,12 +305,11 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
                         UnknownProducts.Add(prod);
                     }
-
                 }
                 Console.WriteLine("Unknown Products added");
             }
-
         }
+
         public async Task<List<Product>> GetMatchSuggestions(Product product)
         {
             List<ProductScore> prodScore = new List<ProductScore>();
@@ -347,7 +340,6 @@ namespace SPFAdminSystem.Database.ProductFiles
             MatchSuggestions.Add(newProduct._product);
 
             return MatchSuggestions;
-
         }
 
         static double NameMatch(string a, string b)
