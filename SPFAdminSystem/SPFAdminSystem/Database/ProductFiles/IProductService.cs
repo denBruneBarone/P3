@@ -6,8 +6,9 @@ namespace SPFAdminSystem.Database.ProductFiles
 {
     public interface IProductService
     {
-        Task<Product> GetProductById(string prodId);
         List<Product> GetProducts();
+
+        Product GetInMemmorySingleProduct(string _);
         Task LoadProducts();
         Task<List<Product>> GetUnknownProducts(string fileName);
         Task LoadUnknownProducts(string fileName);

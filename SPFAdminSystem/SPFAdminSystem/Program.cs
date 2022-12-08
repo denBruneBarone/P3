@@ -43,6 +43,7 @@ Console.WriteLine(path);
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlite($"Data Source={path}"));
 
 
+builder.Services.AddScoped<DataContext>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 

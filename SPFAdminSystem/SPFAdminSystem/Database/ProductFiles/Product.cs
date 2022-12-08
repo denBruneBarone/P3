@@ -12,6 +12,7 @@ public class Product
 
     public List<UserAction> UserActions { get; set; }
 
+    [Required]
     public string? InHouseTitle { get; set; }
 
     public double? OrderPrice { get; set; }

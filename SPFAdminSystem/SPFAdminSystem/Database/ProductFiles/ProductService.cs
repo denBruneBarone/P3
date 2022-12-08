@@ -41,7 +41,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             return Products;
         }
 
-        public async Task<Product> GetSingleProduct(string productId)
+        public Product GetInMemmorySingleProduct(string productId)
         {
             Product? product = await _context.Products.FindAsync(productId);
 
@@ -50,6 +50,50 @@ namespace SPFAdminSystem.Database.ProductFiles
                 throw new Exception("no product here");
             }
             return product;
+        }
+
+        public async Task CreateProduct(Product product, bool verify=true)
+        {
+
+            if (verify && _context.Products.FindAsync(product.ProductId).Result != null)
+            {
+                throw new Exception("Product already exists");
+            }
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+
+
+            
+        }
+        public async Task UpdateProduct(Product product)
+        {
+            var dbProduct = await _context.Products.FindAsync(product.ProductId);
+            if (dbProduct == null)
+            {
+                throw new KeyNotFoundException("product not found");
+
+            }
+            else
+            {
+               // update
+                dbProduct.ArriveDate = product.ArriveDate;
+                dbProduct.RemovedFromStockDate = product.RemovedFromStockDate;
+                dbProduct.InHouseTitle = product.InHouseTitle;
+                dbProduct.TitleGWS = product.TitleGWS;
+                dbProduct.OrderPrice = product.OrderPrice;
+                dbProduct.StockAmount = product.StockAmount;
+                dbProduct.OrderAmount = product.OrderAmount;
+                dbProduct.AvailableAmount = product.AvailableAmount;
+                dbProduct.Ordered = product.Ordered;
+                dbProduct.Barcode = product.Barcode;
+                dbProduct.PackSize = product.PackSize;
+                dbProduct.Target = product.Target;
+                dbProduct.MinOrder = product.MinOrder;
+                dbProduct.OrderQuantity = product.OrderQuantity;
+            }
+
+            await _context.SaveChangesAsync();
+
         }
 
         public async Task CreateOrUpdateProduct(Product product)
@@ -78,7 +122,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbProduct.Target = product.Target;
                 dbProduct.TitleGWS = product.TitleGWS;
             }
-            await _context.SaveChangesAsync();
+               
         }
 
         public async Task InsertExcelProducts(string fileName)
@@ -212,9 +256,16 @@ namespace SPFAdminSystem.Database.ProductFiles
         }
         public async Task<Product> GetProductById(string prodId)
         {
-            var prod = await _context.Products.FindAsync(prodId);
+            var prod = await _context.Products.FirstOrDefaultAsync(product => product.ProductId == prodId);
             if (prod == null)
                 throw new KeyNotFoundException("product not found");
+
+            if (forceUpdate)
+            {
+                _context.Entry<Product>(prod).Reload();
+                //Console.WriteLine("Updating...");
+            }
+
             return prod;
         }
 

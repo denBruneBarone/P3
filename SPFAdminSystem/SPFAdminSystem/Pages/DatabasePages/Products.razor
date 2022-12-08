@@ -4,6 +4,7 @@
 @using SPFAdminSystem.Database.ProductFiles
 @inject IProductService _productDb
 
+
 <h5>All Products</h5>
 @if (products is null)
 {
@@ -14,34 +15,67 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>ProductId</th>
-                <th>Inhouse Title</th>
-                <th>GWS title</th>
-                <th>GWS Barcode</th>
-                <th>Stock Amount</th>
-                <th>Order Amount</th>
-                <th>AvailableAmount</th>
-                <th>Order Quantity</th>
-                <th>PackSize</th>
-                <th>MinOrder</th>
-                <th>Target</th>
+                <th scope="col">ProductId</th>
+                <th scope="col">Inhouse Title</th>
+                <th scope="col">GWS Title</th>
+                <th scope="col">Order Price</th>
+                <th scope="col">Stock Amount</th>
+                <th scope="col">Order Amount</th>
+                <th scope="col">AvailableAmount</th>
+                <th scope="col">Ordered</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Pack Size</th>
+                <th scope="col">Target</th>
+                <th scope="col">MinOrder</th>
+                <th scope="col">Order Quantity</th>
+                
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in products)
+            @foreach (var item in products.Select((value, index) => (value, index)))
             {
                 <tr>
-                    <td>@product.ProductId</td>
-                    <td>@product.InHouseTitle</td>
-                    <td>@product.TitleGWS</td>
-                    <td>@product.Barcode</td>
-                    <td>@product.StockAmount</td>
-                    <td>@product.OrderAmount</td>
-                    <td>@product.AvailableAmount</td>
-                    <td>@product.OrderQuantity</td>
-                    <td>@product.Packsize</td>
-                    <td>@product.MinOrder</td>
-                    <td>@product.Target</td>
+                    <td>
+                        <input type="text" value="@item.value.ProductId" disabled>
+                    </td>
+
+                    <td>
+                        <input type="text" @bind="@item.value.InHouseTitle" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+
+                    <td>
+                        <input type="text" @bind="@item.value.TitleGWS" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.OrderPrice" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.StockAmount" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.OrderAmount" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.AvailableAmount" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.Ordered" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.Barcode" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.PackSize" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.Target" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.MinOrder" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
+                    <td>
+                        <input type="text" @bind="@item.value.OrderQuantity" @onblur="@(() => ValidateTitle(item.index))">
+                    </td>
                 </tr>
             }
         </tbody>
@@ -51,6 +85,7 @@ else
     <input @bind=Id type="text" placeholder="Id" required />
     <input @bind=Title type="text" placeholder="Title" required />
     <button onclick="@InsertProduct">add new product</button>
+
 }
 
 @code {
@@ -63,6 +98,23 @@ else
         await _productDb.LoadProducts();
         products = _productDb.GetProducts();
     }
+
+    public async void ValidateTitle(int i){
+        // Inplemet generic validation
+
+        if (products[i].InHouseTitle.Length != 0)
+        {
+            await _productDb.CreateOrUpdateProduct(products[i]);
+        } else {
+            // Reset
+            products[i].InHouseTitle = _productDb.GetProductById(products[i].ProductId, true).Result.InHouseTitle;
+        }
+
+    }
+
+    
+
+
 
     public async Task InsertProduct() {
 
