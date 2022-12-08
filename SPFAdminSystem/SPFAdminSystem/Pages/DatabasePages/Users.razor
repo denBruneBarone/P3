@@ -13,7 +13,7 @@
 }
 else
 {
-    <table class="table table-striped">
+    <table class="table table-striped" name="user-table">
         <thead>
             <tr>
                 <th>UserId</th>
@@ -40,9 +40,9 @@ else
     </table>
 
     <h3>Add User</h3>
-    <input @bind=userName @bind:event="oninput" type="text" placeholder="UserName" required />
-    <input @bind=password @bind:event="oninput" type="text" placeholder="Password" required />
-    <input @bind=fullName @bind:event="oninput" type="text" placeholder="Full Name" required />
+    <input @bind=userName @bind:event="oninput" type="text" placeholder="UserName" required name="username" />
+    <input @bind=password @bind:event="oninput" type="text" placeholder="Password" required name="password" />
+    <input @bind=fullName @bind:event="oninput" type="text" placeholder="Full Name" required name="fullname"/>
 
 
 
@@ -53,7 +53,7 @@ else
     </select>
 
 
-    <button onclick="@addUser">add new user</button>
+    <button onclick="@addUser" name="add-user">add new user</button>
     <button onclick="@getUserByName">Test Get User</button>
 }   
 
