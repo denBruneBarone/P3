@@ -8,7 +8,7 @@ namespace SPFAdminSystem.Database.ProductFiles
     {
         List<Product> GetProducts();
 
-        Product GetInMemmorySingleProduct(string _);
+        
         Task LoadProducts();
         Task<List<Product>> GetUnknownProducts(string fileName);
         Task LoadUnknownProducts(string fileName);
@@ -16,7 +16,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task<Product> GetSingleProduct(string productId);
 
         Task CreateOrUpdateProduct(Product product);
-
+        Task<Product> GetProductById(string prodId, bool forceUpdate);
         Task InsertExcelProducts(string fileName);
 
         Task InsertExcelMapping(string fileName);

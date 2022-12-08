@@ -41,7 +41,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             return Products;
         }
 
-        public Product GetInMemmorySingleProduct(string productId)
+        public async Task<Product> GetSingleProduct(string productId)
         {
             Product? product = await _context.Products.FindAsync(productId);
 
@@ -86,7 +86,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbProduct.AvailableAmount = product.AvailableAmount;
                 dbProduct.Ordered = product.Ordered;
                 dbProduct.Barcode = product.Barcode;
-                dbProduct.PackSize = product.PackSize;
+                dbProduct.Packsize = product.Packsize;
                 dbProduct.Target = product.Target;
                 dbProduct.MinOrder = product.MinOrder;
                 dbProduct.OrderQuantity = product.OrderQuantity;
@@ -254,7 +254,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                 await AddToProduct(map);
             }
         }
-        public async Task<Product> GetProductById(string prodId)
+        public async Task<Product> GetProductById(string prodId, bool forceUpdate = false)
         {
             var prod = await _context.Products.FirstOrDefaultAsync(product => product.ProductId == prodId);
             if (prod == null)

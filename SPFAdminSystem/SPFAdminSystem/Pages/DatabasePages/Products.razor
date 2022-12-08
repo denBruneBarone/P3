@@ -2,6 +2,7 @@
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
+@attribute [Authorize(Roles = "Admin, Employee")];
 @inject IProductService _productDb
 
 
@@ -65,7 +66,7 @@ else
                         <input type="text" @bind="@item.value.Barcode" @onblur="@(() => ValidateTitle(item.index))">
                     </td>
                     <td>
-                        <input type="text" @bind="@item.value.PackSize" @onblur="@(() => ValidateTitle(item.index))">
+                        <input type="text" @bind="@item.value.Packsize" @onblur="@(() => ValidateTitle(item.index))">
                     </td>
                     <td>
                         <input type="text" @bind="@item.value.Target" @onblur="@(() => ValidateTitle(item.index))">
