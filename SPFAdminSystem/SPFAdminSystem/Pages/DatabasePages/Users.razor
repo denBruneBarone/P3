@@ -49,9 +49,13 @@ else
         </tbody>
     </table>
     <div style="width: 25%;">
-        <button type="button" class="btn btn-primary" @onclick=showAddPopupModal>Add User</button>
+        <button type="button" class="btn btn-primary" id="adduserbutton" @onclick=showAddPopupModal>Add User</button>
     </div>
 }   
+<p id="usercount">@usercount</p>
+<p id="newusername">@newusername</p>
+<p id="newuserfullname">@newuserfullname</p>
+<p id="newuserrole">@newuserrole</p>
 
 @code {
     // Variables for input bind
@@ -63,16 +67,30 @@ else
     public User curUser = new User { UserName = "N/A", FullName = "N/A", Role = "N/A", UserId = -3 };
     private List<User> users = new();
     public bool modalDisplay { get; private set; } = false;
+    string usercount;
+    string newusername;
+    string newuserfullname;
+    string newuserrole;
 
     protected override async Task OnInitializedAsync()
     {
         await _userDb.LoadUsers();
         users = _userDb.GetUsers();
+        usercount = users.Count.ToString();
+        await Task.Delay(1);
+        StateHasChanged();
     }
 
-    public void closeModals()
+    public async void closeModals()
     {
         showAddModal = "visually-hidden";
+        await _userDb.LoadUsers();
+        users = _userDb.GetUsers();
+        usercount = users.Count.ToString();
+        newusername = users[0].UserName;
+        newuserrole = users[0].Role;
+        newuserfullname = users[0].FullName;
+        await Task.Delay(1);
         StateHasChanged();
     }
     public void showAddPopupModal()

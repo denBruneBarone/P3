@@ -64,7 +64,7 @@ namespace SPF_UNITTESTS
 
 
             //ASSERT
-            Assert.Equal(mergeButtonText, mergeButton.TextContent );
+            Assert.Equal(mergeButtonText, mergeButton.TextContent);
 
             Assert.Equal(dbCountBefore, Int32.Parse(component.Find($"#productcounter").TextContent));
             Assert.Equal(dbCountBefore, Int32.Parse(component.Find("#mappingcounter").TextContent));

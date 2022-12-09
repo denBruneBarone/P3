@@ -26,13 +26,13 @@
                             <tr>
                                 <th class="align-middle" scope="row" style="width: 33%;">Username:</th>
                                 <td class="text-center">
-                                    <input type="text" @bind=newUser.UserName required placeholder="johndoe21"/>
+                                    <input id="usernameinput" type="text" @bind=newUser.UserName required placeholder="johndoe21"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th class="align-middle" scope="row" style="width: 33%;">Full Name:</th>
                                 <td class="text-center">
-                                    <input type="text" @bind-value=newUser.FullName required placeholder="John Doe"/>
+                                    <input id="fullnameinput"type="text" @bind-value=newUser.FullName required placeholder="John Doe"/>
                                 </td>
                             </tr>
                             <tr>
@@ -49,13 +49,13 @@
                         </tbody>
                     </table>
                     <div class="w-100" style="display:flex; justify-content: space-around">
-                        <input @bind="Pass.pw" class="form-control" type="password" placeholder="Password" required />
-                        <input @bind="Pass.confirmPassword" type="password" class="form-control" placeholder="Confirm Password" required />
+                        <input id="passwordinput" @bind="Pass.pw" class="form-control" type="password" placeholder="Password" required />
+                        <input id="cpasswordinput" @bind="Pass.confirmPassword" type="password" class="form-control" placeholder="Confirm Password" required />
                     </div>
 
                 </div>
                 <div class="modal-footer flex-row justify-content-around">
-                    <input type="submit" name="Submit" value="Add" class="btn btn-primary" />
+                    <input id="adduserinput" type="submit" name="Submit" value="Add" class="btn btn-primary" />
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick=close>Abort</button>
                 </div>
             </EditForm>
@@ -82,7 +82,6 @@
         newUser.Role = role;
         await _userdb.InsertUser(newUser);
         close();
-        navManager.NavigateTo("users", true);
     }
 
     public void close()

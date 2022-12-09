@@ -76,7 +76,7 @@
                             UpdateMatch(matchTitle);
                         }
                     }
-                    <h1 style="font-weight: 700; font-size: 24px;" id="productleftTitle">@products[chosenProduct].TitleGWS</h1>
+                    <h1 style="font-weight: 700; font-size: 24px;">@products[chosenProduct].TitleGWS</h1>
                 </div>
                 <div id="currentInfoTitle">
                     <h3 style="text-align: center;">Current match information:</h3>
@@ -173,7 +173,7 @@
                                             }
                                             else if (prop.Name.ToLower() == "titlegws" && TitleGWSCpy != null)
                                             {
-                                                <li id="itemLi">@TitleGWSCpy.ToString()</li>
+                                                <li id="itemLi" class="productleftTitleGWS">@TitleGWSCpy.ToString()</li>
                                             }
                                             else if (prop.Name.ToLower() == "barcode" && BarcodeCpy != null)
                                             {
@@ -250,7 +250,39 @@
                                 foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                 {
                                     <div class="w-100">
-                                    <li style="display: flex; justify-content: space-between;">
+                                        @if(prop.Name.ToLower() == "titlegws")
+                                        {
+                                        <li style="display: flex; justify-content: space-between;">
+                                        <div>
+                                            <label class="form-check-label" for="@prop.Name">
+                                                    @prop.Name
+                                            </label>
+                                        </div>
+                                            <div id="productrightTitleGWS">
+                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
+                                                {
+                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                                    {
+                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                    }
+                                                    else if (prop.Name == "Target")
+                                                    {
+                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        {
+                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
+                                                    }
+                                                }
+                                        </div>
+                                            </li>
+
+                                        } else
+                                        {
+                                            <li style="display: flex; justify-content: space-between;">
                                         <div>
                                             <label class="form-check-label" for="@prop.Name">
                                                     @prop.Name
@@ -277,7 +309,8 @@
                                                 }
                                         </div>
                                     </li>
-                            </div>
+                                        }
+                                    </div>
                                 }
                             }
                     </ul>
@@ -301,8 +334,11 @@
 </div>
 
 <div id="continueBtnContainer">
-    <button class="btn btn-primary btn-lg" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
+    <button class="btn btn-primary btn-lg" id="continuebutton"disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
 </div>
+
+<p id="continuestatus">@continuetext</p>
+<p id="dbproductname">@dbprodname</p>
 
 @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -322,6 +358,8 @@
     string InHouseTitleCpy = "";
     string ProductIdCpy = "";
     string BarcodeCpy = "";
+    string continuetext = "";
+    string dbprodname = "";
     DateTime? ArriveDateCpy;
     DateTime? RemovedFromStockDateCpy;
 
@@ -360,7 +398,19 @@
             await _db.CreateOrUpdateProduct(product);
             await _db.CreateOrUpdateMapping(productToMapping(product));
         }
-        navManager.NavigateTo("/order/overview", true);
+        await _db.LoadProducts();
+        List<Product> prods = _db.GetProducts();
+        foreach(Product prod in prods)
+        {
+            if(prod.Barcode == "5011921165704")
+            {
+                dbprodname = prod.TitleGWS;
+            }
+        }
+        await Task.Delay(1);
+        StateHasChanged();
+        continuetext = "continuecomplete";
+        //navManager.NavigateTo("/order/overview", true);
     }
     private Mapping productToMapping(Product product)
     {
@@ -790,19 +840,25 @@
 
     }));
         /*foreach(Product prod in products){
-            foreach (PropertyInfo prop in prod.GetType().GetProperties())
+        foreach (PropertyInfo prop in prod.GetType().GetProperties())
             {
                 Product product = new Product();
                 if (prop.Name == "ArriveDate"){
-                    product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
-                }else if(prop.Name == "RemovedFromStockDate"){
-                    product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
-                }
-                prop.
+                product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
+            }else if(prop.Name == "RemovedFromStockDate"){
+                product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
         }
-        }
+        prop.
+    }
+    }
     }*/
-
+        foreach(Product prod in products)
+        {
+            if(prod.Barcode == "5011921165704")
+            {
+                dbprodname = prod.TitleGWS;
+            }
+        }
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
