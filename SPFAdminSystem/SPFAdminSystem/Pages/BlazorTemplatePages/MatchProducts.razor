@@ -10,12 +10,7 @@
 @page "/match"
 
 <div id="topSpacer"></div>
-<button onclick="@Experiment">AFPRØV PRODUCTS BACKUP</button>
-@{
-    void Experiment(){
-        Console.WriteLine($"{products[chosenProduct].TitleGWS}   +++++    {productsBackup[chosenProduct].TitleGWS}");
-    }
-}
+
 <div class="container">
     <div id="productList">
         @{
@@ -738,7 +733,6 @@
 
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
-    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
 
@@ -754,11 +748,7 @@
         if (products.Count() == 0 || products == null)
         {
             products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
-            productsBackup = await _db.GetBackupProducts();
         }
-        //Console.WriteLine(products.Count());
-
-
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 

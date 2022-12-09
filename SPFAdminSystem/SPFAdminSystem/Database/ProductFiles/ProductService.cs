@@ -28,7 +28,6 @@ namespace SPFAdminSystem.Database.ProductFiles
 
         public List<Product> Products { get; set; } = new List<Product>();
         public List<Product> UnknownProducts { get; set; } = new List<Product>();
-        public List<Product> BackupProducts { get; set; } = new List<Product>();
         public List<Mapping> Mappings { get; set; } = new List<Mapping>();
         public List<Product> MatchSuggestions { get; set; } = new List<Product>();
 
@@ -268,15 +267,10 @@ namespace SPFAdminSystem.Database.ProductFiles
         {
             /*Calls function to assure products from database is in List<Product> Products*/
             UnknownProducts.Clear();
-            BackupProducts.Clear();
+
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
-        }
-        public async Task<List<Product>> GetBackupProducts()
-        {
-            /*Calls function to assure products from database is in List<Product> Products*/
-            return BackupProducts;
         }
 
         public async Task LoadUnknownProducts(string fileName)
@@ -293,7 +287,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                 for (int row = 3; row <= rowCount; row++)
                 {
                     Product prod = new Product();
-                    Product prod2 = new Product();
                     int isFound = 0;
                     foreach (Mapping mapping in Mappings)
                     {
@@ -313,13 +306,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
 
-                        prod2.ProductId = worksheet.Cells[row, 5].Value.ToString();
-                        prod2.Barcode = worksheet.Cells[row, 6].Value.ToString();
-                        prod2.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
-                        prod2.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
-                        prod2.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
                         UnknownProducts.Add(prod);
-                        BackupProducts.Add(prod2);
 
                     }
                 }
