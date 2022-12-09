@@ -15,7 +15,8 @@
     <div id="productList">
         @{
             counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
-            if(counter<=0){
+            if (counter <= 0)
+            {
                 counter = 0;
                 disableContinue = false;
             }
@@ -94,7 +95,19 @@
                                                 <li style="color: red; font-weight: 700;" id="itemLiTitles">@prop.Name</li>
                                                 sameTitle = false;
                                             }
-                                            else if (prop.GetValue(products[chosenProduct], null) != null && prop.GetValue(products[chosenProduct], null) == prop.GetValue(matchSuggestions[chosenMatch], null))
+                                            else if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
+                                            prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != "" && InHouseTitleCpy != products[chosenProduct].InHouseTitle ||
+                                            prop.Name.ToLower() == "productid" && ProductIdCpy != "" && ProductIdCpy != products[chosenProduct].ProductId ||
+                                            prop.Name.ToLower() == "orderprice" && OrderPriceCpy != -1 && OrderPriceCpy != products[chosenProduct].OrderPrice ||
+                                            prop.Name.ToLower() == "stockamount" && StockAmountCpy != -1 && StockAmountCpy != products[chosenProduct].StockAmount ||
+                                            prop.Name.ToLower() == "orderamount" && OrderAmountCpy != -1 && OrderAmountCpy != products[chosenProduct].OrderAmount ||
+                                            prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != -1 && AvailableAmountCpy != products[chosenProduct].AvailableAmount ||
+                                            prop.Name.ToLower() == "ordered" && OrderedCpy != -1 && OrderedCpy != products[chosenProduct].Ordered ||
+                                            prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != -1 && OrderQuantityCpy != products[chosenProduct].OrderQuantity ||
+                                            prop.Name.ToLower() == "titlegws" && TitleGWSCpy != "" && TitleGWSCpy != products[chosenProduct].TitleGWS ||
+                                            prop.Name.ToLower() == "barcode" && BarcodeCpy != "" && BarcodeCpy != products[chosenProduct].Barcode ||
+                                            prop.Name.ToLower() == "packsize" && PacksizeCpy != -1 && PacksizeCpy != products[chosenProduct].Packsize ||
+                                            prop.Name.ToLower() == "minorder" && MinOrderCpy != -1 && MinOrderCpy != products[chosenProduct].MinOrder)
                                             {
                                                 <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
                                             }
@@ -640,10 +653,12 @@
 
         if (accepted == false)
         {
-            if (IgnoredTitles.Contains(products[chosenProduct].Barcode)) {
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode))
+            {
                 IgnoredTitles.Remove(products[chosenProduct].Barcode);
             }
-            if (MappedTitles.Contains(products[chosenProduct].Barcode)) {
+            if (MappedTitles.Contains(products[chosenProduct].Barcode))
+            {
                 MappedTitles.Remove(products[chosenProduct].Barcode);
             }
             IgnoredTitles.Add(products[chosenProduct].Barcode);
@@ -721,6 +736,7 @@
 
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
+    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
 
