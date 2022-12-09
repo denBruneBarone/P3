@@ -14,7 +14,6 @@
 }
 
 <PageTitle>Upload</PageTitle>
-
 <center>
     <div class="upload-container">
         <div class="upload-div">
@@ -30,14 +29,17 @@
         <p>@addedString</p>
     </div>
 </center>
+
 <center>
     <FileCard Title="Produkter" State=@produkterState Text=@produkterText ButtonText="Upload Produkter.xlsx to DB" isLoading="@isProdukterLoading"></FileCard>
     <FileCard Title="Mapping" State=@mappingState Text=@mappingText ButtonText="Upload Mapping.xlsx to DB" isLoading="@isMappingLoading"></FileCard>
     <FileCard Title="Pricelist" State=@pricelistState Text=@pricelistText ButtonText="Upload Pricelist" isLoading="@isPricelistLoading"></FileCard>
+    <div class="mergeBtnDiv">
+        <button onclick="@mapMappingsToDb" class="btn btn-primary" id="mergeBtn" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
+    </div>
 
 </center>
 
-<button onclick="@mapMappingsToDb" class="btn btn-primary" disabled=@mappingUnavailable >Merge Mappings into Products' DB'</button>
 @if (isMapping == true)
 {
     <p>Loading....</p>

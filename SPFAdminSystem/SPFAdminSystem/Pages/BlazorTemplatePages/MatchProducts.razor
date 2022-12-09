@@ -10,7 +10,12 @@
 @page "/match"
 
 <div id="topSpacer"></div>
-
+<button onclick="@Experiment">AFPRØV PRODUCTS BACKUP</button>
+@{
+    void Experiment(){
+        Console.WriteLine($"{products[chosenProduct].TitleGWS}   +++++    {productsBackup[chosenProduct].TitleGWS}");
+    }
+}
 <div class="container">
     <div id="productList">
         @{
@@ -59,7 +64,6 @@
                 endLoop = 1;
             }
         </ul>
-        <button class="btn btn-primary">Browse all products</button>
     </div>
 
     @*----------------------------------------------------------------------------------------------------------------------*@
@@ -228,11 +232,6 @@
                                     {
                                         i++;
                                         <option value="@item.TitleGWS">@item.TitleGWS</option>
-
-                                        if (i == 20)
-                                        {
-                                            <option></option>
-                                        }
                                     }
                                 }
                             </select>
@@ -755,30 +754,12 @@
         if (products.Count() == 0 || products == null)
         {
             products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+            productsBackup = await _db.GetBackupProducts();
         }
         //Console.WriteLine(products.Count());
 
-        productsBackup = new List<Product>(products.Select(x => new Product() {
-                ArriveDate = x.ArriveDate,
-                RemovedFromStockDate = x.RemovedFromStockDate,
-                ProductId = x.ProductId,
-                UserActions = x.UserActions,
-                InHouseTitle = x.InHouseTitle,
-                OrderPrice = x.OrderPrice,
-                StockAmount = x.StockAmount,
-                OrderAmount = x.OrderAmount,
-                AvailableAmount = x.AvailableAmount,
-                Ordered = x.Ordered,
-                OrderQuantity = x.OrderQuantity,
-                TitleGWS = x.TitleGWS,
-                Barcode = x.Barcode,
-                Packsize = x.Packsize,
-                MinOrder = x.MinOrder,
-                Target = x.Target
 
-    }));
-
-    matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
     //Parsing methods
