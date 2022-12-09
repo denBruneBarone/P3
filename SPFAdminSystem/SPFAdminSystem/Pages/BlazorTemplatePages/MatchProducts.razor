@@ -144,7 +144,7 @@
                                             }
                                             else if (prop.Name.ToLower() == "productid" && ProductIdCpy != null)
                                             {
-                                                <li id="itemLi">@ProductIdCpy.ToString()</li>
+                                                <li id="itemLi" name="left-id">@ProductIdCpy.ToString()</li>
                                             }
                                             else if (prop.Name.ToLower() == "orderprice" && OrderPriceCpy != null)
                                             {
@@ -172,7 +172,7 @@
                                             }
                                             else if (prop.Name.ToLower() == "titlegws" && TitleGWSCpy != null)
                                             {
-                                                <li id="itemLi">@TitleGWSCpy.ToString()</li>
+                                                <li id="itemLi" name="left-titlegws">@TitleGWSCpy.ToString()</li>
                                             }
                                             else if (prop.Name.ToLower() == "barcode" && BarcodeCpy != null)
                                             {
@@ -184,11 +184,11 @@
                                             }
                                             else if (prop.Name.ToLower() == "minorder" && MinOrderCpy != null)
                                             {
-                                                <li id="itemLi">@MinOrderCpy.ToString()</li>
+                                                <li id="itemLi" name="left-minOrder">@MinOrderCpy.ToString()</li>
                                             }
                                             else if (prop.Name.ToLower() == "target" && TargetCpy != null)
                                             {
-                                                <li id="itemLi">@TargetCpy.ToString()</li>
+                                                <li id="itemLi" name="left-target">@TargetCpy.ToString()</li>
                                             }
                                             else
                                             {
@@ -251,25 +251,17 @@
                                     <div class="w-100">
                                     <li style="display: flex; justify-content: space-between;">
                                         <div>
-                                            <label class="form-check-label" for="@prop.Name">
+                                            <label class="form-check-label" for="@prop.Name" name=@(prop.Name+"_label")>
                                                     @prop.Name
                                             </label>
                                         </div>
-                                        <div>
+                                        <div name=@(prop.Name+"_value")>
                                                 @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                                                 {
                                                     @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
-                                                    }
-                                                    else if (prop.Name == "Target")
-                                                    {
-                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
-                                                        {
-                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
-                                                        }
-                                                    }
-                                                    else
+                                                    } else
                                                     {
                                                         @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
                                                     }
@@ -283,7 +275,7 @@
                 </div>
             </div>
             <div id="ignoreApplyButtons">
-                <button onclick=@(()=>ApplyReset(false)) class="btn btn-success">Apply</button>
+                <button onclick=@(()=>ApplyReset(false)) class="btn btn-success" name="apply-btn">Apply</button>
             </div>
         </div>
     </div>
@@ -295,7 +287,7 @@
 <div id="accIgnContainer">
     <div id="acceptIgnore">
         <button onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn-lg">Ignore</button>
-        <button onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn-lg" disabled="@reverseAccepted">Accept</button>
+        <button onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn-lg" name="accept-btn" disabled="@reverseAccepted">Accept</button>
     </div>
 </div>
 
