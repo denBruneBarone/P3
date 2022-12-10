@@ -15,7 +15,8 @@
     <div id="productList">
         @{
             counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
-            if(counter<=0){
+            if (counter <= 0)
+            {
                 counter = 0;
                 disableContinue = false;
             }
@@ -651,10 +652,12 @@
 
         if (accepted == false)
         {
-            if (IgnoredTitles.Contains(products[chosenProduct].Barcode)) {
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode))
+            {
                 IgnoredTitles.Remove(products[chosenProduct].Barcode);
             }
-            if (MappedTitles.Contains(products[chosenProduct].Barcode)) {
+            if (MappedTitles.Contains(products[chosenProduct].Barcode))
+            {
                 MappedTitles.Remove(products[chosenProduct].Barcode);
             }
             IgnoredTitles.Add(products[chosenProduct].Barcode);
@@ -732,6 +735,7 @@
 
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
+    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
 
