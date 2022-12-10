@@ -3,6 +3,7 @@
 @using System.Collections.Generic;
 @using System.Runtime.InteropServices;
 @using SPFAdminSystem.Database.ProductFiles;
+@attribute [Authorize(Roles = "Admin, Employee")];
 @inject IProductService _db
 @inject NavigationManager navManager
 
@@ -18,7 +19,6 @@
                 counter = 0;
                 disableContinue = false;
             }
-
         }
         <li id="listTitle">@counter Unknown Products</li>
         <ul id="productListItems">
@@ -59,7 +59,6 @@
                 endLoop = 1;
             }
         </ul>
-        <button class="btn btn-primary">Browse all products</button>
     </div>
 
     @*----------------------------------------------------------------------------------------------------------------------*@
@@ -228,11 +227,6 @@
                                     {
                                         i++;
                                         <option value="@item.TitleGWS">@item.TitleGWS</option>
-
-                                        if (i == 20)
-                                        {
-                                            <option></option>
-                                        }
                                     }
                                 }
                             </select>
@@ -321,6 +315,7 @@
     bool suggestionsOff = true;
     bool matchprodCheckStatus = false;
     bool accepted = false;
+    bool reverseIgnore = false;
     bool reverseAccepted = true;
     bool ignore = false;
     bool disableContinue = true;
@@ -334,6 +329,9 @@
 
         ApplyReset(true);
         UpdateMatch(matchTitle);
+
+        reverseIgnore = IsMapped(products[chosenProduct].Barcode);
+
         await Task.Delay(1);
         StateHasChanged();
         await Task.Delay(1);
@@ -688,7 +686,7 @@
         GetValue(matchTitle);
         suggestedMapping();
     }
- 
+
     /*List of strings, is used to check if product is mapped*/
     private List<string> MappedTitles = new List<string>();
 
@@ -734,7 +732,6 @@
 
     /*Get products from database and insert products into database*/
     private List<Product> products = new();
-    private List<Product> productsBackup = new();
     private List<Product> matchSuggestions = new();
     private List<Product> resetOrApply = new();
 
@@ -747,28 +744,11 @@
     protected override async Task OnInitializedAsync()
     {
         //await _db.LoadProducts();
-        products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
-        productsBackup = new List<Product>(products.Select(x => new Product() {
-                ArriveDate = x.ArriveDate,
-                RemovedFromStockDate = x.RemovedFromStockDate,
-                ProductId = x.ProductId,
-                UserActions = x.UserActions,
-                InHouseTitle = x.InHouseTitle,
-                OrderPrice = x.OrderPrice,
-                StockAmount = x.StockAmount,
-                OrderAmount = x.OrderAmount,
-                AvailableAmount = x.AvailableAmount,
-                Ordered = x.Ordered,
-                OrderQuantity = x.OrderQuantity,
-                TitleGWS = x.TitleGWS,
-                Barcode = x.Barcode,
-                Packsize = x.Packsize,
-                MinOrder = x.MinOrder,
-                Target = x.Target
-
-    }));
-
-    matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+        if (products.Count() == 0 || products == null)
+        {
+            products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
+        }
+        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
     //Parsing methods

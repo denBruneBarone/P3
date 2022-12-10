@@ -6,7 +6,6 @@ namespace SPFAdminSystem.Database.ProductFiles
 {
     public interface IProductService
     {
-        Task<Product> GetProductById(string prodId);
         List<Product> GetProducts();
         Task LoadProducts();
         Task<List<Product>> GetUnknownProducts(string fileName);
@@ -15,7 +14,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task<Product> GetSingleProduct(string productId);
 
         Task CreateOrUpdateProduct(Product product);
-
+        Task<Product> GetProductById(string prodId, bool forceUpdate);
         Task InsertExcelProducts(string fileName);
 
         Task InsertExcelMapping(string fileName);

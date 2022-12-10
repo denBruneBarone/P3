@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Text;
 using OfficeOpenXml;
+using SPFAdminSystem.Data;
 using System.Threading.Tasks;
 using DataAccessLibrary.Models;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SPFAdminSystem.Pages.DatabasePages;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
-using SPFAdminSystem.Data;
 
 namespace SPFAdminSystem.Database.ProductFiles
 {
@@ -16,6 +16,7 @@ namespace SPFAdminSystem.Database.ProductFiles
         public double score { get; set; }
         public Product _product = new();
     }
+
     public class ProductService : IProductService
     {
         private readonly DataContext _context;
@@ -49,6 +50,45 @@ namespace SPFAdminSystem.Database.ProductFiles
                 throw new Exception("no product here");
             }
             return product;
+        }
+
+        public async Task CreateProduct(Product product, bool verify=true)
+        {
+
+            if (verify && _context.Products.FindAsync(product.ProductId).Result != null)
+            {
+                throw new Exception("Product already exists");
+            }
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateProduct(Product product)
+        {
+            var dbProduct = await _context.Products.FindAsync(product.ProductId);
+            if (dbProduct == null)
+            {
+                throw new KeyNotFoundException("product not found");
+            }
+            else
+            {
+               // update
+                dbProduct.ArriveDate = product.ArriveDate;
+                dbProduct.RemovedFromStockDate = product.RemovedFromStockDate;
+                dbProduct.InHouseTitle = product.InHouseTitle;
+                dbProduct.TitleGWS = product.TitleGWS;
+                dbProduct.OrderPrice = product.OrderPrice;
+                dbProduct.StockAmount = product.StockAmount;
+                dbProduct.OrderAmount = product.OrderAmount;
+                dbProduct.AvailableAmount = product.AvailableAmount;
+                dbProduct.Ordered = product.Ordered;
+                dbProduct.Barcode = product.Barcode;
+                dbProduct.Packsize = product.Packsize;
+                dbProduct.Target = product.Target;
+                dbProduct.MinOrder = product.MinOrder;
+                dbProduct.OrderQuantity = product.OrderQuantity;
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateOrUpdateProduct(Product product)
@@ -157,8 +197,7 @@ namespace SPFAdminSystem.Database.ProductFiles
                     Map.MinOrder = Convert.ToInt32(worksheet.Cells[row, 7].Value);
                     Map.PackSize = Convert.ToInt32(worksheet.Cells[row, 6].Value);
                     mappings.Add(Map);
-                    Console.WriteLine(Map.ProductIdMapping);
-                    
+
                 }
                 package.Dispose();
             }
@@ -186,7 +225,7 @@ namespace SPFAdminSystem.Database.ProductFiles
 
             if (dbProduct == null)
             {
-                Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
+                //Console.WriteLine("could not find product with id of : " + mapping.ProductIdMapping);
             }
             else
             {
@@ -209,17 +248,26 @@ namespace SPFAdminSystem.Database.ProductFiles
                 await AddToProduct(map);
             }
         }
-        public async Task<Product> GetProductById(string prodId)
+        public async Task<Product> GetProductById(string prodId, bool forceUpdate = false)
         {
-            var prod = await _context.Products.FindAsync(prodId);
+            var prod = await _context.Products.FirstOrDefaultAsync(product => product.ProductId == prodId);
             if (prod == null)
                 throw new KeyNotFoundException("product not found");
+
+            if (forceUpdate)
+            {
+                _context.Entry<Product>(prod).Reload();
+                ////Console.WriteLine("Updating...");
+            }
+
             return prod;
         }
 
         public async Task<List<Product>> GetUnknownProducts(string fileName)
         {
             /*Calls function to assure products from database is in List<Product> Products*/
+            UnknownProducts.Clear();
+
             await LoadMappings();
             await LoadUnknownProducts(fileName);
             return UnknownProducts;
@@ -257,16 +305,18 @@ namespace SPFAdminSystem.Database.ProductFiles
                         prod.TitleGWS = worksheet.Cells[row, 7].Value.ToString();
                         prod.Packsize = Convert.ToInt32(worksheet.Cells[row, 9].Value);
                         prod.OrderPrice = Convert.ToDouble(worksheet.Cells[row, 16].Value);
+
                         UnknownProducts.Add(prod);
+
                     }
-
                 }
-                Console.WriteLine("Unknown Products added");
+                //Console.WriteLine("Unknown Products added");
             }
-
         }
+
         public async Task<List<Product>> GetMatchSuggestions(Product product)
         {
+            MatchSuggestions.Clear();
             List<ProductScore> prodScore = new List<ProductScore>();
             List<ProductScore> sortedProdScore = new();
 
@@ -282,20 +332,14 @@ namespace SPFAdminSystem.Database.ProductFiles
                 prod._product.ProductId = map.ProductIdMapping;
                 prodScore.Add(prod);
             }
-
-            ProductScore newProduct = new();
-            newProduct._product.TitleGWS = "new";
             sortedProdScore = prodScore.OrderByDescending(x => x.score).ToList();
-
-            MatchSuggestions.Add(sortedProdScore[0]._product);
-            MatchSuggestions.Add(sortedProdScore[1]._product);
-            MatchSuggestions.Add(sortedProdScore[2]._product);
-            MatchSuggestions.Add(sortedProdScore[3]._product);
-            MatchSuggestions.Add(sortedProdScore[4]._product);
-            MatchSuggestions.Add(newProduct._product);
+            
+            for(int i = 0; i<20; i++)
+            {
+                MatchSuggestions.Add(sortedProdScore[i]._product);
+            }
 
             return MatchSuggestions;
-
         }
 
         static double NameMatch(string a, string b)
