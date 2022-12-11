@@ -79,13 +79,13 @@ li {
 }
 
 #itemTitle {
-    height: 75px;
-    padding-left: 15px;
+    height: 62px;
     padding-top: 10px;
 }
 
 #currentInfoTitle {
     margin-top: 25px;
+    text-align: center;
 }
 
 #leftMatchItemsFlex {
@@ -177,9 +177,11 @@ li {
 }
 
 #rightAuxItems {
-    display: block;
-    flex: auto;
-    padding-top: 25px;
+
+    display:flex;
+    justify-content: center;
+    margin-top:15px;
+   
 }
 
 #accIgnContainer {
@@ -190,11 +192,12 @@ li {
 
 #acceptIgnore {
     padding-left: 8.2%;
-    padding-top: 5%;
+    padding-top: 1%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 30%;
+    margin-right: 2.649%;
 }
 
 #dropdownId {

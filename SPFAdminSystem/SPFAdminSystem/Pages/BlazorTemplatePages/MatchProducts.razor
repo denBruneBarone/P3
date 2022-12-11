@@ -67,6 +67,9 @@
         <div id="matchProduct">
             <div id="leftItem">
                 <div id="itemTitle">
+                    <h3 style="text-align: center;">Unknown product:</h3>
+                </div>
+                <div id="currentInfoTitle">
                     @{
                         if (matchTitle == "" && products.Count > 0)
                         {
@@ -75,9 +78,6 @@
                         }
                     }
                     <h1 style="font-weight: 700; font-size: 24px;">@products[chosenProduct].TitleGWS</h1>
-                </div>
-                <div id="currentInfoTitle">
-                    <h3 style="text-align: center;">Current match information:</h3>
                 </div>
                 <div id="leftMatchItemsFlex">
                     <div id="currentInfo">
@@ -217,8 +217,11 @@
                     }
                 }
                 <div id="itemTitle">
+                    <h3 style="text-align: center;">Match suggestion:</h3>
+                </div>
+                <div id="itemTitle">
                     <div id="rightAuxItems">
-                        <div id="dropdownId">
+                        <div>
                             <select name="matches" id="matches" @onchange="checkIfMatchChosen">
                                 @{
                                     int i = 0;
@@ -232,9 +235,6 @@
                             </select>
                         </div>
                     </div>
-                </div>
-                <div id="currentInfoTitle">
-                    <h3 style="text-align: center;">Selected match information:</h3>
                 </div>
                 <div id="leftMatchItemsFlex" class="w-100">
                     <div id="currentInfo" class="w-100">
@@ -281,8 +281,8 @@
 
 <div id="accIgnContainer">
     <div id="acceptIgnore">
-        <button onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn-lg" disabled="@reverseIgnore">Ignore</button>
-        <button onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn-lg" disabled="@reverseAccepted">Accept</button>
+        <button id="ignoreButton" onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn" disabled="@reverseIgnore">Ignore</button>
+        <button id="acceptButton" onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn" disabled="@reverseAccepted">Accept</button>
     </div>
 </div>
 
