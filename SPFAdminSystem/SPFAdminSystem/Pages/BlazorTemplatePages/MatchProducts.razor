@@ -375,10 +375,6 @@
     //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
     {
-
-        Console.WriteLine(products[1].TitleGWS);
-        Console.WriteLine(products[1].Barcode);
-
         accepted = false;
 
         matchTitle = item;
@@ -398,18 +394,6 @@
             await _db.CreateOrUpdateProduct(product);
             await _db.CreateOrUpdateMapping(productToMapping(product));
         }
-        await _db.LoadProducts();
-        List<Product> prods = _db.GetProducts();
-        foreach(Product prod in prods)
-        {
-            if(prod.Barcode == "5011921165704")
-            {
-                dbprodname = prod.TitleGWS;
-            }
-        }
-        await Task.Delay(1);
-        StateHasChanged();
-        continuetext = "continuecomplete";
         //navManager.NavigateTo("/order/overview", true);
     }
     private Mapping productToMapping(Product product)
@@ -655,12 +639,6 @@
     //"Accept"-button confirms the choice to map an unknown product to a found match
     private void AcceptMatch(Product product, bool ignore)
     {
-        Console.WriteLine("");
-        Console.WriteLine(products[1].TitleGWS);
-        Console.WriteLine(products[1].Barcode);
-        Console.WriteLine("");
-
-
         bool resetRun = false;
 
         if (ignore == true)
@@ -852,13 +830,6 @@
     }
     }
     }*/
-        foreach(Product prod in products)
-        {
-            if(prod.Barcode == "5011921165704")
-            {
-                dbprodname = prod.TitleGWS;
-            }
-        }
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 

@@ -3,11 +3,11 @@
 @using SPFAdminSystem.Shared.PopupModals
 @inject IUserService _userDB
 @inject NavigationManager navManager
-<DeleteUserPopup userRemove="@removeUser" user=@user closeModal=@closeModal showModal=@showDeleteUserModal />
+@*<DeleteUserPopup userRemove="@removeUser" user=@user closeModal=@closeModal showModal=@showDeleteUserModal />
 <ChangePasswordPopup showModal="@showPasswordModal" closeModal=@closeModal user=@user />
-<ChangeUserNamePopup showModal="@ShowUsernameModal" closeModal=@closeModal user=@user/>
+<ChangeUserNamePopup showModal="@ShowUsernameModal" closeModal=@closeModal user=@user/>*@
 <ChangeFullnamePopup showModal="@ShowFullnameModal" closeModal=@closeModal user=@user/>
-<ChangeRolePopup showModal="@ShowRoleModal" closeModal=@closeModal user=@user />
+@*<ChangeRolePopup showModal="@ShowRoleModal" closeModal=@closeModal user=@user />*@
 <h3><a href="users" class="text-reset"><span class="oi oi-arrow-circle-left"></span></a></h3>
 <h3 class="align-middle">Editing User:  @user.FullName</h3>
 <div class="container informationContainer">
@@ -23,7 +23,7 @@
             <tbody>
                 <tr>
                     <th class="align-middle" scope="row">UserID:</th>
-                    <td class="align-middle">@user.UserId</td>
+                    <td class="align-middle" id="tableuserid">@user.UserId</td>
                     <td class="align-middle" style="width: 5%;"></td>
                 </tr>
                 <tr>
