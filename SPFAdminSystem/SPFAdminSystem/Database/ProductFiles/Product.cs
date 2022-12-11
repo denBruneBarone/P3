@@ -11,7 +11,6 @@ public class Product
     public string ProductId { get; set; }
 
     public List<UserAction> UserActions { get; set; }
-
     public string? InHouseTitle { get; set; }
 
     public double? OrderPrice { get; set; }

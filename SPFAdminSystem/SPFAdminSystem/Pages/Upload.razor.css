@@ -54,4 +54,10 @@
 .label-wrapper:hover{
     cursor:pointer;
 }
+#mergeBtn{
+    width: 400px
+}
+.mergeBtnDiv {
+    padding-top: 20px;
+}
 

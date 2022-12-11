@@ -7,6 +7,7 @@
 @using System.Reflection;
 @using OfficeOpenXml;
 @using Microsoft.AspNetCore.Http;
+@attribute [Authorize(Roles = "Admin, Employee")];
 
 @using Microsoft.AspNetCore.Mvc;
 @inject IProductService database
@@ -95,7 +96,6 @@
         }
         foreach(Product product in productlist)
         {
-
         }
     }
 
@@ -108,7 +108,7 @@
         ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         if(fileInfo.Exists)
         {
-            Console.WriteLine("SUCESS");
+            //Console.WriteLine("SUCESS");
         }
         using (ExcelPackage package = new ExcelPackage(fileInfo))
         {
@@ -138,5 +138,4 @@
         using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
         await JS.InvokeVoidAsync("DownloadExcel", "Pricelist Europe__3.xlsx", streamReference);
     }
-
 }

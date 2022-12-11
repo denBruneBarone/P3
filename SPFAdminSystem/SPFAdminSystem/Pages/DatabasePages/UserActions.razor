@@ -39,12 +39,12 @@ else{
             {
                 //dev
                 string prodId = "5011921003747";
-                Product prod = await _prodDb.GetProductById(prodId);
+                Product prod = await _prodDb.GetProductById(prodId, true);
 
                 action = new UserAction(currUser.UserId, currUser, DateTime.Now, "Excel File Upload","",prodId,prod);
             }
             else{
-                Product prod = await _prodDb.GetProductById(identifier);
+                Product prod = await _prodDb.GetProductById(identifier, true);
                 action = new UserAction(currUser.UserId, currUser, DateTime.Now, "OrderQuantity", "7", identifier, prod);
             }
 
@@ -81,7 +81,7 @@ else{
         actions = _userDb.GetActions();
         foreach (UserAction action in actions)
         {
-            action.Product = await _prodDb.GetProductById(action.ProductId);
+            action.Product = await _prodDb.GetProductById(action.ProductId, true);
             action.User = await _userDb.GetUserById(action.UserId);
         }
     }
