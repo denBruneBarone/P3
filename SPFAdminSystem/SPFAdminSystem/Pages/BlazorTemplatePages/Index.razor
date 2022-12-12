@@ -1,8 +1,23 @@
 ﻿@page "/"
 
 <PageTitle>Index</PageTitle>
-<h1>Hello, world!</h1>
+@{
+    string filepath = $"{Directory.GetCurrentDirectory()}{@"\wwwroot"}" + "\\" + "images" + "\\" + "SpilforsyningLogo.jpg";
+}
 
-Welcome to your new app.
+<AuthorizeView>
+    <NotAuthorized>
+        <img src=".\images/SPFAdminSystem.jpg" alt="SPFAdminSystem logo" width="250">
+        <h1>Spilforsyningens Administrering System</h1>
+        <br />
+        <h3>Please log in to proceed</h3>
+    </NotAuthorized>
+    <Authorized>
+        <img src=".\images/SPFAdminSystem.jpg" alt="SPFAdminSystem logo" width="250">
+        <br />
+        <h2>Choose an action on the left</h2>
+    </Authorized>
+</AuthorizeView>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+
+
