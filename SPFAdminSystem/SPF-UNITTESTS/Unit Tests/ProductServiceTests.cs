@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,10 @@ namespace SPF_UNITTESTS
         [InlineData("Title5", "Barcode5", "ProductId2", 5, 6, 7, 8, 9)]
         [InlineData("Title6", "Barcode6", "ProductId2", 6, 7, 8, 9, 10)]
         //Get Products should return a list of products.
-        public void GetProductsReturnsAListOfProducts(string title, string barcode, string productid, int ordered, int minorder, int stockamount, int target, int orderquantity)
+        public void OverviewCorrectlyDisplaysProducts(string title, string barcode, 
+                                                      string productid, int ordered, 
+                                                      int minorder, int stockamount, 
+                                                      int target, int orderquantity)
         {
             var mockService = new Mock<IProductService>();
             Product mockProduct = new Product()
@@ -56,25 +60,22 @@ namespace SPF_UNITTESTS
 
 
             //Assert
-            Assert.Equal(mockProduct.TitleGWS, render.Find("td").GetInnerText());
+            var TableData = render.FindAll("td");
+            Assert.Equal(mockProduct.TitleGWS, TableData[0].GetInnerText());
+            Assert.Equal(mockProduct.Barcode, TableData[1].GetInnerText());
+            Assert.Equal(mockProduct.ProductId, TableData[2].GetInnerText());
+            Assert.Equal(mockProduct.Ordered.ToString(), TableData[3].GetInnerText());
+            Assert.Equal(mockProduct.MinOrder.ToString(), TableData[4].GetInnerText());
+            Assert.Equal(mockProduct.StockAmount.ToString(), TableData[5].GetInnerText());
+            Assert.Equal(mockProduct.Target.ToString(), TableData[6].GetInnerText());
+            Assert.Equal(mockProduct.OrderQuantity.ToString(), TableData[7].GetInnerText());
         }
 
         [Fact]
         public void UploadDisplaysFileCardsCorrectly()
         {
             var mockService = new Mock<IProductService>();
-            Product mockProduct = new Product()
-            {
-                TitleGWS = "title",
-                Barcode = "barcode",
-                ProductId = "id",
-                Ordered = 1,
-                MinOrder = 2,
-                StockAmount = 3,
-                Target = 4,
-                OrderQuantity = 5
-            };
-            mockService.Setup(m => m.GetProducts()).Returns(new List<Product> { mockProduct });
+
             Services.AddSingleton<IWebHostEnvironment, myHostingEnvironment.HostingEnvironment>();
             Services.AddSingleton<IProductService>(mockService.Object);
             Services.AddBlazorTable();
@@ -86,6 +87,9 @@ namespace SPF_UNITTESTS
             //Assert
             var comps = render.FindComponents<FileCard>();
             Assert.Equal(3, comps.Count);
+            Assert.Equal("Produkter.xlsx was last modified on 08/12/2022 15.20.58", comps[0].Instance.Text);
+            Assert.Equal("Mapping.xlsx was last modified on 08/12/2022 15.20.58", comps[1].Instance.Text);
+            Assert.Equal("Pricelist Europe__3.xlsx was last modified on 08/12/2022 15.20.58", comps[2].Instance.Text);
         }
     }
 }

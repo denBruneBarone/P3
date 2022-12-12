@@ -26,7 +26,7 @@
             <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="8%">
             </Column>
             <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
-            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right" DefaultSortColumn="true" DefaultSortDescending="true">
+            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Align="Align.Right" DefaultSortColumn="true" DefaultSortDescending="true">
                 <EditTemplate>
                     <input type="number" @bind-value="context.Target" @onfocusout="() => updatequantity(context)" class="form-control form-control-sm" required />
                 </EditTemplate>
