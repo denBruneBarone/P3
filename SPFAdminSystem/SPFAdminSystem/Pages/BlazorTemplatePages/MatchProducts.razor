@@ -10,287 +10,295 @@
 @page "/match"
 
 <div id="topSpacer"></div>
+@if(products.Count>0){
 
-<div class="container">
-    <div id="productList">
-        @{
-            counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
-            if (counter <= 0)
-            {
-                counter = 0;
-                disableContinue = false;
-            }
-        }
-        <li id="listTitle">@counter Unknown Products</li>
-        <ul id="productListItems">
+    <div class="container">
+        <div id="productList">
             @{
-                int endLoop = 0;
-                counter = 0;
-            }
-            @foreach (var item in products)
-            {
-                if (products.Contains(item))
+                counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
+                if (counter <= 0)
                 {
-                    if (matchTitle == "" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
+                    counter = 0;
+                    disableContinue = false;
+                }
+            }
+            <li id="listTitle">@counter Unknown Products</li>
+            <ul id="productListItems">
+                @{
+                    int endLoop = 0;
+                    counter = 0;
+                }
+                @foreach (var item in products)
+                {
+                    if (products.Contains(item))
                     {
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
-                    }
-                    else if (matchTitle == item.Barcode)
-                    {
-                        <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
-                        counter++;
-                    }
-                    else
-                    {
-                        if (IsMapped(item.Barcode))
+                        if (matchTitle == "" && justBooted == 0 && products.Count() > 0 && endLoop == 0)
                         {
-                            <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                            <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
                         }
-                        else if (IsIgnored(item.Barcode))
+                        else if (matchTitle == item.Barcode)
                         {
-                            <li style="background-color: yellow;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: yellow;" id="listButtons">@item.TitleGWS</button></li>
+                            <li style="background-color: dodgerblue;"><button @onclick=@(_=>GetValue(item.Barcode)) style="background-color: dodgerblue;" id="listButtons">@item.TitleGWS</button></li>
+                            counter++;
                         }
                         else
                         {
-                            <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
-                            counter++;
+                            if (IsMapped(item.Barcode))
+                            {
+                                <li style="background-color: #b2dab6;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #b2dab6;" id="listButtons">@item.TitleGWS</button></li>
+                            }
+                            else if (IsIgnored(item.Barcode))
+                            {
+                                <li style="background-color: yellow;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: yellow;" id="listButtons">@item.TitleGWS</button></li>
+                            }
+                            else
+                            {
+                                <li style="background-color: #f3cac9;"><button @onclick=@(_=>{GetValue(item.Barcode); suggestedMapping();}) style="background-color: #f3cac9;" id="listButtons">@item.TitleGWS</button></li>
+                                counter++;
+                            }
                         }
                     }
+                    endLoop = 1;
                 }
-                endLoop = 1;
-            }
-        </ul>
-    </div>
+            </ul>
+        </div>
 
-    @*----------------------------------------------------------------------------------------------------------------------*@
+        @*----------------------------------------------------------------------------------------------------------------------*@
 
-    @{
-        <div id="matchProduct">
-            <div id="leftItem">
-                <div id="itemTitle">
-                    <h3 style="text-align: center;">Unknown product:</h3>
+        @{
+            <div id="matchProduct">
+                <div id="leftItem">
+                    <div id="itemTitle">
+                        <h3 style="text-align: center;">Unknown product:</h3>
+                    </div>
+                    <div id="currentInfoTitle">
+                        @{
+                            if (matchTitle == "" && products.Count > 0)
+                            {
+                                matchTitle = products[0].Barcode;
+                                UpdateMatch(matchTitle);
+                            }
+                        }
+                        <h1 style="font-weight: 700; font-size: 24px;">@products[chosenProduct].TitleGWS</h1>
+                    </div>
+                    <div id="leftMatchItemsFlex">
+                        <div id="currentInfo">
+                            <ul id="matchListLeft">
+                                @{
+                                    if (products.Count() > 0)
+                                    {
+                                        if (matchTitle != "")
+                                        {
+                                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                            {
+                                                if (sameTitle == true && prop.Name.ToLower() == "titlegws")
+                                                {
+                                                    <li style="color: red; font-weight: 700;" id="itemLiTitles">@prop.Name</li>
+                                                    sameTitle = false;
+                                                }
+                                                else if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
+                                                prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != "" && InHouseTitleCpy != products[chosenProduct].InHouseTitle ||
+                                                prop.Name.ToLower() == "productid" && ProductIdCpy != "" && ProductIdCpy != products[chosenProduct].ProductId ||
+                                                prop.Name.ToLower() == "orderprice" && OrderPriceCpy != -1 && OrderPriceCpy != products[chosenProduct].OrderPrice ||
+                                                prop.Name.ToLower() == "stockamount" && StockAmountCpy != -1 && StockAmountCpy != products[chosenProduct].StockAmount ||
+                                                prop.Name.ToLower() == "orderamount" && OrderAmountCpy != -1 && OrderAmountCpy != products[chosenProduct].OrderAmount ||
+                                                prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != -1 && AvailableAmountCpy != products[chosenProduct].AvailableAmount ||
+                                                prop.Name.ToLower() == "ordered" && OrderedCpy != -1 && OrderedCpy != products[chosenProduct].Ordered ||
+                                                prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != -1 && OrderQuantityCpy != products[chosenProduct].OrderQuantity ||
+                                                prop.Name.ToLower() == "titlegws" && TitleGWSCpy != "" && TitleGWSCpy != products[chosenProduct].TitleGWS ||
+                                                prop.Name.ToLower() == "barcode" && BarcodeCpy != "" && BarcodeCpy != products[chosenProduct].Barcode ||
+                                                prop.Name.ToLower() == "packsize" && PacksizeCpy != -1 && PacksizeCpy != products[chosenProduct].Packsize ||
+                                                prop.Name.ToLower() == "minorder" && MinOrderCpy != -1 && MinOrderCpy != products[chosenProduct].MinOrder)
+                                                {
+                                                    <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
+                                                }
+                                                else
+                                                {
+                                                    <li id="itemLiTitles">@prop.Name</li>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                        <div id="currentInfoValues">
+                            <ul style="list-style: none;" id="matchListLeft">
+                                @{
+                                    if (products.Count() > 0)
+                                    {
+                                        if (matchTitle != "")
+                                        {
+                                            foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                                            {
+                                                if (prop.Name == "ArriveDate" && ArriveDateCpy != null)
+                                                {
+                                                    <li id="itemLi">@ArriveDateCpy.ToString().Substring(0,10)</li>
+                                                }
+                                                else if (prop.Name == "RemovedFromStockDate" && RemovedFromStockDateCpy != null)
+                                                {
+                                                    <li id="itemLi">@RemovedFromStockDateCpy.ToString().Substring(0,10)</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != null)
+                                                {
+                                                    <li id="itemLi">@InHouseTitleCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "productid" && ProductIdCpy != null)
+                                                {
+                                                    <li id="itemLi" name="left-id">@ProductIdCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "orderprice" && OrderPriceCpy != null)
+                                                {
+                                                    <li id="itemLi">@OrderPriceCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "stockamount" && StockAmountCpy != null)
+                                                {
+                                                    <li id="itemLi">@StockAmountCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "orderamount" && OrderAmountCpy != null)
+                                                {
+                                                    <li id="itemLi">@OrderAmountCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != null)
+                                                {
+                                                    <li id="itemLi">@AvailableAmountCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "ordered" && OrderedCpy != null)
+                                                {
+                                                    <li id="itemLi">@OrderedCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != null)
+                                                {
+                                                    <li id="itemLi">@OrderQuantityCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "titlegws" && TitleGWSCpy != null)
+                                                {
+                                                    <li id="itemLi" name="left-titlegws">@TitleGWSCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "barcode" && BarcodeCpy != null)
+                                                {
+                                                    <li id="itemLi">@BarcodeCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "packsize" && PacksizeCpy != null)
+                                                {
+                                                    <li id="itemLi">@PacksizeCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "minorder" && MinOrderCpy != null)
+                                                {
+                                                    <li id="itemLi" name="left-minOrder">@MinOrderCpy.ToString()</li>
+                                                }
+                                                else if (prop.Name.ToLower() == "target" && TargetCpy != null)
+                                                {
+                                                    <li id="itemLi" name="left-target">@TargetCpy.ToString()</li>
+                                                }
+                                                else
+                                                {
+                                                    <li id="itemLi"></li>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="ignoreApplyButtons">
+                        <button onclick=@(()=>ApplyReset(true)) class="btn btn-warning">Reset</button>
+                    </div>
                 </div>
-                <div id="currentInfoTitle">
-                    @{
-                        if (matchTitle == "" && products.Count > 0)
+
+                @*----------------------------------------------------------------------------------------------------------------------*@
+
+                <div id="rightItem">
+                    @code {
+                        int justBooted = 0;
+
+                        private void updateJustBooted()
                         {
-                            matchTitle = products[0].Barcode;
-                            UpdateMatch(matchTitle);
+                            justBooted = 1;
                         }
                     }
-                    <h1 style="font-weight: 700; font-size: 24px;">@products[chosenProduct].TitleGWS</h1>
-                </div>
-                <div id="leftMatchItemsFlex">
-                    <div id="currentInfo">
-                        <ul id="matchListLeft">
-                            @{
-                                if (products.Count() > 0)
-                                {
-                                    if (matchTitle != "")
-                                    {
-                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
-                                        {
-                                            if (sameTitle == true && prop.Name.ToLower() == "titlegws")
-                                            {
-                                                <li style="color: red; font-weight: 700;" id="itemLiTitles">@prop.Name</li>
-                                                sameTitle = false;
-                                            }
-                                            else if (prop.Name.ToLower() == "target" && TargetCpy != -1 && TargetCpy != products[chosenProduct].Target ||
-                                            prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != "" && InHouseTitleCpy != products[chosenProduct].InHouseTitle ||
-                                            prop.Name.ToLower() == "productid" && ProductIdCpy != "" && ProductIdCpy != products[chosenProduct].ProductId ||
-                                            prop.Name.ToLower() == "orderprice" && OrderPriceCpy != -1 && OrderPriceCpy != products[chosenProduct].OrderPrice ||
-                                            prop.Name.ToLower() == "stockamount" && StockAmountCpy != -1 && StockAmountCpy != products[chosenProduct].StockAmount ||
-                                            prop.Name.ToLower() == "orderamount" && OrderAmountCpy != -1 && OrderAmountCpy != products[chosenProduct].OrderAmount ||
-                                            prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != -1 && AvailableAmountCpy != products[chosenProduct].AvailableAmount ||
-                                            prop.Name.ToLower() == "ordered" && OrderedCpy != -1 && OrderedCpy != products[chosenProduct].Ordered ||
-                                            prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != -1 && OrderQuantityCpy != products[chosenProduct].OrderQuantity ||
-                                            prop.Name.ToLower() == "titlegws" && TitleGWSCpy != "" && TitleGWSCpy != products[chosenProduct].TitleGWS ||
-                                            prop.Name.ToLower() == "barcode" && BarcodeCpy != "" && BarcodeCpy != products[chosenProduct].Barcode ||
-                                            prop.Name.ToLower() == "packsize" && PacksizeCpy != -1 && PacksizeCpy != products[chosenProduct].Packsize ||
-                                            prop.Name.ToLower() == "minorder" && MinOrderCpy != -1 && MinOrderCpy != products[chosenProduct].MinOrder)
-                                            {
-                                                <li style="color: green; font-weight: 700;" id="itemLiTitles">@prop.Name ✓</li>
-                                            }
-                                            else
-                                            {
-                                                <li id="itemLiTitles">@prop.Name</li>
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        </ul>
+                    <div id="itemTitle">
+                        <h3 style="text-align: center;">Match suggestion:</h3>
                     </div>
-                    <div id="currentInfoValues">
-                        <ul style="list-style: none;" id="matchListLeft">
-                            @{
-                                if (products.Count() > 0)
-                                {
-                                    if (matchTitle != "")
-                                    {
-                                        foreach (PropertyInfo prop in products[chosenProduct].GetType().GetProperties())
+                    <div id="itemTitle">
+                        <div id="rightAuxItems">
+                            <div>
+                                <select name="matches" id="matches" @onchange="checkIfMatchChosen">
+                                    @{
+                                        int i = 0;
+
+                                        foreach (Product item in matchSuggestions)
                                         {
-                                            if (prop.Name == "ArriveDate" && ArriveDateCpy != null)
-                                            {
-                                                <li id="itemLi">@ArriveDateCpy.ToString().Substring(0,10)</li>
-                                            }
-                                            else if (prop.Name == "RemovedFromStockDate" && RemovedFromStockDateCpy != null)
-                                            {
-                                                <li id="itemLi">@RemovedFromStockDateCpy.ToString().Substring(0,10)</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "inhousetitle" && InHouseTitleCpy != null)
-                                            {
-                                                <li id="itemLi">@InHouseTitleCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "productid" && ProductIdCpy != null)
-                                            {
-                                                <li id="itemLi" name="left-id">@ProductIdCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "orderprice" && OrderPriceCpy != null)
-                                            {
-                                                <li id="itemLi">@OrderPriceCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "stockamount" && StockAmountCpy != null)
-                                            {
-                                                <li id="itemLi">@StockAmountCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "orderamount" && OrderAmountCpy != null)
-                                            {
-                                                <li id="itemLi">@OrderAmountCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "availableamount" && AvailableAmountCpy != null)
-                                            {
-                                                <li id="itemLi">@AvailableAmountCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "ordered" && OrderedCpy != null)
-                                            {
-                                                <li id="itemLi">@OrderedCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "orderquantity" && OrderQuantityCpy != null)
-                                            {
-                                                <li id="itemLi">@OrderQuantityCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "titlegws" && TitleGWSCpy != null)
-                                            {
-                                                <li id="itemLi" name="left-titlegws">@TitleGWSCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "barcode" && BarcodeCpy != null)
-                                            {
-                                                <li id="itemLi">@BarcodeCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "packsize" && PacksizeCpy != null)
-                                            {
-                                                <li id="itemLi">@PacksizeCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "minorder" && MinOrderCpy != null)
-                                            {
-                                                <li id="itemLi" name="left-minOrder">@MinOrderCpy.ToString()</li>
-                                            }
-                                            else if (prop.Name.ToLower() == "target" && TargetCpy != null)
-                                            {
-                                                <li id="itemLi" name="left-target">@TargetCpy.ToString()</li>
-                                            }
-                                            else
-                                            {
-                                                <li id="itemLi"></li>
-                                            }
+                                            i++;
+                                            <option value="@item.TitleGWS">@item.TitleGWS</option>
                                         }
                                     }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="leftMatchItemsFlex" class="w-100">
+                        <div id="currentInfo" class="w-100">
+                            <ul id="matchListLeft" class="w-100">
+                                @{
+                                    foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
+                                    {
+                                        <div class="w-100">
+                                        <li style="display: flex; justify-content: space-between;">
+                                            <div>
+                                                <label class="form-check-label" for="@prop.Name" name=@(prop.Name+"_label")>
+                                                        @prop.Name
+                                                </label>
+                                            </div>
+                                            <div name=@(prop.Name+"_value")>
+                                                    @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
+                                                    {
+                                                        @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                                        {
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                        } else
+                                                        {
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
+                                                        }
+                                                    }
+                                            </div>
+                                        </li>
+                                </div>
+                                    }
                                 }
-                            }
                         </ul>
                     </div>
                 </div>
                 <div id="ignoreApplyButtons">
-                    <button onclick=@(()=>ApplyReset(true)) class="btn btn-warning">Reset</button>
+                    <button onclick=@(()=>ApplyReset(false)) class="btn btn-success" name="apply-btn">Apply</button>
                 </div>
-            </div>
-
-            @*----------------------------------------------------------------------------------------------------------------------*@
-
-            <div id="rightItem">
-                @code {
-                    int justBooted = 0;
-
-                    private void updateJustBooted()
-                    {
-                        justBooted = 1;
-                    }
-                }
-                <div id="itemTitle">
-                    <h3 style="text-align: center;">Match suggestion:</h3>
-                </div>
-                <div id="itemTitle">
-                    <div id="rightAuxItems">
-                        <div>
-                            <select name="matches" id="matches" @onchange="checkIfMatchChosen">
-                                @{
-                                    int i = 0;
-
-                                    foreach (Product item in matchSuggestions)
-                                    {
-                                        i++;
-                                        <option value="@item.TitleGWS">@item.TitleGWS</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div id="leftMatchItemsFlex" class="w-100">
-                    <div id="currentInfo" class="w-100">
-                        <ul id="matchListLeft" class="w-100">
-                            @{
-                                foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
-                                {
-                                    <div class="w-100">
-                                    <li style="display: flex; justify-content: space-between;">
-                                        <div>
-                                            <label class="form-check-label" for="@prop.Name" name=@(prop.Name+"_label")>
-                                                    @prop.Name
-                                            </label>
-                                        </div>
-                                        <div name=@(prop.Name+"_value")>
-                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
-                                                {
-                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
-                                                    {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
-                                                    } else
-                                                    {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
-                                                    }
-                                                }
-                                        </div>
-                                    </li>
-                            </div>
-                                }
-                            }
-                    </ul>
-                </div>
-            </div>
-            <div id="ignoreApplyButtons">
-                <button onclick=@(()=>ApplyReset(false)) class="btn btn-success" name="apply-btn">Apply</button>
             </div>
         </div>
+        }
     </div>
-    }
-</div>
+    @*----------------------------------------------------------------------------------------------------------------------*@
 
-@*----------------------------------------------------------------------------------------------------------------------*@
-
-<div id="accIgnContainer">
-    <div id="acceptIgnore">
-        <button id="ignoreButton" onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn" disabled="@reverseIgnore">Ignore</button>
-        <button id="acceptButton" onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn" disabled="@reverseAccepted">Accept</button>
+    <div id="accIgnContainer">
+        <div id="acceptIgnore">
+            <button id="ignoreButton" onclick=@(()=>AcceptMatch(products[chosenProduct], true)) class="btn btn-warning btn" disabled="@reverseIgnore">Ignore</button>
+            <button id="acceptButton" onclick=@(()=>AcceptMatch(products[chosenProduct], false)) class="btn btn-success btn" disabled="@reverseAccepted">Accept</button>
+        </div>
     </div>
-</div>
 
-<div id="continueBtnContainer">
-    <button class="btn btn-primary btn-lg" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
-</div>
+    <div id="continueBtnContainer">
+        <button class="btn btn-primary btn-lg" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
+    </div>
 
-@*----------------------------------------------------------------------------------------------------------------------*@
+    @*----------------------------------------------------------------------------------------------------------------------*@
+}
+else
+{
+    <h1>0 Unknown Products! Please Upload new files.</h1>
+    <a href="/order/overview">
+        <button class="btn btn-primary btn-lg">Preview Price List</button>
+    </a>
+}
 
 @code {
     //Variables that are used as the buffer between applied match and accepted match
@@ -752,7 +760,8 @@
         {
             products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
         }
-        matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+        if (products.Count() > 0) //otherwise throws error because chosenProduct=0 (ArgumentOutOfRangeException: Index was out of range)
+            matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 
     //Parsing methods
