@@ -18,13 +18,13 @@
             <ValidationSummary />
 
             <div class="mb-3 pt-4 px-4">
-            <input @bind="model.UserName" class="form-control" placeholder="User Name" required />
+            <input @bind="model.UserName" class="form-control" placeholder="User Name" required id="loginform" />
         </div>
         <div class="mb-3 pb-4 px-4">
-            <input @bind-value="model.Password" type="password" class="form-control" placeholder="Password" required/>
+            <input @bind-value="model.Password" type="password" class="form-control" placeholder="Password" required id="passwordform"/>
         </div>
         <div class="mb-3 d-grid gap-2 flex justify-content-center">
-            <input type="submit" name="Submit" value="LOGIN" class="btn btn-primary"/>
+            <input type="submit" name="Submit" value="LOGIN" class="btn btn-primary" id="loginbut"/>
 @*            <button @onclick="Authenticate" class="btn btn-primary">Login</button>
 *@        </div>
         </EditForm>

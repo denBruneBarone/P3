@@ -70,7 +70,7 @@ namespace SPF_UNITTESTS
             var NewUserName = component.Find("#newusername");
             var NewUserFullName = component.Find("#newuserfullname");
             var NewUserRole = component.Find("#newuserrole");
-
+            var logoutButton = component.Find("#logoutbutton");
             //ASSERT
             Assert.Equal(0, Int32.Parse(component.Find($"#usercount").TextContent));
             AddUserButton.Click();
