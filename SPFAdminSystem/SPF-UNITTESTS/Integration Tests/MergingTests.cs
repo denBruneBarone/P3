@@ -62,6 +62,8 @@ namespace SPF_UNITTESTS
             var leftProductName = "NECROMUNDA: ORLOCK ASH WASTES DICE";
             var rightProductName = "Necromunda: Orlock Gang";
             var dbName = component.Find("#dbproductname");
+            var dbBarcode = component.Find("#dbBarcode");
+            var newBarcode = "5011921165704";
             //ASSERT
             Assert.Equal("SQUAT IRONHEAD PROSPECTORS GANG DICE", leftProduct.TextContent);
             Assert.Equal("Necromunda: Ironhead Squat Prospectors", rightProduct.TextContent);
@@ -77,16 +79,14 @@ namespace SPF_UNITTESTS
                 Task.Delay(10);
                 ignoreButton.Click();
             }
-            // TODO:
-            //
-            // CHECK TITLE BEFORE CLICKING CONTINUE
-            // CHECK AFTER CLICKING CONTINUE
-            //
+
             Assert.False(continueButton.IsDisabled());
-            Assert.Equal(leftProductName, dbName.TextContent);
+            Assert.Equal(rightProductName, dbName.TextContent);
+            Assert.Equal(newBarcode, dbBarcode.TextContent);
             continueButton.Click();
             component.WaitForState(() => component.Find("#continuestatus").TextContent == "continuecomplete", TimeSpan.FromSeconds(10));
             Assert.Equal(rightProductName, dbName.TextContent);
+            Assert.Equal(newBarcode, dbBarcode.TextContent);
         }
     }
 }

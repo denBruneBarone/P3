@@ -339,6 +339,7 @@
 
 <p id="continuestatus">@continuetext</p>
 <p id="dbproductname">@dbprodname</p>
+<p id="dbBarcode">@dbBarcode</p>
 
 @*----------------------------------------------------------------------------------------------------------------------*@
 
@@ -360,6 +361,7 @@
     string BarcodeCpy = "";
     string continuetext = "";
     string dbprodname = "";
+    string dbBarcode = "";
     DateTime? ArriveDateCpy;
     DateTime? RemovedFromStockDateCpy;
 
@@ -394,6 +396,9 @@
             await _db.CreateOrUpdateProduct(product);
             await _db.CreateOrUpdateMapping(productToMapping(product));
         }
+        continuetext = "continuecomplete";
+        await Task.Delay(1);
+        StateHasChanged();
         //navManager.NavigateTo("/order/overview", true);
     }
     private Mapping productToMapping(Product product)
@@ -637,7 +642,7 @@
     }
 
     //"Accept"-button confirms the choice to map an unknown product to a found match
-    private void AcceptMatch(Product product, bool ignore)
+    private async void AcceptMatch(Product product, bool ignore)
     {
         bool resetRun = false;
 
@@ -735,6 +740,17 @@
             matchTitle = products[0].Barcode;
         }
 
+        foreach (Product prod in products)
+        {
+            if (prod.ProductId == "5011921101344")
+            {
+                dbBarcode = prod.Barcode;
+                dbprodname = prod.TitleGWS;
+            }
+
+        }
+        await Task.Delay(1);
+        StateHasChanged();
         GetValue(matchTitle);
         suggestedMapping();
     }
@@ -819,18 +835,29 @@
     }));
         /*foreach(Product prod in products){
         foreach (PropertyInfo prop in prod.GetType().GetProperties())
-            {
+                {
                 Product product = new Product();
                 if (prop.Name == "ArriveDate"){
                 product.ArriveDate = Convert.ToDateTime(prop.GetValue(prod, null));
             }else if(prop.Name == "RemovedFromStockDate"){
                 product.RemovedFromStockDate = Convert.ToDateTime(prop.GetValue(prod, null));
-        }
-        prop.
+    }
+    prop.
     }
     }
     }*/
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
+        foreach (Product product in products)
+        {
+            if (product.ProductId == "5011921101344")
+            {
+                dbBarcode = product.Barcode;
+                dbprodname = product.TitleGWS;
+            }
+
+        }
+        await Task.Delay(1);
+        StateHasChanged();
     }
 
     //Parsing methods
