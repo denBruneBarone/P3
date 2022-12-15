@@ -119,6 +119,34 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             await _context.SaveChangesAsync();
         }
+        // same as function above, but does not save changes. There is no point in saving changes every time, when this is called repeatedly in the for-loop in InsertExcelProducts
+        public async Task CreateOrUpdateProducts(Product product)
+        {
+            var dbProduct = await _context.Products.FindAsync(product.ProductId);
+            if (dbProduct == null)
+            {
+                //create
+                _context.Products.Add(product);
+            }
+            else
+            {
+                // update /TOTEST
+                dbProduct.Barcode = product.Barcode;
+                dbProduct.OrderPrice = product.OrderPrice;
+                dbProduct.MinOrder = product.MinOrder;
+                dbProduct.Ordered = product.Ordered;
+                dbProduct.ArriveDate = product.ArriveDate;
+                dbProduct.AvailableAmount = product.AvailableAmount;
+                dbProduct.InHouseTitle = product.InHouseTitle;
+                dbProduct.OrderAmount = product.OrderAmount;
+                dbProduct.OrderQuantity = product.OrderQuantity;
+                dbProduct.Packsize = product.Packsize;
+                dbProduct.RemovedFromStockDate = product.RemovedFromStockDate;
+                dbProduct.StockAmount = product.StockAmount;
+                dbProduct.Target = product.Target;
+                dbProduct.TitleGWS = product.TitleGWS;
+            }
+        }
 
         public async Task InsertExcelProducts(string fileName)
         {
@@ -146,10 +174,11 @@ namespace SPFAdminSystem.Database.ProductFiles
             }
             foreach (Product product in products)
             {
-                CreateOrUpdateProduct(product);
+                CreateOrUpdateProducts(product);
             }
             await _context.SaveChangesAsync();
         }
+
 
         public async Task CreateOrUpdateMapping(Mapping mapping)
         {
@@ -171,7 +200,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbMapping.Target = mapping.Target;
                 dbMapping.TitleGWS = mapping.TitleGWS;
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task InsertExcelMapping(string fileName)
@@ -235,8 +263,6 @@ namespace SPFAdminSystem.Database.ProductFiles
                 dbProduct.Target = mapping.Target;
                 dbProduct.MinOrder = mapping.MinOrder;
             }
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task JoinMappingToProducts()
@@ -247,6 +273,7 @@ namespace SPFAdminSystem.Database.ProductFiles
             {
                 await AddToProduct(map);
             }
+            await _context.SaveChangesAsync();
         }
         public async Task<Product> GetProductById(string prodId, bool forceUpdate = false)
         {
