@@ -2,7 +2,10 @@
 @attribute [Authorize(Roles = "Admin, Employee")];
 @using SPFAdminSystem.Database;
 @using SPFAdminSystem.Database.ProductFiles
+@using BlazorTable
 @inject IProductService _productDb
+@inject IJSRuntime js
+
 
 <h5>All Products</h5>
 @if (products is null)
@@ -11,83 +14,79 @@
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">ProductId</th>
-                <th scope="col">Inhouse Title</th>
-                <th scope="col">GWS Title</th>
-                <th scope="col">Order Price</th>
-                <th scope="col">Stock Amount</th>
-                <th scope="col">Order Amount</th>
-                <th scope="col">AvailableAmount</th>
-                <th scope="col">Ordered</th>
-                <th scope="col">Barcode</th>
-                <th scope="col">Pack Size</th>
-                <th scope="col">Target</th>
-                <th scope="col">MinOrder</th>
-                <th scope="col">Order Quantity</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in products.Select((value, index) => (value, index)))
-            {
-                <tr>
-                    <td>
-                        <input type="text" value="@item.value.ProductId" disabled>
-                    </td>
-
-                    <td>
-                        <input type="text" @bind="@item.value.InHouseTitle" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-
-                    <td>
-                        <input type="text" @bind="@item.value.TitleGWS" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.OrderPrice" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.StockAmount" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.OrderAmount" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.AvailableAmount" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.Ordered" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.Barcode" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.Packsize" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.Target" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.MinOrder" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                    <td>
-                        <input type="text" @bind="@item.value.OrderQuantity" @onblur="@(() => ValidateTitle(item.index))">
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
+    <Table TableItem="Product" Items="products" IsEditMode="true" AutoGenerateColumns="false" PageSize="25" @ref="Table" ColumnReorder="false">
+        <Column TableItem="Product" Title="Title GWS" Field="@(x => x.TitleGWS)" Sortable="true" Filterable="true" Width="10%">
+            <EditTemplate>
+                <input type="text" @bind-value="context.TitleGWS" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Title In House" Field="@(x => x.InHouseTitle)" Sortable="true" Filterable="true" Width="10%">
+            <EditTemplate>
+                <input type="text" @bind-value="context.InHouseTitle" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="true" Filterable="true" Width="10%">
+            <EditTemplate>
+                <input type="text" @bind-value="context.Barcode" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="true" Filterable="true" Width="10%">
+            <EditTemplate>
+                <input type="text" @bind-value="context.ProductId" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="In Order" Field="@(x => x.Ordered)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.Ordered" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.MinOrder" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.StockAmount" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="true" Filterable="true" Width="5%">
+                <EditTemplate>
+                    <input type="number" @bind-value="context.Target" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+                </EditTemplate>
+            </Column>
+        <Column TableItem="Product" Title="Order Quantity" Field="@(x => x.OrderQuantity)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.OrderQuantity" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Order Amount" Field="@(x => x.OrderAmount)" Sortable="true" Filterable="true"Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.OrderAmount" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Available" Field="@(x => x.AvailableAmount)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.AvailableAmount" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+        <Column TableItem="Product" Title="Pack Size" Field="@(x => x.Packsize)" Sortable="true" Filterable="true" Width="5%">
+            <EditTemplate>
+                <input type="number" @bind-value="context.Packsize" @onfocusout="() => UpdateProduct(context)" class="form-control form-control-sm" required />
+            </EditTemplate>
+        </Column>
+            <Pager ShowPageNumber="true" ShowTotalCount="true" />
+    </Table>
+    @*dev debug addproduct throws an error*@
+   @*
     <h3>AddProduct</h3>
     <input @bind=Id type="text" placeholder="Id" required />
     <input @bind=Title type="text" placeholder="Title" required />
-    <button onclick="@InsertProduct">add new product</button>
+    <button onclick="@InsertProduct">add new product</button>*@
 }
 
 @code {
-    public string Id { get; private set; }
-    public string Title { get; private set; }
+    ITable<Product>? Table;
     private List<Product> products = new();
 
     protected override async Task OnInitializedAsync()
@@ -96,36 +95,49 @@ else
         products = _productDb.GetProducts();
     }
 
-    public async void ValidateTitle(int i){
-        // Inplemet generic validation
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!Table.IsEditMode)
+        {
+            Table.ToggleEditMode();
+            Table.UpdateAsync();
+        }
+        foreach (Product product in products)
+        {
+        }
+    }
 
-        try{
-            if (products[i].InHouseTitle != null && products[i].InHouseTitle.Length != 0)
+    async void UpdateProduct(Product product)
+    {
+        try
+        {
+            if (product.InHouseTitle != null && product.InHouseTitle.Length != 0)
             {
-                await _productDb.CreateOrUpdateProduct(products[i]);
+                await _productDb.CreateOrUpdateProduct(product);
             }
             else
             {
                 // Reset
-                products[i].InHouseTitle = _productDb.GetProductById(products[i].ProductId, true).Result.InHouseTitle;
+                product.InHouseTitle = _productDb.GetProductById(product.ProductId, true).Result.InHouseTitle;
             }
         }
         catch (NullReferenceException e)
         {
-            //Console.WriteLine("RIGHT HERE BIG BOIIIIII --> " + e.Message);
+            await js.InvokeVoidAsync("alert", e);
         }
     }
 
-    public async Task InsertProduct() {
+    // throws an error dev debug
+    //public async Task InsertProduct() {
 
-        Product p = new Product();
-        p.ProductId = Id;
-        p.InHouseTitle = Title;
+    //    Product p = new Product();
+    //    p.ProductId = Id;
+    //    p.InHouseTitle = Title;
 
-        await _productDb.CreateOrUpdateProduct(p);
+    //    await _productDb.CreateOrUpdateProduct(p);
 
-        // Bad pratice
-        products.Add(p);
-        //Console.WriteLine("Product Added");
-    }
+    //    // Bad pratice
+    //    products.Add(p);
+    //    //Console.WriteLine("Product Added");
+    //}
 }
