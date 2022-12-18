@@ -18,21 +18,21 @@
 <h3>Order Overview</h3>
 <div class="w-100" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
     <div id="table-div">
-        <Table TableItem="Product" Items="productlist" IsEditMode="true" PageSize="25" @ref="Table" ColumnReorder="false">
-            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="false" Filterable="true" Width="50%"/>
-            <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="false" Filterable="false" Width="10%">
+        <Table TableItem="Product" Items="productlist" IsEditMode="true" PageSize="20" @ref="Table" ColumnReorder="false">
+            <Column TableItem="Product" Title="Title" Field="@(x => x.TitleGWS)" Sortable="true" Filterable="true" Width="50%" />
+            <Column TableItem="Product" Title="Barcode" Field="@(x => x.Barcode)" Sortable="true" Filterable="false" Width="10%">
             </Column>
-            <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="false" Filterable="false" Width="10%" />
-            <Column TableItem="Product" Title="In Order" Field="@(x => x.Ordered)" Sortable="false" Filterable="false" Width="8%" />
-            <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="false" Filterable="false" Width="8%">
+            <Column TableItem="Product" Title="Product ID" Field="@(x => x.ProductId)" Sortable="true" Filterable="false" Width="10%" />
+            <Column TableItem="Product" Title="In Order" Field="@(x => x.Ordered)" Sortable="true" Filterable="false" Width="8%" />
+            <Column TableItem="Product" Title="Min. Order" Field="@(x => x.MinOrder)" Sortable="true" Filterable="false" Width="8%">
             </Column>
-            <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="false" Filterable="false" Width="10%" />
-            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="false" Filterable="false" Width="10%" Format="C" Align="Align.Right" DefaultSortColumn="true" DefaultSortDescending="true">
+            <Column TableItem="Product" Title="Current Stock" Field="@(x => x.StockAmount)" Sortable="true" Filterable="false" Width="10%" />
+            <Column TableItem="Product" Title="Target" Field="@(x => x.Target)" Sortable="true" Filterable="false" Width="10%" Format="C" Align="Align.Right">
                 <EditTemplate>
                     <input type="number" @bind-value="context.Target" @onfocusout="() => updatequantity(context)" class="form-control form-control-sm" required />
                 </EditTemplate>
             </Column>
-            <Column TableItem="Product" Title="Order Quantity" Field="@(x => x.OrderQuantity)" Sortable="false" Width="10%" />
+            <Column TableItem="Product" Title="Order Quantity" Field="@(x => x.OrderQuantity)" Sortable="true" Width="10%" DefaultSortColumn="true" DefaultSortDescending="true" />
             <Pager ShowPageNumber="true" ShowTotalCount="true" />
         </Table>
     </div>
@@ -119,7 +119,7 @@
             {
                 foreach (Product product in productlist)
                 {
-                    if ((string)worksheet.Cells[row, 6].Value == product.Barcode)
+                    if (product.OrderQuantity > 0 && (string)worksheet.Cells[row, 6].Value == product.Barcode)
                     {
                         worksheet.Cells[row, 3].Value = product.OrderQuantity;
                     }
