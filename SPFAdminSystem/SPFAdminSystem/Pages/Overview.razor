@@ -36,7 +36,7 @@
         </Table>
     </div>
     <div>
-        <button class="btn btn-success" @onclick=SaveOrder>SAVE EXCEL ORDER</button>
+        <button class="btn btn-success" @onclick=GenerateFileStream>SAVE EXCEL ORDER</button>
     </div>
 </div>
 
@@ -63,19 +63,19 @@
     }
 
     /*    protected override void OnAfterRender(bool firstRender)
-        {
-            if (!Table.IsEditMode)
             {
+            if (!Table.IsEditMode)
+                {
                 Table.ToggleEditMode();
-                Table.UpdateAsync();
+            Table.UpdateAsync();
             }
             foreach(Product product in productlist)
             {
 
-            }
+        }
         }*/
 
-    private async Task<Stream> GenerateFileStream()
+    private async Task GenerateFileStream()
     {
         var fileStream = new MemoryStream();
         byte[] bytes;
@@ -105,12 +105,13 @@
             package.Dispose();
         }
         fileStream.Position = 0;
-        return fileStream;
+        await SaveOrder(fileStream);
+        fileStream.Dispose();
     }
 
-    private async Task SaveOrder()
+    private async Task SaveOrder(MemoryStream stream)
     {
-        Stream fileStream = await GenerateFileStream();        
+        Stream fileStream = stream;        
         using DotNetStreamReference streamReference = new DotNetStreamReference(stream: fileStream);
         await JS.InvokeVoidAsync("DownloadExcel", "Pricelist Europe__3.xlsx", streamReference);
     }

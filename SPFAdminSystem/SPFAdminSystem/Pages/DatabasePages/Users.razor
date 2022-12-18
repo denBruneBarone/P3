@@ -7,7 +7,7 @@
 @using BCrypt.Net
 @inject IJSRuntime js
 @inject NavigationManager navManager
-@*<AddUserModal showModal="@showAddModal" closeModal=closeModals />*@
+<AddUserModal closeModal="@closeModals" showModal="@showAddModal"/>
 <h5>All Users</h5>
 @if (users is null)
 {
@@ -56,6 +56,7 @@ else
 <p id="newusername">@newusername</p>
 <p id="newuserfullname">@newuserfullname</p>
 <p id="newuserrole">@newuserrole</p>
+<p id="newuserpassword">@newuserpassword</p>
 
 @code {
     // Variables for input bind
@@ -71,6 +72,7 @@ else
     string newusername;
     string newuserfullname;
     string newuserrole;
+    string newuserpassword;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +92,7 @@ else
         newusername = users[0].UserName;
         newuserrole = users[0].Role;
         newuserfullname = users[0].FullName;
+        newuserpassword = users[0].Password;
         await Task.Delay(1);
         StateHasChanged();
     }

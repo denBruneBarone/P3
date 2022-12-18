@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BCrypt.Net;
 
 namespace SPF_UNITTESTS
 {
@@ -70,6 +71,7 @@ namespace SPF_UNITTESTS
             var NewUserName = component.Find("#newusername");
             var NewUserFullName = component.Find("#newuserfullname");
             var NewUserRole = component.Find("#newuserrole");
+            var NewUserPassword = component.Find("#newuserpassword");
 
             //ASSERT
             Assert.Equal(0, Int32.Parse(component.Find($"#usercount").TextContent));
@@ -86,6 +88,7 @@ namespace SPF_UNITTESTS
             Assert.Equal(expectedUsername, NewUserName.TextContent);
             Assert.Equal(expectedFullname, NewUserFullName.TextContent);
             Assert.Equal(expectedRole, NewUserRole.TextContent);
+            Assert.True(BCrypt.Net.BCrypt.Verify("password", NewUserPassword.TextContent));
         }
     }
 }
