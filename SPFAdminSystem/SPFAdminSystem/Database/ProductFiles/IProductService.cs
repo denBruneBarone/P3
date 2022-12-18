@@ -24,5 +24,6 @@ namespace SPFAdminSystem.Database.ProductFiles
         Task LoadMappings();
         Task JoinMappingToProducts();
         Task AddToProduct(Mapping mapping);
+        void CalculateProductOrderQuantity();
     }
 }

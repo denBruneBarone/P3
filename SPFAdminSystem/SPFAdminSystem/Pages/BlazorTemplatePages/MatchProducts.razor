@@ -15,7 +15,8 @@
     <div id="productList">
         @{
             counter = products.Count() - MappedTitles.Count() - IgnoredTitles.Count();
-            if(counter<=0){
+            if (counter <= 0)
+            {
                 counter = 0;
                 disableContinue = false;
             }
@@ -250,67 +251,68 @@
                                 foreach (PropertyInfo prop in matchSuggestions[chosenMatch].GetType().GetProperties())
                                 {
                                     <div class="w-100">
-                                        @if(prop.Name.ToLower() == "titlegws")
+                                        @if (prop.Name.ToLower() == "titlegws")
                                         {
                                         <li style="display: flex; justify-content: space-between;">
-                                        <div>
-                                            <label class="form-check-label" for="@prop.Name">
-                                                    @prop.Name
-                                            </label>
-                                        </div>
+                                            <div>
+                                                <label class="form-check-label" for="@prop.Name">
+                                                        @prop.Name
+                                                </label>
+                                            </div>
                                             <div id="productrightTitleGWS">
-                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
-                                                {
-                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                                    @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                                                     {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
-                                                    }
-                                                    else if (prop.Name == "Target")
-                                                    {
-                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
                                                         {
-                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                        }
+                                                        else if (prop.Name == "Target")
+                                                        {
+                                                            if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                            {
+                                                            <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
-                                                    }
-                                                }
-                                        </div>
-                                            </li>
+                                            </div>
+                                        </li>
 
-                                        } else
+                                        }
+                                        else
                                         {
-                                            <li style="display: flex; justify-content: space-between;">
-                                        <div>
-                                            <label class="form-check-label" for="@prop.Name">
-                                                    @prop.Name
-                                            </label>
-                                        </div>
-                                        <div>
-                                                @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
-                                                {
-                                                    @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
+                                        <li style="display: flex; justify-content: space-between;">
+                                            <div>
+                                                <label class="form-check-label" for="@prop.Name">
+                                                        @prop.Name
+                                                </label>
+                                            </div>
+                                            <div>
+                                                    @if (prop.GetValue(matchSuggestions[chosenMatch], null) != null)
                                                     {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
-                                                    }
-                                                    else if (prop.Name == "Target")
-                                                    {
-                                                        if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                        @if (prop.Name == "ArriveDate" || prop.Name == "RemovedFromStock" || prop.Name == "UserActions")
                                                         {
-                                                        <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString().Substring(0,10)
+                                                        }
+                                                        else if (prop.Name == "Target")
+                                                        {
+                                                            if (matchSuggestions[chosenMatch].TitleGWS != "new")
+                                                            {
+                                                            <input type="text" placeholder="@prop.GetValue(matchSuggestions[chosenMatch], null).ToString()">
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        @prop.GetValue(matchSuggestions[chosenMatch], null).ToString()
-                                                    }
-                                                }
-                                        </div>
-                                    </li>
+                                            </div>
+                                        </li>
                                         }
-                                    </div>
+                            </div>
                                 }
                             }
                     </ul>
@@ -334,7 +336,7 @@
 </div>
 
 <div id="continueBtnContainer">
-    <button class="btn btn-primary btn-lg" id="continuebutton"disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
+    <button class="btn btn-primary btn-lg" id="continuebutton" disabled="@disableContinue" @onclick="continueSequence">CONTINUE</button>
 </div>
 
 <p id="continuestatus">@continuetext</p>
@@ -375,6 +377,10 @@
     //Method that sets the focused product when unknown product is chosen
     private async void GetValue(string item)
     {
+
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+
         accepted = false;
 
         matchTitle = item;
@@ -394,6 +400,18 @@
             await _db.CreateOrUpdateProduct(product);
             await _db.CreateOrUpdateMapping(productToMapping(product));
         }
+        await _db.LoadProducts();
+        List<Product> prods = _db.GetProducts();
+        foreach (Product prod in prods)
+        {
+            if (prod.Barcode == "5011921165704")
+            {
+                dbprodname = prod.TitleGWS;
+            }
+        }
+        await Task.Delay(1);
+        StateHasChanged();
+        continuetext = "continuecomplete";
         //navManager.NavigateTo("/order/overview", true);
     }
     private Mapping productToMapping(Product product)
@@ -639,6 +657,12 @@
     //"Accept"-button confirms the choice to map an unknown product to a found match
     private void AcceptMatch(Product product, bool ignore)
     {
+        Console.WriteLine("");
+        Console.WriteLine(products[1].TitleGWS);
+        Console.WriteLine(products[1].Barcode);
+        Console.WriteLine("");
+
+
         bool resetRun = false;
 
         if (ignore == true)
@@ -704,10 +728,12 @@
 
         if (accepted == false)
         {
-            if(IgnoredTitles.Contains(products[chosenProduct].Barcode)){
+            if (IgnoredTitles.Contains(products[chosenProduct].Barcode))
+            {
                 IgnoredTitles.Remove(products[chosenProduct].Barcode);
             }
-            if(MappedTitles.Contains(products[chosenProduct].Barcode)){
+            if (MappedTitles.Contains(products[chosenProduct].Barcode))
+            {
                 MappedTitles.Remove(products[chosenProduct].Barcode);
             }
             IgnoredTitles.Add(products[chosenProduct].Barcode);
@@ -798,7 +824,8 @@
     {
         //await _db.LoadProducts();
         products = await _db.GetUnknownProducts("Pricelist Europe__3.xlsx");
-        productsBackup = new List<Product>(products.Select(x => new Product() {
+        productsBackup = new List<Product>(products.Select(x => new Product()
+            {
                 ArriveDate = x.ArriveDate,
                 RemovedFromStockDate = x.RemovedFromStockDate,
                 ProductId = x.ProductId,
@@ -816,7 +843,7 @@
                 MinOrder = x.MinOrder,
                 Target = x.Target
 
-    }));
+            }));
         /*foreach(Product prod in products){
         foreach (PropertyInfo prop in prod.GetType().GetProperties())
             {
@@ -830,6 +857,13 @@
     }
     }
     }*/
+        foreach (Product prod in products)
+        {
+            if (prod.Barcode == "5011921165704")
+            {
+                dbprodname = prod.TitleGWS;
+            }
+        }
         matchSuggestions = await _db.GetMatchSuggestions(products[chosenProduct]);
     }
 

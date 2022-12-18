@@ -52,7 +52,33 @@ namespace SPFAdminSystem.Database.ProductFiles
         }
 
 
-
+        public void CalculateProductOrderQuantity()
+        {
+            foreach (Product product in Products)
+            {
+                if (product.StockAmount < 0 || product.StockAmount == null)
+                {
+                    product.StockAmount = 0;
+                }
+                if (product.Ordered < 0 || product.Ordered == null)
+                {
+                    product.Ordered = 0;
+                }
+                if (product.Target < 0 || product.Target == null)
+                {
+                    product.Target = 0;
+                }
+                product.OrderQuantity = product.Target - product.StockAmount - product.Ordered;
+                if (product.OrderQuantity < 0 || product.OrderQuantity == null)
+                {
+                    product.OrderQuantity = 0;
+                }
+                else
+                {
+                    product.OrderQuantity = product.OrderQuantity > product.MinOrder ? product.OrderQuantity : product.MinOrder;
+                }
+            }
+        }
         public async Task CreateOrUpdateProduct(Product product)
         {
             var dbProduct = await _context.Products.FindAsync(product.ProductId);
@@ -81,7 +107,6 @@ namespace SPFAdminSystem.Database.ProductFiles
         {
             List<Product> products = new();
             var FilePath = $"C:\\Users\\peter\\source\\repos\\P3\\SPFAdminSystem\\SPFAdminSystem\\wwwroot\\" + fileName;
-            Console.WriteLine(FilePath);
             FileInfo fileInfo = new FileInfo(FilePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage package = new ExcelPackage(fileInfo))
